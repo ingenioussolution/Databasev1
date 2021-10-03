@@ -26,6 +26,10 @@ const PhoneListSchema = mongoose.Schema({
 		min: 1,
 		max: 1
 	},
+	status: {
+		type: String,
+		enum: ['success', 'fail'],
+	  },
 	date: {
 		type: Date,
 		default: Date.now

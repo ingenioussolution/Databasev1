@@ -29,7 +29,7 @@ app.get('/', (req,res) =>{
 
 // Use routes
 app.use('/phoneslist', phoneslistRoutes)
-app.use('/phone', phoneslistRoutes)
+app.use('/phone', phoneRoutes)
 
 const PORT = process.env.PORT || 5000
 

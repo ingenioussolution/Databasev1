@@ -7,6 +7,8 @@ const {MONGO_URI} = require('./config')
 //Routes
 
 const phoneslistRoutes = require('./routes/phoneslist')
+const phoneRoutes = require('./routes/phone')
+
 
 const app = express() 
 
@@ -27,6 +29,7 @@ app.get('/', (req,res) =>{
 
 // Use routes
 app.use('/phoneslist', phoneslistRoutes)
+app.use('/phone', phoneslistRoutes)
 
 const PORT = process.env.PORT || 5000
 

@@ -9,8 +9,12 @@ const {MONGO_URI} = require('./config')
 const phoneslistRoutes = require('./routes/phoneslist')
 const phoneRoutes = require('./routes/phone')
 
-
+const cors = require('cors');
 const app = express() 
+app.use(cors({
+    methods: ['GET','POST','DELETE','UPDATE','PUT','PATCH']
+}));
+app.options('*', cors());
 
 //Body Parser Middleware
 

@@ -1,4 +1,4 @@
-const mongoose = require('mongoose');
+import mongoose from 'mongoose'
 
 const PhoneSchema = mongoose.Schema({
 	name: {
@@ -20,4 +20,6 @@ const PhoneSchema = mongoose.Schema({
 	}
 });
 
-module.exports = mongoose.model('Phone', PhoneSchema);
+const Phone = mongoose.model('Phone', PhoneSchema)
+
+export default Phone

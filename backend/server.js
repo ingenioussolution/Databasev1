@@ -2,6 +2,7 @@ import express from 'express'
 import dotenv from 'dotenv'
 import cors from 'cors'
 import connectDB from './config/db.js'
+
 //Routes
 import phoneslistRoutes from './routes/phoneslist.js'
 import phoneRoutes from './routes/phone.js'

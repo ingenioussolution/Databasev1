@@ -6,7 +6,8 @@
   "type": "module",
   "scripts": {
     "dev": "nodemon server.js",
-    "server": "nodemon backend/server"
+    "server": "nodemon backend/server",
+    "client": "npm start --prefix frontend"
   },
   "author": "camps",
   "license": "ISC",

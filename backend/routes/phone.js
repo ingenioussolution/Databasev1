@@ -4,9 +4,9 @@ import {
   registerPhone,
 } from '../controllers/phoneController.js'
 
-const route = express.Router()
+const router = express.Router()
 
-route.get('/', getPhone)
-route.post('/', registerPhone)
+router.get('/', getPhone)
+router.post('/', registerPhone)
 
-export default route
+export default router

@@ -4,22 +4,33 @@
   "description": "MERN example 1",
   "main": "server.js",
   "type": "module",
+  "engines": {
+    "node": "16.6.x",
+    "npm": "7.19.x"
+  },
   "scripts": {
-    "dev": "nodemon server.js",
+    "start": "node backend/server",
     "server": "nodemon backend/server",
-    "client": "npm start --prefix frontend"
+    "client": "npm start --prefix frontend",
+    "dev": "concurrently \"npm run server\" \"npm run client\""
   },
   "author": "camps",
   "license": "ISC",
   "dependencies": {
+    "axios": "^0.22.0",
     "bcrypt": "^5.0.1",
+    "body-parser": "^1.19.0",
     "cors": "^2.8.5",
     "dotenv": "^10.0.0",
     "express": "^4.17.1",
     "express-async-handler": "^1.1.4",
+    "heroku": "^7.59.0",
+    "heroku-cli": "^7.0.9",
+    "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.0.8"
   },
   "devDependencies": {
+    "concurrently": "^6.3.0",
     "nodemon": "^2.0.13"
   }
 }

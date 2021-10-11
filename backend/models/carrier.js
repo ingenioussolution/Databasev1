@@ -4,9 +4,7 @@ const CarrierSchema = mongoose.Schema(
   {
     name: {
       type: String,
-      required: false,
-      min: 6,
-      max: 255
+      default: null
     },
     phone: {
       type: String,
@@ -18,14 +16,10 @@ const CarrierSchema = mongoose.Schema(
     wireless:{
       type: Number,
       default: 1,
-      min: 1,
-      max: 1
     },
     results:{
       type: Number,
-      default: 0,
-      min: 1,
-      max: 1
+      default: 0
     },
     status: {
       type: String

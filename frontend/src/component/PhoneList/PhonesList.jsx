@@ -1,11 +1,36 @@
 import React from 'react'
-import {} from '@material-ui/core'
-import useStyles from './styles'
+import { registerPhoneCarrier } from '../../actions/backListPhonesCleanActions'
+import { useDispatch } from 'react-redux'
+import Swal from 'sweetalert2/src/sweetalert2.js'
 
-const PhonesList = () =>{
-    const classes = useStyles()
+const PhonesList = ({ filterPhone }) => {
+  const dispatch = useDispatch()
 
-    return(<div>Phone List Clean</div>)
+  const count = filterPhone.length
+  console.log(count);
+
+  const NewCarrier = () => {
+    if (filterPhone) {
+      filterPhone.forEach( async (prev, carrier) => {
+        await prev
+        dispatch(registerPhoneCarrier(filterPhone[carrier]))
+      });
+      Swal.fire(
+        'Activated!',
+        'Complete!!!',
+        'success'
+      )
+    } else {
+      console.log('No found Carriers')
+    }
+  }
+
+  return (
+    <div>
+      <h1>Phone List Clean</h1>
+      <button onClick={() => NewCarrier()}>Add to Carrier Data</button>
+    </div>
+  )
 }
 
 export default PhonesList

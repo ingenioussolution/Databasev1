@@ -3,9 +3,7 @@ import mongoose from 'mongoose'
 const PhoneSchema = mongoose.Schema({
 	name: {
 		type: String,
-		required: false,
-		min: 6,
-		max: 255
+		default:null
 	},
 	phone: {
 		type: String,

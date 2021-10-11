@@ -1,5 +1,6 @@
 // carrier Model
 import Carrier from '../models/carrier.js'
+import asyncHandler from 'express-async-handler'
 
 // @routes GET /carrier
 // @des GET All PhoneCarrier
@@ -15,14 +16,34 @@ export const getPhoneCarrier = async (req, res) => {
 
 // @routes POST /carrier
 // @des Register an PhoneCarrier
-export const registerPhoneCarrier = async (req, res) => {
-  const newPhoneCarrier = new Carrier(req.body)
+export const registerPhoneCarrier = asyncHandler(async (req, res, next) => {
   try {
-    const carrier = await newPhoneCarrier.save()
-    if (!carrier) throw Error('Something went wrong saving the phoneCarrier')
+    const { phone, name, wireless, status, results } = req.body
+    const phoneExists = await Carrier.findOne({ phone: phone })
+    if (phoneExists) throw Error('Carrier already exists')
 
-    res.status(200).json(carrier)
-  } catch (err) {
-    res.status(400).json({ msg: err })
+    const carrier = await Carrier.create({
+      phone,
+      name,
+      wireless,
+      status,
+      results,
+    })
+    if (carrier) {
+      res.status(201).json({
+        _id: carrier._id,
+        phone: carrier.phone,
+        name: carrier.name,
+        wireless: carrier.wireless,
+        status: carrier.status,
+        results: carrier.results,
+      })
+    } else {
+      res.status(400)
+      throw new Error('Invalid user data')
+    }
+  } catch (error) {
+    next(error)
   }
-}
+
+})

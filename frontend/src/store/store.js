@@ -5,18 +5,22 @@ import {
   registerPhoneReducer,
   deletePhoneReducer,
   phoneListReducer,
-  registerPhoneCarrierReducer,
-  deletePhoneCarrierReducer,
-  phoneCarrierListReducer,
 } from '../reducers/phoneReducers'
 
-const reducer = combineReducers({
-    //List Phones reducers
-    registerPhone: registerPhoneReducer,
-    deletePhone: deletePhoneReducer,
-    phoneList: phoneListReducer,
+import {
+  deletePhoneCarrierReducer,
+  phoneCarrierListReducer,
+  registerPhoneCarrierReducer,
+} from '../reducers/backListPhonesCleanReducer'
 
-    //List Black List Phone Reducer
+const reducer = combineReducers({
+  //List Phones reducers
+  registerPhone: registerPhoneReducer,
+  deletePhone: deletePhoneReducer,
+  phoneList: phoneListReducer,
+  registerPhoneCarrier: registerPhoneCarrierReducer,
+  deletePhoneCarrier: deletePhoneCarrierReducer,
+  phoneCarrierList: phoneCarrierListReducer,
 })
 
 const middleware = [thunk]

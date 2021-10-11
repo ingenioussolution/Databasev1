@@ -6,6 +6,8 @@
         "Outame",
         "phoneslist",
         "postbuild",
-        "Supressed"
+        "Supressed",
+        "Swal",
+        "sweetalert"
     ]
 }

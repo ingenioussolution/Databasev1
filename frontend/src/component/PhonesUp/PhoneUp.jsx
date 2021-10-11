@@ -2,12 +2,13 @@ import React, { useEffect, useState } from 'react'
 import axios from 'axios'
 import { getPhones } from '../../actions/phoneActions'
 import { useDispatch, useSelector } from 'react-redux'
+import PhoneList from '../PhoneList/PhonesList'
 
 const PhoneUp = () => {
   const dispatch = useDispatch()
 
   const phoneData = useSelector((state) => state.phoneList)
-  const { loading, error, phones } = phoneData
+  const { phones } = phoneData
 
   const [listPhone, setListPhone] = useState([])
   const [listPhoneCarrier, setListPhoneCarrier] = useState([])
@@ -25,6 +26,7 @@ const PhoneUp = () => {
           ...listPhone,
           {
             phone: phoneNumber.phone,
+            name: phoneNumber.name,
             wireless: data.wireless,
             status: data.status,
             results: data.results,
@@ -38,14 +40,13 @@ const PhoneUp = () => {
 
   console.log('API List Filter', listPhone)
 
-
-// Filter Data when results = 0
+  // Filter Data when results = 0
   const FilterData = () => {
     let filterStatus = listPhone?.filter(
       (phoneBk) => phoneBk.wireless === 1 && phoneBk.results === 0
     )
-    setFilterData(filterStatus)
-    getApiCarrierData()
+    return setFilterData(filterStatus)
+    //getApiCarrierData()
   }
 
   console.log('Filter Data Black List', filterData)
@@ -88,6 +89,13 @@ const PhoneUp = () => {
         <button onClick={() => getApiBlackListData()}>Filter Black List</button>
         <br />
         <button onClick={() => FilterData()}>Filter Carrier List</button>
+      </div>
+      <div>
+      
+        <PhoneList filterPhone = {filterData}/> 
+      
+      
+        
       </div>
     </div>
   )

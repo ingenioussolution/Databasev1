@@ -1,13 +1,17 @@
 import React from 'react'
 import { registerPhoneCarrier } from '../../actions/backListPhonesCleanActions'
-import { useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import Swal from 'sweetalert2/src/sweetalert2.js'
 
 const PhonesList = ({ filterPhone }) => {
   const dispatch = useDispatch()
 
   const count = filterPhone.length
-  console.log(count);
+  
+  const registerPhoneCarrier = useSelector((state) => state.registerPhoneCarrier)
+  const { error: errorRegistering, socialMedia: newSocialMedia, loading: registering } =
+  registerPhoneCarrier
+
 
   const NewCarrier = () => {
     if (filterPhone) {

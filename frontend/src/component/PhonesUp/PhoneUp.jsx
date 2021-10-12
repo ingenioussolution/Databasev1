@@ -21,7 +21,7 @@ const PhoneUp = () => {
       const { data } = await axios.get(
         `https://api.blacklistalliance.com/standard/api/v1/Lookup/key/b128a57d1da0fdaea16f8ab95883a5f2/response/json/phone/${phoneNumber.phone}`
       )
-      if (data) {
+      if (data.wireless === 1 && data.results === 0) {
         setListPhone((listPhone) => [
           ...listPhone,
           {
@@ -40,14 +40,14 @@ const PhoneUp = () => {
 
   console.log('API List Filter', listPhone)
 
-  // Filter Data when results = 0
-  const FilterData = () => {
-    let filterStatus = listPhone?.filter(
-      (phoneBk) => phoneBk.wireless === 1 && phoneBk.results === 0
-    )
-    return setFilterData(filterStatus)
-    //getApiCarrierData()
-  }
+  // // Filter Data when results = 0
+  // const FilterData = () => {
+  //   let filterStatus = listPhone?.filter(
+  //     (phoneBk) => phoneBk.wireless === 1 && phoneBk.results === 0
+  //   )
+  //   return setFilterData(filterStatus)
+  //   //getApiCarrierData()
+  // }
 
   console.log('Filter Data Black List', filterData)
 
@@ -88,14 +88,9 @@ const PhoneUp = () => {
       <div className="container">
         <button onClick={() => getApiBlackListData()}>Filter Black List</button>
         <br />
-        <button onClick={() => FilterData()}>Filter Carrier List</button>
       </div>
       <div>
-      
-        <PhoneList filterPhone = {filterData}/> 
-      
-      
-        
+        <PhoneList filterPhone={listPhone} />
       </div>
     </div>
   )

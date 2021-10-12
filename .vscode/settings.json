@@ -1,5 +1,8 @@
 {
     "cSpell.words": [
+        "assests",
+        "clsx",
+        "Drawe",
         "fullname",
         "MERN",
         "Middlewere",
@@ -8,6 +11,8 @@
         "postbuild",
         "Supressed",
         "Swal",
-        "sweetalert"
+        "sweetalert",
+        "Swipeable",
+        "Toogle"
     ]
 }

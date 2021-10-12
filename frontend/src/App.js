@@ -1,17 +1,18 @@
 import './App.css'
-import PhonesUp from './component/PhonesUp/PhoneUp'
 import {
   BrowserRouter as Router,
   Route,
   Switch,
   withRouter,
 } from 'react-router-dom'
+import Layout from './component/Dashboard/Layout/Layout'
 
-function App() {
+// <Route path="/" exact component={DashboardLayout} />
+const App = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/" exact component={PhonesUp} />
+         <Route path="/clean-list" exact component={Layout} />
       </Switch>
     </Router>
   )

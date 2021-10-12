@@ -20,6 +20,7 @@ export const registerPhoneCarrier = asyncHandler(async (req, res, next) => {
   try {
     const { phone, name, wireless, status, results } = req.body
     const phoneExists = await Carrier.findOne({ phone: phone })
+    console.log(phoneExists)
     if (phoneExists) throw Error('Carrier already exists')
 
     const carrier = await Carrier.create({
@@ -29,6 +30,7 @@ export const registerPhoneCarrier = asyncHandler(async (req, res, next) => {
       status,
       results,
     })
+    console.log(carrier)
     if (carrier) {
       res.status(201).json({
         _id: carrier._id,
@@ -45,5 +47,4 @@ export const registerPhoneCarrier = asyncHandler(async (req, res, next) => {
   } catch (error) {
     next(error)
   }
-
 })

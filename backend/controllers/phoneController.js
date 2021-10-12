@@ -5,7 +5,7 @@ import Phone from '../models/phone.js'
 // @des GET All Phone
 export const getPhone = async (req, res) => {
   try {
-    const phone = await Phone.find({})
+    const phone = await Phone.find()
     if (!phone) throw Error('Not items')
     res.status(200).json(phone)
   } catch (err) {

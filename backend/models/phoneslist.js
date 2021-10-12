@@ -14,6 +14,10 @@ const PhoneListSchema = mongoose.Schema({
     min: 6,
     max: 255,
   },
+  clicker:{
+    type: String,
+    enum: ['yes', 'no']
+  },
   supressedOutame: {
     type: Boolean,
     default: false,
@@ -95,6 +99,8 @@ const PhoneListSchema = mongoose.Schema({
     type: Boolean,
     default: false,
   },
+
+  
   
 },
 {

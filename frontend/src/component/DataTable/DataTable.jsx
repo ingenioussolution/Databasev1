@@ -17,7 +17,7 @@ import {
   IconButton,
   Tooltip,
 } from '@material-ui/core'
-import { FaPen, FaTrash, FaEye } from 'react-icons/fa'
+//import { FaPen, FaTrash, FaEye } from 'react-icons/fa'
 
 import { getComparator, stableSort } from '../../utils/table'
 import DataTableHead from './dataTableHead/DataTableHead'
@@ -262,7 +262,7 @@ const DataTable = ({
                                       className={classes.actionBtn}
                                       aria-label='edit'
                                     >
-                                      <FaEye />
+                                    
                                     </IconButton>
                                   </Link>
                                 </Tooltip>
@@ -277,7 +277,7 @@ const DataTable = ({
                                       className={classes.actionBtn}
                                       aria-label='edit'
                                     >
-                                      <FaPen color='#119DA4' />
+                                  
                                     </IconButton>
                                   </Link>
                                 </Tooltip>
@@ -297,7 +297,7 @@ const DataTable = ({
                                       handleDeleteClick(row[rowsIdentity])
                                     }
                                   >
-                                    <FaTrash />
+                                   
                                   </IconButton>
                                 </Tooltip>
                               </Grid>

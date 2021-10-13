@@ -8,6 +8,7 @@ import { notFound, errorHandler } from './middlewere/errorMiddlewere.js'
 import phoneslistRoutes from './routes/phoneslist.js'
 import phoneRoutes from './routes/phone.js'
 import carrierRoutes from './routes/carrierRouters.js'
+import ModelTemporal from './routes/modelTemporalRouters.js'
 
 dotenv.config()
 connectDB()
@@ -23,6 +24,7 @@ app.options('*', cors())
 app.use('/phoneslist', phoneslistRoutes)
 app.use('/phone', phoneRoutes)
 app.use('/carrier', carrierRoutes)
+app.use('/data-temporal', ModelTemporal)
 
 app.get('/', (req, res) => {
   res.send('Hello from node')

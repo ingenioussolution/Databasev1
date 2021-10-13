@@ -1,13 +1,11 @@
 import mongoose from 'mongoose'
 
-const PhoneListSchema = mongoose.Schema(
+const ModelTemporalCleanDataSchema = mongoose.Schema(
   {
     phone: {
       type: String,
       required: true,
       unique: true,
-      min: 9,
-      max: 10,
     },
     carrier: {
       type: String,
@@ -57,7 +55,6 @@ const PhoneListSchema = mongoose.Schema(
     state: {
       type: String,
     },
-
     monthlyIncome: {
       type: Number,
       default: 0.0,
@@ -70,16 +67,17 @@ const PhoneListSchema = mongoose.Schema(
       type: String,
       enum: ['no', 'poor', 'bad', 'fair', 'good', 'excellent'],
     },
-    subId: { type: String, },
-    vertical: { type: String, },
+    subId: { type: String },
+    vertical: { type: String },
 
     countryCode: {
       type: String,
     },
+
     platform: {
       type: String,
     },
-    Message: {
+    message: {
       type: String,
     },
     recentAbuse: {
@@ -119,7 +117,6 @@ const PhoneListSchema = mongoose.Schema(
       type: String,
       enum: ['m', 'f'],
     },
-    
     senderID: {
       type: String,
     },
@@ -138,5 +135,8 @@ const PhoneListSchema = mongoose.Schema(
   }
 )
 
-const PhoneList = mongoose.model('PhoneList', PhoneListSchema)
-export default PhoneList
+const ModelTemporalCleanData = mongoose.model(
+  'ModelTemporalCleanData',
+  ModelTemporalCleanDataSchema
+)
+export default ModelTemporalCleanData

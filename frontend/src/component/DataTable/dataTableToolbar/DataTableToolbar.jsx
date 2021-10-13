@@ -17,12 +17,12 @@ import {
   MenuList,
 } from '@material-ui/core'
 
-import {
-  FaFileDownload,
-  FaPlusCircle,
-  FaChevronDown,
-  FaSyncAlt,
-} from 'react-icons/fa'
+// import {
+//   FaFileDownload,
+//   FaPlusCircle,
+//   FaChevronDown,
+//   FaSyncAlt,
+// } from 'react-icons/fa'
 
 import CsvDownloader from 'react-csv-downloader'
 
@@ -147,7 +147,7 @@ const DataTableToolbar = ({
               <Button
                 variant='outlined'
                 className={commons.secondaryBtn}
-                endIcon={<FaFileDownload />}
+                // endIcon={<FaFileDownload />}
               >
                 Export
               </Button>
@@ -158,7 +158,7 @@ const DataTableToolbar = ({
               <Tooltip title='Refresh' aria-label='export'>
                 <Button
                   className={commons.secondaryBtn}
-                  endIcon={<FaSyncAlt />}
+                  // endIcon={<FaSyncAlt />}
                   onClick={() => handleRefresh()}
                 >
                   Refresh
@@ -172,7 +172,7 @@ const DataTableToolbar = ({
                 <Link to={addHandler}>
                   <Button
                     className={clsx(commons.successBtn, classes.addBtn)}
-                    endIcon={<FaPlusCircle />}
+                    // endIcon={<FaPlusCircle />}
                   >
                     Add
                   </Button>
@@ -188,7 +188,7 @@ const DataTableToolbar = ({
                 color='secondary'
                 onClick={handleToggle}
                 className={commons.primaryBtn}
-                endIcon={<FaChevronDown />}
+                //endIcon={<FaChevronDown />}
               >
                 Bulk actions
               </Button>

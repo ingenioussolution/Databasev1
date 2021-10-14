@@ -42,7 +42,7 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
           source: phoneNumber.source,
           ip: phoneNumber.ip,
           site: phoneNumber.site,
-          status: phoneNumber.status === undefined ? '' : phoneNumber.status,
+          status: phoneNumber.status,
           list: phoneNumber.list,
           revenue: phoneNumber.revenue,
           monthlyIncome: phoneNumber.monthlyIncome,
@@ -57,21 +57,14 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
           validMobile: data.status === 'success' ? true : false,
           blackListAlliance: data.results === 0 ? false : true,
           clicker: phoneNumber.clicker,
-          converter:
-            phoneNumber.converter === undefined ? '' : phoneNumber.converter,
-          hardBouce:
-            phoneNumber.hardBouce === undefined ? '' : phoneNumber.hardBouce,
-          suppressed:
-            phoneNumber.phoneNumber === undefined
-              ? ''
-              : phoneNumber.phoneNumber,
-          platform:
-            phoneNumber.platform === undefined ? '' : phoneNumber.platform,
-          message: phoneNumber.message === undefined ? '' : phoneNumber.message,
+          converter: phoneNumber.converter,
+          hardBouce: phoneNumber.hardBouce,
+          suppressed: phoneNumber.phoneNumber,
+          platform: phoneNumber.platform,
+          message: phoneNumber.message,
           recentAbuse: phoneNumber.recentAbuse,
           fraudScore: phoneNumber.fraudScore,
           lineType: data.wireless === 1 ? 'wireless' : phoneNumber.lineType,
-          prepaid: phoneNumber.prepaid,
           prepaid: phoneNumber.prepaid,
           risky: phoneNumber.risky,
           city: phoneNumber.city,
@@ -86,17 +79,11 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
           vertical3: phoneNumber.vertical3,
         })
       }
-
-      //const count =  temporal.length
-
       getApiCarrierData(temporal)
-
       // console.log('temporal', temporal)
       //console.log('temporal', temporal.length)
-
       return Promise.resolve()
     }, Promise.resolve())
-
     if (!listPhones) throw Error('Not items')
     res.status(200).json(listPhones)
   } catch (error) {
@@ -104,18 +91,14 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
   }
 })
 
-
-
-const getApiCarrierData =  (phoneNumber) => {
-
-  ///console.log(phoneNumber);
+// Request API Email Over Sight
+const getApiCarrierData = (phoneNumber) => {
   const EmailOversight = []
   phoneNumber.forEach(async (prev, tmp) => {
     await prev
     const { data } = await axios.get(
       `https://api.emailoversight.com/api/PhoneValidation?apitoken=8466c45b-6467-47d8-a594-4966f8e4461e&phonenumber=${phoneNumber[tmp].phone}`
     )
-    console.log("data",data);
     if (data) {
       EmailOversight.push({
         firstName: phoneNumber[tmp].firstName,
@@ -153,7 +136,6 @@ const getApiCarrierData =  (phoneNumber) => {
         fraudScore: phoneNumber[tmp].fraudScore,
         lineType: phoneNumber[tmp].lineType,
         prepaid: phoneNumber[tmp].prepaid,
-        prepaid: phoneNumber[tmp].prepaid,
         risky: phoneNumber[tmp].risky,
         city: phoneNumber[tmp].city,
         listID: phoneNumber[tmp].listID,
@@ -167,12 +149,10 @@ const getApiCarrierData =  (phoneNumber) => {
         vertical3: phoneNumber[tmp].vertical3,
       })
     }
-    console.log('EmailOversight', EmailOversight)
-
+    //console.log('EmailOversight', EmailOversight)
     console.log('EmailOversight', EmailOversight.length)
   })
 }
-
 
 // @routes GET /phoneslist by phone
 // @des GET by Phone Number
@@ -266,7 +246,7 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
     carrier,
     supressedOutame,
     source,
-    ipAddress,
+    ip,
     site,
     status,
     list,
@@ -274,9 +254,35 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
     monthlyIncome,
     incomeSource,
     creditScore,
-    wireless,
+    zipCode,
     subId,
     countryCode,
+    activePhone,
+    validStatus,
+    recentAbuse,
+    validMobile,
+    blackListAlliance,
+    clicker,
+    converter,
+    hardBouce,
+    suppressed,
+    platform,
+    message,
+    recentAbuse,
+    fraudScore,
+    lineType,
+    prepaid,
+    risky,
+    city,
+    listID,
+    birthDate,
+    gender,
+    senderID,
+    sendAt,
+    validity,
+    subject,
+    vertical2,
+    vertical3,
   } = req.body
 
   const phoneExists = await PhoneList.findOne({ phone: phone })
@@ -300,7 +306,32 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
     phoneExists.creditScore = creditScore || phoneExists.creditScore
     phoneExists.subId = subId || phoneExists.subId
     phoneExists.countryCode = countryCode || phoneExists.countryCode
-    phoneExists.wireless = wireless || phoneExists.wireless
+    phoneExists.activePhone = activePhone || phoneExists.activePhone
+    phoneExists.validStatus = validStatus || phoneExists.validStatus
+    phoneExists.recentAbuse = recentAbuse || phoneExists.recentAbuse
+    phoneExists.validMobile = validMobile || phoneExists.validMobile
+    phoneExists.blackListAlliance = blackListAlliance || phoneExists.blackListAlliance
+    phoneExists.clicker = clicker || phoneExists.clicker
+    phoneExists.converter = converter || phoneExists.converter
+    phoneExists.hardBouce = hardBouce || phoneExists.hardBouce
+    phoneExists.suppressed = suppressed || phoneExists.suppressed
+    phoneExists.platform = platform || phoneExists.platform
+    phoneExists.message = message || phoneExists.message
+    phoneExists.recentAbuse = recentAbuse || phoneExists.recentAbuse
+    phoneExists.fraudScore = fraudScore || phoneExists.fraudScore
+    phoneExists.lineType = lineType || phoneExists.lineType
+    phoneExists.prepaid = prepaid || phoneExists.prepaid
+    phoneExists.risky = risky || phoneExists.risky
+    phoneExists.city = city || phoneExists.city
+    phoneExists.listID = listID || phoneExists.listID
+    phoneExists.birthDate = birthDate || phoneExists.birthDate
+    phoneExists.gender = gender || phoneExists.gender
+    phoneExists.senderID = senderID || phoneExists.senderID
+    phoneExists.sendAt = sendAt || phoneExists.sendAt
+    phoneExists.validity = validity || phoneExists.validity
+    phoneExists.subject = subject || phoneExists.subject
+    phoneExists.vertical2 = vertical2 || phoneExists.vertical2
+    phoneExists.vertical3 = vertical3 || phoneExists.vertical3
 
     const updatedPhonesList = await phoneExists.save()
     res.status(200).json({
@@ -322,7 +353,31 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
       creditScore: updatedPhonesList.creditScore,
       subId: updatedPhonesList.subId,
       countryCode: updatedPhonesList.countryCode,
-      wireless: updatedPhonesList.wireless,
+      activePhone: updatedPhonesList.activePhone,
+      validStatus: updatedPhonesList.validStatus,
+      recentAbuse: updatedPhonesList.recentAbuse,
+      validMobile: updatedPhonesList.validMobile,
+      blackListAlliance: updatedPhonesList.blackListAlliance,
+      clicker: updatedPhonesList.clicker,
+      converter: updatedPhonesList.converter,
+      hardBouce: updatedPhonesList.hardBouce,
+      suppressed: updatedPhonesList.suppressed,
+      platform: updatedPhonesList.platform,
+      message: updatedPhonesList.message,
+      recentAbuse: updatedPhonesList.recentAbuse,
+      fraudScore: updatedPhonesList.fraudScore,
+      lineType: updatedPhonesList.lineType,
+      prepaid: updatedPhonesList.prepaid,
+      risky: updatedPhonesList.risky,
+      city: updatedPhonesList.city,
+      listID: updatedPhonesList.listID,
+      birthDate: updatedPhonesList.birthDate,
+      senderID: updatedPhonesList.senderID,
+      sendAt: updatedPhonesList.sendAt,
+      validity: updatedPhonesList.validity,
+      subject: updatedPhonesList.subject,
+      vertical2: updatedPhonesList.vertical2,
+      vertical3: updatedPhonesList.vertical3,
     })
   } else {
     const phoneCreated = await PhoneList.create({
@@ -335,7 +390,7 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
       carrier,
       supressedOutame,
       source,
-      ipAddress,
+      ip,
       site,
       status,
       list,
@@ -343,9 +398,35 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
       monthlyIncome,
       incomeSource,
       creditScore,
-      wireless,
+      zipCode,
       subId,
       countryCode,
+      activePhone,
+      validStatus,
+      recentAbuse,
+      validMobile,
+      blackListAlliance,
+      clicker,
+      converter,
+      hardBouce,
+      suppressed,
+      platform,
+      message,
+      recentAbuse,
+      fraudScore,
+      lineType,
+      prepaid,
+      risky,
+      city,
+      listID,
+      birthDate,
+      gender,
+      senderID,
+      sendAt,
+      validity,
+      subject,
+      vertical2,
+      vertical3,
     })
 
     if (phoneCreated) {
@@ -359,7 +440,7 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
         phone: phoneCreated.phone,
         supressedOutame: phoneCreated.supressedOutame,
         source: phoneCreated.source,
-        ipAddress: phoneCreated.ipAddress,
+        ip: phoneCreated.ip,
         site: phoneCreated.site,
         status: phoneCreated.status,
         list: phoneCreated.list,
@@ -370,7 +451,31 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
         creditScore: phoneCreated.creditScore,
         subId: phoneCreated.subId,
         countryCode: phoneCreated.countryCode,
-        wireless: phoneCreated.wireless,
+        activePhone: phoneCreated.activePhone,
+        validStatus: phoneCreated.validStatus,
+        recentAbuse: phoneCreated.recentAbuse,
+        validMobile: phoneCreated.validMobile,
+        blackListAlliance: phoneCreated.blackListAlliance,
+        clicker: phoneCreated.clicker,
+        converter: phoneCreated.converter,
+        hardBouce: phoneCreated.hardBouce,
+        suppressed: phoneCreated.suppressed,
+        platform: phoneCreated.platform,
+        message: phoneCreated.message,
+        recentAbuse: phoneCreated.recentAbuse,
+        fraudScore: phoneCreated.fraudScore,
+        lineType: phoneCreated.lineType,
+        prepaid: phoneCreated.prepaid,
+        risky: phoneCreated.risky,
+        city: phoneCreated.city,
+        listID: phoneCreated.listID,
+        birthDate: phoneCreated.birthDate,
+        senderID: phoneCreated.senderID,
+        sendAt: phoneCreated.sendAt,
+        validity: phoneCreated.validity,
+        subject: phoneCreated.subject,
+        vertical2: phoneCreated.vertical2,
+        vertical3: phoneCreated.vertical3,
       })
     } else {
       res.status(400)

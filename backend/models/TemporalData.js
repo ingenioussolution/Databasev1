@@ -85,7 +85,8 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
       default: false,
     },
     fraudScore: {
-      type: String,
+      type: Number,
+      default: 0.0,
     },
     validMobile: {
       type: Boolean,

@@ -1,13 +1,13 @@
 import express from 'express'
 import {
-  getModelTemporalList,
+  getTemporal,
   registerModelTemporal,
   updateModelTemporal,
-} from '../controllers/modelTemporalController.js'
+} from '../controllers/TemporalDataController.js'
 
 const route = express.Router()
 
-route.get('/', getModelTemporalList)
+route.get('/', getTemporal)
 route.post('/', registerModelTemporal)
 route.put('/:phone', updateModelTemporal)
 

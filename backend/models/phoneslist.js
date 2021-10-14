@@ -70,8 +70,8 @@ const PhoneListSchema = mongoose.Schema(
       type: String,
       enum: ['no', 'poor', 'bad', 'fair', 'good', 'excellent'],
     },
-    subId: { type: String, },
-    vertical: { type: String, },
+    subId: { type: String },
+    vertical: { type: String },
 
     countryCode: {
       type: String,
@@ -79,7 +79,7 @@ const PhoneListSchema = mongoose.Schema(
     platform: {
       type: String,
     },
-    Message: {
+    message: {
       type: String,
     },
     recentAbuse: {
@@ -87,7 +87,8 @@ const PhoneListSchema = mongoose.Schema(
       default: false,
     },
     fraudScore: {
-      type: String,
+      type: Number,
+      default: 0.0,
     },
     validMobile: {
       type: Boolean,
@@ -99,7 +100,6 @@ const PhoneListSchema = mongoose.Schema(
       type: String,
       enum: ['wireless', 'landline', 'VOIP', 'Mobile'],
     },
-
     prepaid: {
       type: Boolean,
     },
@@ -119,7 +119,7 @@ const PhoneListSchema = mongoose.Schema(
       type: String,
       enum: ['m', 'f'],
     },
-    
+
     senderID: {
       type: String,
     },

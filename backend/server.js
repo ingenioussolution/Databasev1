@@ -8,7 +8,7 @@ import { notFound, errorHandler } from './middlewere/errorMiddlewere.js'
 import phoneslistRoutes from './routes/phoneslist.js'
 import phoneRoutes from './routes/phone.js'
 import carrierRoutes from './routes/carrierRouters.js'
-import ModelTemporal from './routes/modelTemporalRouters.js'
+import ModelTemporal from './routes/TemporalDataRouters.js'
 
 dotenv.config()
 connectDB()

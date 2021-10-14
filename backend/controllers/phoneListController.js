@@ -2,11 +2,12 @@
 import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import Phone from '../models/phone.js'
+import axios from 'axios'
 
 // @routes GET /phoneslist
 // @des GET All Phone List
 // @access  Private/User
-export const getPhoneList = asyncHandler(async (req, res, next) => {
+export const getPhoneList1 = asyncHandler(async (req, res, next) => {
   try {
     const listPhones = await PhoneList.find()
     if (!listPhones) throw Error('Not items')
@@ -15,6 +16,163 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
     next(error)
   }
 })
+
+const temporal = []
+// Return Array after filter with BlackList API
+export const getPhoneList = asyncHandler(async (req, res, next) => {
+  try {
+    const listPhones = await PhoneList.find()
+
+    listPhones.reduce(async (prev, phoneNumber) => {
+      await prev
+      const { data } = await axios.get(
+        `https://api.blacklistalliance.com/standard/api/v1/Lookup/key/b128a57d1da0fdaea16f8ab95883a5f2/response/json/phone/${phoneNumber.phone}`
+      )
+
+      if (data.wireless === 1 && data.results === 0) {
+        temporal.push({
+          firstName: phoneNumber.firstName,
+          lastName: phoneNumber.lastName,
+          email: phoneNumber.email,
+          name: phoneNumber.name,
+          phone: phoneNumber.phone,
+          state: phoneNumber.state,
+          carrier: phoneNumber.carrier,
+          supressedOutame: phoneNumber.supressedOutame,
+          source: phoneNumber.source,
+          ip: phoneNumber.ip,
+          site: phoneNumber.site,
+          status: phoneNumber.status === undefined ? '' : phoneNumber.status,
+          list: phoneNumber.list,
+          revenue: phoneNumber.revenue,
+          monthlyIncome: phoneNumber.monthlyIncome,
+          incomeSource: phoneNumber.incomeSource,
+          creditScore: phoneNumber.creditScore,
+          zipCode: phoneNumber.zipCode,
+          subId: phoneNumber.subId,
+          countryCode: phoneNumber.countryCode,
+          activePhone: phoneNumber.activePhone,
+          validStatus: phoneNumber.validStatus,
+          recentAbuse: phoneNumber.recentAbuse,
+          validMobile: data.status === 'success' ? true : false,
+          blackListAlliance: data.results === 0 ? false : true,
+          clicker: phoneNumber.clicker,
+          converter:
+            phoneNumber.converter === undefined ? '' : phoneNumber.converter,
+          hardBouce:
+            phoneNumber.hardBouce === undefined ? '' : phoneNumber.hardBouce,
+          suppressed:
+            phoneNumber.phoneNumber === undefined
+              ? ''
+              : phoneNumber.phoneNumber,
+          platform:
+            phoneNumber.platform === undefined ? '' : phoneNumber.platform,
+          message: phoneNumber.message === undefined ? '' : phoneNumber.message,
+          recentAbuse: phoneNumber.recentAbuse,
+          fraudScore: phoneNumber.fraudScore,
+          lineType: data.wireless === 1 ? 'wireless' : phoneNumber.lineType,
+          prepaid: phoneNumber.prepaid,
+          prepaid: phoneNumber.prepaid,
+          risky: phoneNumber.risky,
+          city: phoneNumber.city,
+          listID: phoneNumber.listID,
+          birthDate: phoneNumber.birthDate,
+          gender: phoneNumber.gender,
+          senderID: phoneNumber.senderID,
+          sendAt: phoneNumber.sendAt,
+          validity: phoneNumber.validity,
+          subject: phoneNumber.subject,
+          vertical2: phoneNumber.vertical2,
+          vertical3: phoneNumber.vertical3,
+        })
+      }
+
+      //const count =  temporal.length
+
+      getApiCarrierData(temporal)
+
+      // console.log('temporal', temporal)
+      //console.log('temporal', temporal.length)
+
+      return Promise.resolve()
+    }, Promise.resolve())
+
+    if (!listPhones) throw Error('Not items')
+    res.status(200).json(listPhones)
+  } catch (error) {
+    next(error)
+  }
+})
+
+
+
+const getApiCarrierData =  (phoneNumber) => {
+
+  ///console.log(phoneNumber);
+  const EmailOversight = []
+  phoneNumber.forEach(async (prev, tmp) => {
+    await prev
+    const { data } = await axios.get(
+      `https://api.emailoversight.com/api/PhoneValidation?apitoken=8466c45b-6467-47d8-a594-4966f8e4461e&phonenumber=${phoneNumber[tmp].phone}`
+    )
+    console.log("data",data);
+    if (data) {
+      EmailOversight.push({
+        firstName: phoneNumber[tmp].firstName,
+        lastName: phoneNumber[tmp].lastName,
+        email: phoneNumber[tmp].email,
+        name: phoneNumber[tmp].name,
+        phone: phoneNumber[tmp].phone,
+        state: phoneNumber[tmp].state,
+        carrier: data.Carrier,
+        supressedOutame: phoneNumber[tmp].supressedOutame,
+        source: phoneNumber[tmp].source,
+        ip: phoneNumber[tmp].ip,
+        site: phoneNumber[tmp].site,
+        status: phoneNumber[tmp].status,
+        list: phoneNumber[tmp].list,
+        revenue: phoneNumber[tmp].revenue,
+        monthlyIncome: phoneNumber[tmp].monthlyIncome,
+        incomeSource: phoneNumber[tmp].incomeSource,
+        creditScore: phoneNumber[tmp].creditScore,
+        zipCode: phoneNumber[tmp].zipCode,
+        subId: phoneNumber[tmp].subId,
+        countryCode: phoneNumber[tmp].countryCode,
+        activePhone: phoneNumber[tmp].activePhone,
+        validStatus: phoneNumber[tmp].validStatus,
+        recentAbuse: phoneNumber[tmp].recentAbuse,
+        validMobile: phoneNumber[tmp].validMobile,
+        blackListAlliance: phoneNumber[tmp].blackListAlliance,
+        clicker: phoneNumber[tmp].clicker,
+        converter: phoneNumber[tmp].converter,
+        hardBouce: phoneNumber[tmp].hardBouce,
+        suppressed: phoneNumber[tmp].phoneNumber,
+        platform: phoneNumber[tmp].platform,
+        message: phoneNumber[tmp].message,
+        recentAbuse: phoneNumber[tmp].recentAbuse,
+        fraudScore: phoneNumber[tmp].fraudScore,
+        lineType: phoneNumber[tmp].lineType,
+        prepaid: phoneNumber[tmp].prepaid,
+        prepaid: phoneNumber[tmp].prepaid,
+        risky: phoneNumber[tmp].risky,
+        city: phoneNumber[tmp].city,
+        listID: phoneNumber[tmp].listID,
+        birthDate: phoneNumber[tmp].birthDate,
+        gender: phoneNumber[tmp].gender,
+        senderID: phoneNumber[tmp].senderID,
+        sendAt: phoneNumber[tmp].sendAt,
+        validity: phoneNumber[tmp].validity,
+        subject: phoneNumber[tmp].subject,
+        vertical2: phoneNumber[tmp].vertical2,
+        vertical3: phoneNumber[tmp].vertical3,
+      })
+    }
+    console.log('EmailOversight', EmailOversight)
+
+    console.log('EmailOversight', EmailOversight.length)
+  })
+}
+
 
 // @routes GET /phoneslist by phone
 // @des GET by Phone Number

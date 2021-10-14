@@ -1,16 +1,50 @@
 // phone list Model
-import ModelTemporal from '../models/modelTemporalCleanData.js'
+import ModelTemporal from '../models/TemporalData.js'
 import asyncHandler from 'express-async-handler'
 
 
 // @routes GET /data-temporal
 // @des GET All Model Temporal List
 // @access  Private/User
-export const getModelTemporalList = asyncHandler(async (req, res, next) => {
+// export const getModelTemporalList = asyncHandler(async (req, res, next) => {
+//   try {
+//     const listPhones = await ModelTemporal.find()
+//     if (!listPhones) throw Error('Not items')
+//     res.status(200).json(listPhones)
+//   } catch (error) {
+//     next(error)
+//   }
+// })
+
+
+export const getTemporal = asyncHandler(async (req, res, next) => {
+  let temporal = []
   try {
     const listPhones = await ModelTemporal.find()
+    console.log("listPhones",listPhones);
+    listPhones.reduce(async (prev, phoneNumber) => {
+      await prev
+      const { data } = await axios.get(
+        `https://api.blacklistalliance.com/standard/api/v1/Lookup/key/b128a57d1da0fdaea16f8ab95883a5f2/response/json/phone/${phoneNumber.phone}`
+      )
+      if (data.wireless === 1 && data.results === 0) {
+        temporal.push = ( {
+          phone: phoneNumber.phone,
+          name: phoneNumber.name,
+          wireless: data.wireless,
+          status: data.status,
+          results: data.results,
+        }) 
+      }
+     
+      return Promise.resolve()
+    }, Promise.resolve())
+
+    console.log("temporal",temporal);
+
     if (!listPhones) throw Error('Not items')
     res.status(200).json(listPhones)
+
   } catch (error) {
     next(error)
   }

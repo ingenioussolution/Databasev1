@@ -36,6 +36,8 @@ const CleanList = () => {
     phoneClean,
   } = listPhoneClean
 
+  const [filterState, setFilterState] = useState(clearFilters)
+
   return (
     <div>
       <h1>New Window</h1>

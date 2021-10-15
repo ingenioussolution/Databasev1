@@ -1,15 +1,15 @@
 // phone list Model
 import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
-import Phone from '../models/phone.js'
+import ModelTemporal from '../models/TemporalData.js'
 import axios from 'axios'
 
 // @routes GET /phoneslist
 // @des GET All Phone List
 // @access  Private/User
-export const getPhoneList1 = asyncHandler(async (req, res, next) => {
+export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
-    const listPhones = await PhoneList.find()
+    const listPhones = await PhoneList.find().limit(100)
     if (!listPhones) throw Error('Not items')
     res.status(200).json(listPhones)
   } catch (error) {
@@ -62,7 +62,6 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
           suppressed: phoneNumber.phoneNumber,
           platform: phoneNumber.platform,
           message: phoneNumber.message,
-          recentAbuse: phoneNumber.recentAbuse,
           fraudScore: phoneNumber.fraudScore,
           lineType: data.wireless === 1 ? 'wireless' : phoneNumber.lineType,
           prepaid: phoneNumber.prepaid,
@@ -132,7 +131,6 @@ const getApiCarrierData = (phoneNumber) => {
         suppressed: phoneNumber[tmp].phoneNumber,
         platform: phoneNumber[tmp].platform,
         message: phoneNumber[tmp].message,
-        recentAbuse: phoneNumber[tmp].recentAbuse,
         fraudScore: phoneNumber[tmp].fraudScore,
         lineType: phoneNumber[tmp].lineType,
         prepaid: phoneNumber[tmp].prepaid,
@@ -268,7 +266,6 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
     suppressed,
     platform,
     message,
-    recentAbuse,
     fraudScore,
     lineType,
     prepaid,
@@ -310,14 +307,14 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
     phoneExists.validStatus = validStatus || phoneExists.validStatus
     phoneExists.recentAbuse = recentAbuse || phoneExists.recentAbuse
     phoneExists.validMobile = validMobile || phoneExists.validMobile
-    phoneExists.blackListAlliance = blackListAlliance || phoneExists.blackListAlliance
+    phoneExists.blackListAlliance =
+      blackListAlliance || phoneExists.blackListAlliance
     phoneExists.clicker = clicker || phoneExists.clicker
     phoneExists.converter = converter || phoneExists.converter
     phoneExists.hardBouce = hardBouce || phoneExists.hardBouce
     phoneExists.suppressed = suppressed || phoneExists.suppressed
     phoneExists.platform = platform || phoneExists.platform
     phoneExists.message = message || phoneExists.message
-    phoneExists.recentAbuse = recentAbuse || phoneExists.recentAbuse
     phoneExists.fraudScore = fraudScore || phoneExists.fraudScore
     phoneExists.lineType = lineType || phoneExists.lineType
     phoneExists.prepaid = prepaid || phoneExists.prepaid
@@ -364,7 +361,6 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
       suppressed: updatedPhonesList.suppressed,
       platform: updatedPhonesList.platform,
       message: updatedPhonesList.message,
-      recentAbuse: updatedPhonesList.recentAbuse,
       fraudScore: updatedPhonesList.fraudScore,
       lineType: updatedPhonesList.lineType,
       prepaid: updatedPhonesList.prepaid,
@@ -412,7 +408,6 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
       suppressed,
       platform,
       message,
-      recentAbuse,
       fraudScore,
       lineType,
       prepaid,
@@ -462,7 +457,6 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
         suppressed: phoneCreated.suppressed,
         platform: phoneCreated.platform,
         message: phoneCreated.message,
-        recentAbuse: phoneCreated.recentAbuse,
         fraudScore: phoneCreated.fraudScore,
         lineType: phoneCreated.lineType,
         prepaid: phoneCreated.prepaid,
@@ -483,18 +477,192 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
     }
   }
 })
+// 540401
+// @routes POST /register-data-temporal
+// Move data th Temporal to PhonesList
+// @des Create or Update an Phones List
+export const AddPhoneList = asyncHandler(async (req, res, next) => {
+  const TemporalData = await ModelTemporal.find().limit(20000)
+  console.log('TemporalData', TemporalData.length)
+  TemporalData.forEach(async (prev, phoneCount) => {
+    await prev
+    const phoneExists = await PhoneList.findOne({
+      phone: TemporalData[phoneCount].phone,
+    })
+    console.log("phoneCount",phoneCount);
+    if (phoneExists) {
+      console.log('phoneExists')
+      phoneExists.firstName =
+        TemporalData[phoneCount].firstName || phoneExists.firstName
+      phoneExists.lastName =
+        TemporalData[phoneCount].lastName || phoneExists.lastName
+      phoneExists.name = TemporalData[phoneCount].name || phoneExists.name
+      phoneExists.email = TemporalData[phoneCount].email || phoneExists.email
+      phoneExists.state = TemporalData[phoneCount].state || phoneExists.state
+      phoneExists.supressedOutame =
+        TemporalData[phoneCount].supressedOutame || phoneExists.supressedOutame
+      phoneExists.source = TemporalData[phoneCount].source || phoneExists.source
+      phoneExists.ip = TemporalData[phoneCount].ip || phoneExists.ip
+      phoneExists.site = TemporalData[phoneCount].site || phoneExists.site
+      phoneExists.status = TemporalData[phoneCount].status || phoneExists.status
+      phoneExists.list = TemporalData[phoneCount].list || phoneExists.list
+      phoneExists.revenue =
+        TemporalData[phoneCount].revenue || phoneExists.revenue
+      phoneExists.monthlyIncome =
+        TemporalData[phoneCount].monthlyIncome || phoneExists.monthlyIncome
+      phoneExists.incomeSource =
+        TemporalData[phoneCount].incomeSource || phoneExists.incomeSource
+      phoneExists.carrier =
+        TemporalData[phoneCount].carrier || phoneExists.carrier
+      phoneExists.creditScore =
+        TemporalData[phoneCount].creditScore || phoneExists.creditScore
+      phoneExists.subId = TemporalData[phoneCount].subId || phoneExists.subId
+      phoneExists.countryCode =
+        TemporalData[phoneCount].countryCode || phoneExists.countryCode
+      phoneExists.activePhone =
+        TemporalData[phoneCount].activePhone || phoneExists.activePhone
+      phoneExists.validStatus =
+        TemporalData[phoneCount].validStatus || phoneExists.validStatus
+      phoneExists.recentAbuse =
+        TemporalData[phoneCount].recentAbuse || phoneExists.recentAbuse
+      phoneExists.validMobile =
+        TemporalData[phoneCount].validMobile || phoneExists.validMobile
+      phoneExists.blackListAlliance =
+        TemporalData[phoneCount].blackListAlliance ||
+        phoneExists.blackListAlliance
+      phoneExists.clicker =
+        TemporalData[phoneCount].clicker || phoneExists.clicker
+      phoneExists.converter =
+        TemporalData[phoneCount].converter || phoneExists.converter
+      phoneExists.hardBouce =
+        TemporalData[phoneCount].hardBouce || phoneExists.hardBouce
+      phoneExists.suppressed =
+        TemporalData[phoneCount].suppressed || phoneExists.suppressed
+      phoneExists.platform =
+        TemporalData[phoneCount].platform || phoneExists.platform
+      phoneExists.message =
+        TemporalData[phoneCount].message || phoneExists.message
+      phoneExists.fraudScore =
+        TemporalData[phoneCount].fraudScore || phoneExists.fraudScore
+      phoneExists.lineType =
+        TemporalData[phoneCount].lineType || phoneExists.lineType
+      phoneExists.prepaid =
+        TemporalData[phoneCount].prepaid || phoneExists.prepaid
+      phoneExists.risky = TemporalData[phoneCount].risky || phoneExists.risky
+      phoneExists.city = TemporalData[phoneCount].city || phoneExists.city
+      phoneExists.listID = TemporalData[phoneCount].listID || phoneExists.listID
+      phoneExists.birthDate =
+        TemporalData[phoneCount].birthDate || phoneExists.birthDate
+      phoneExists.gender = TemporalData[phoneCount].gender || phoneExists.gender
+      phoneExists.senderID =
+        TemporalData[phoneCount].senderID || phoneExists.senderID
+      phoneExists.sendAt = TemporalData[phoneCount].sendAt || phoneExists.sendAt
+      phoneExists.validity =
+        TemporalData[phoneCount].validity || phoneExists.validity
+      phoneExists.subject =
+        TemporalData[phoneCount].subject || phoneExists.subject
+      phoneExists.vertical2 =
+        TemporalData[phoneCount].vertical2 || phoneExists.vertical2
+      phoneExists.vertical3 =
+        TemporalData[phoneCount].vertical3 || phoneExists.vertical3
+
+      await phoneExists.save()
+      //res.status(200).json('Update New Row')
+
+      const DeletePhone = await ModelTemporal.findOne({
+        phone: TemporalData[phoneCount].phone,
+      })
+      if (DeletePhone) {
+        console.log('Phone Update delete')
+        await DeletePhone.remove()
+       
+      } else {
+        res.status(404)
+        throw new Error('Phone not found')
+      }
+    } else {
+      const phoneCreated = await PhoneList.create({
+        firstName: TemporalData[phoneCount].firstName,
+        lastName: TemporalData[phoneCount].lastName,
+        email: TemporalData[phoneCount].email,
+        name: TemporalData[phoneCount].name,
+        phone: TemporalData[phoneCount].phone,
+        state: TemporalData[phoneCount].state,
+        carrier: TemporalData[phoneCount].carrier,
+        supressedOutame: TemporalData[phoneCount].supressedOutame,
+        source: TemporalData[phoneCount].source,
+        ip: TemporalData[phoneCount].ip,
+        site: TemporalData[phoneCount].site,
+        status: TemporalData[phoneCount].status,
+        list: TemporalData[phoneCount].list,
+        revenue: TemporalData[phoneCount].revenue,
+        monthlyIncome: TemporalData[phoneCount].monthlyIncome,
+        incomeSource: TemporalData[phoneCount].incomeSource,
+        creditScore: TemporalData[phoneCount].creditScore,
+        zipCode: TemporalData[phoneCount].zipCode,
+        subId: TemporalData[phoneCount].subId,
+        countryCode: TemporalData[phoneCount].countryCode,
+        activePhone: TemporalData[phoneCount].activePhone,
+        validStatus: TemporalData[phoneCount].validStatus,
+        recentAbuse: TemporalData[phoneCount].recentAbuse,
+        validMobile: TemporalData[phoneCount].validMobile,
+        blackListAlliance: TemporalData[phoneCount].blackListAlliance,
+        clicker: TemporalData[phoneCount].clicker,
+        converter: TemporalData[phoneCount].converter,
+        hardBouce: TemporalData[phoneCount].hardBouce,
+        suppressed: TemporalData[phoneCount].suppressed,
+        platform: TemporalData[phoneCount].platform,
+        message: TemporalData[phoneCount].message,
+        fraudScore: TemporalData[phoneCount].fraudScore,
+        lineType: TemporalData[phoneCount].lineType,
+        prepaid: TemporalData[phoneCount].prepaid,
+        risky: TemporalData[phoneCount].risky,
+        city: TemporalData[phoneCount].city,
+        listID: TemporalData[phoneCount].listID,
+        birthDate: TemporalData[phoneCount].birthDate,
+        gender: TemporalData[phoneCount].gender,
+        senderID: TemporalData[phoneCount].senderID,
+        sendAt: TemporalData[phoneCount].sendAt,
+        validity: TemporalData[phoneCount].validity,
+        subject: TemporalData[phoneCount].subject,
+        vertical2: TemporalData[phoneCount].vertical2,
+        vertical3: TemporalData[phoneCount].vertical3,
+      })
+
+      if (phoneCreated) {
+        console.log('Creating new row')
+
+        const DeletePhoneNew = await ModelTemporal.findOne({
+          phone: TemporalData[phoneCount].phone,
+        })
+        if (DeletePhoneNew) {
+          await DeletePhoneNew.remove()
+          console.log('Phone New delete')
+        } else {
+          res.status(404)
+          throw new Error('Phone not found')
+        }
+
+        // res.status(201).json('Add a New Row')
+      } else {
+        res.status(400)
+        throw new Error('Invalid Phone data')
+      }
+    }
+   
+  })
+})
 
 // @routes PUT /phoneslist:phone
 // @des Update an Phones List
 export const updatePhoneList = async (req, res) => {
   try {
     const updatedPhone = await PhoneList.findOne({ phone: req.params.phone })
-    const { name, carrier, wireless } = req.body
+    const { name, carrier } = req.body
 
     if (updatedPhone) {
       updatedPhone.name = name || updatedPhone.name
       updatedPhone.carrier = carrier || updatedPhone.carrier
-      updatedPhone.wireless = wireless || updatedPhone.wireless
 
       const updatedPhonesList = await updatedPhone.save()
 
@@ -502,7 +670,6 @@ export const updatePhoneList = async (req, res) => {
         _id: updatedPhonesList._id,
         name: updatedPhonesList.name,
         carrier: updatedPhonesList.carrier,
-        wireless: updatedPhonesList.wireless,
       })
     } else {
       res.status(404)

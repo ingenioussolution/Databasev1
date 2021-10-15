@@ -64,7 +64,7 @@ const PhoneListSchema = mongoose.Schema(
     },
     incomeSource: {
       type: String,
-      enum: ['benefits', 'job', 'selfEmployed'],
+      enum: ['Benefits', 'Job Income', 'Self employed'],
     },
     creditScore: {
       type: String,
@@ -98,7 +98,7 @@ const PhoneListSchema = mongoose.Schema(
     },
     lineType: {
       type: String,
-      enum: ['wireless', 'landline', 'VOIP', 'Mobile'],
+      enum: ['wireless', 'landline', 'voip', 'mobile','mobile_prepaid','wifi'],
     },
     prepaid: {
       type: Boolean,
@@ -117,7 +117,7 @@ const PhoneListSchema = mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ['m', 'f'],
+      enum: ['M', 'F'],
     },
 
     senderID: {

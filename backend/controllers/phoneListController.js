@@ -9,7 +9,7 @@ import axios from 'axios'
 // @access  Private/User
 export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
-    const listPhones = await PhoneList.find().limit(100)
+    const listPhones = await (await PhoneList.find().limit(50))
     if (!listPhones) throw Error('Not items')
     res.status(200).json(listPhones)
   } catch (error) {
@@ -477,12 +477,13 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
     }
   }
 })
-// 540401
+
+
 // @routes POST /register-data-temporal
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
-  const TemporalData = await ModelTemporal.find().limit(20000)
+  const TemporalData = await ModelTemporal.find().limit(70000)
   console.log('TemporalData', TemporalData.length)
   TemporalData.forEach(async (prev, phoneCount) => {
     await prev

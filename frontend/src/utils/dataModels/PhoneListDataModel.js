@@ -20,9 +20,9 @@ export const carrier = {
   label: 'Carrier',
 }
 
-export const wireless = {
-  field: 'wireless',
-  label: 'Wireless',
+export const validMobile = {
+  field: 'validMobile',
+  label: 'validMobile',
 }
 
 export const incomeSource = {
@@ -138,15 +138,14 @@ export const createRows = (data) => {
   return rows
 }
 
-const defaultColumns = [
+export const defaultColumns = [
   name,
   email,
   phone,
   carrier,
   monthlyIncome,
-  wireless,
+  validMobile,
   status,
   incomeSource,
 ]
 
-export default defaultColumns

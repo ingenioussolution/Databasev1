@@ -4,6 +4,7 @@ import cors from 'cors'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewere/errorMiddlewere.js'
 
+
 //Routes
 import phoneslistRoutes from './routes/phoneslist.js'
 import phoneRoutes from './routes/phone.js'

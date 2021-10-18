@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-//import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import clsx from 'clsx'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { Grid, Toolbar } from '@material-ui/core'
@@ -37,11 +37,11 @@ const DashboardLayout = ({ dashboardMenuContent, dashboardUrl,dashboardRouter })
   )
 }
 
-// DashboardLayout.propTypes = {
-//   dashboardMenuContent: PropTypes.node.isRequired,
-//   dashboardUrl: PropTypes.string.isRequired,
-//   dashboardRouter: PropTypes.any.isRequired,
-// }
+DashboardLayout.propTypes = {
+  dashboardMenuContent: PropTypes.node.isRequired,
+  dashboardUrl: PropTypes.string.isRequired,
+  dashboardRouter: PropTypes.any.isRequired,
+}
 
 export default DashboardLayout
 

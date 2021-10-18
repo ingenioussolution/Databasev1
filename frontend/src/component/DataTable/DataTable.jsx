@@ -52,6 +52,8 @@ const DataTable = ({
   const [page, setPage] = useState(0)
   const [rowsPerPage, setRowsPerPage] = useState(cantRowsPerPage || 5)
 
+
+  console.log("loading",loading);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
@@ -67,7 +69,7 @@ const DataTable = ({
     setSelected([])
   }
 
-  const handleClick = (event, name) => {
+  const handleClick = (name) => {
     const selectedIndex = selected.indexOf(name)
     let newSelected = []
 

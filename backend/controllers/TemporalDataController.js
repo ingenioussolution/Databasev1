@@ -142,7 +142,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     carrier,
     supressedOutame,
     source,
-    ipAddress,
+    ip,
     site,
     status,
     list,
@@ -150,7 +150,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     monthlyIncome,
     incomeSource,
     creditScore,
-    wireless,
+    zipCode,
     subId,
     countryCode,
     activePhone,
@@ -161,7 +161,25 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     clicker,
     converter,
     hardBouce,
+    suppressed,
+    platform,
+    message,
+    fraudScore,
+    lineType,
+    prepaid,
+    risky,
+    city,
+    listID,
+    birthDate,
+    gender,
+    senderID,
+    sendAt,
+    validity,
+    subject,
+    vertical2,
+    vertical3,
   } = req.body
+
 
   const phoneExists = await ModelTemporal.findOne({ phone: phone })
 
@@ -184,18 +202,33 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     phoneExists.creditScore = creditScore || phoneExists.creditScore
     phoneExists.subId = subId || phoneExists.subId
     phoneExists.countryCode = countryCode || phoneExists.countryCode
-    phoneExists.wireless = wireless || phoneExists.wireless
-
     phoneExists.activePhone = activePhone || phoneExists.activePhone
     phoneExists.validStatus = validStatus || phoneExists.validStatus
-
     phoneExists.recentAbuse = recentAbuse || phoneExists.recentAbuse
     phoneExists.validMobile = validMobile || phoneExists.validMobile
-    phoneExists.blackListAlliance = blackListAlliance || phoneExists.blackListAlliance
-    
+    phoneExists.blackListAlliance =
+      blackListAlliance || phoneExists.blackListAlliance
     phoneExists.clicker = clicker || phoneExists.clicker
     phoneExists.converter = converter || phoneExists.converter
     phoneExists.hardBouce = hardBouce || phoneExists.hardBouce
+    phoneExists.suppressed = suppressed || phoneExists.suppressed
+    phoneExists.platform = platform || phoneExists.platform
+    phoneExists.message = message || phoneExists.message
+    phoneExists.fraudScore = fraudScore || phoneExists.fraudScore
+    phoneExists.lineType = lineType || phoneExists.lineType
+    phoneExists.prepaid = prepaid || phoneExists.prepaid
+    phoneExists.risky = risky || phoneExists.risky
+    phoneExists.city = city || phoneExists.city
+    phoneExists.listID = listID || phoneExists.listID
+    phoneExists.birthDate = birthDate || phoneExists.birthDate
+    phoneExists.gender = gender || phoneExists.gender
+    phoneExists.senderID = senderID || phoneExists.senderID
+    phoneExists.sendAt = sendAt || phoneExists.sendAt
+    phoneExists.validity = validity || phoneExists.validity
+    phoneExists.subject = subject || phoneExists.subject
+    phoneExists.vertical2 = vertical2 || phoneExists.vertical2
+    phoneExists.vertical3 = vertical3 || phoneExists.vertical3
+
 
     const updatedPhonesList = await phoneExists.save()
     res.status(200).json({
@@ -217,50 +250,78 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
       creditScore: updatedPhonesList.creditScore,
       subId: updatedPhonesList.subId,
       countryCode: updatedPhonesList.countryCode,
-      wireless: updatedPhonesList.wireless,
-
       activePhone: updatedPhonesList.activePhone,
       validStatus: updatedPhonesList.validStatus,
       recentAbuse: updatedPhonesList.recentAbuse,
-
       validMobile: updatedPhonesList.validMobile,
       blackListAlliance: updatedPhonesList.blackListAlliance,
       clicker: updatedPhonesList.clicker,
-
       converter: updatedPhonesList.converter,
       hardBouce: updatedPhonesList.hardBouce,
-    
+      suppressed: updatedPhonesList.suppressed,
+      platform: updatedPhonesList.platform,
+      message: updatedPhonesList.message,
+      fraudScore: updatedPhonesList.fraudScore,
+      lineType: updatedPhonesList.lineType,
+      prepaid: updatedPhonesList.prepaid,
+      risky: updatedPhonesList.risky,
+      city: updatedPhonesList.city,
+      listID: updatedPhonesList.listID,
+      birthDate: updatedPhonesList.birthDate,
+      senderID: updatedPhonesList.senderID,
+      sendAt: updatedPhonesList.sendAt,
+      validity: updatedPhonesList.validity,
+      subject: updatedPhonesList.subject,
+      vertical2: updatedPhonesList.vertical2,
+      vertical3: updatedPhonesList.vertical3,
     })
   } else {
     const phoneCreated = await ModelTemporal.create({
-        firstName,
-        lastName,
-        email,
-        name,
-        phone,
-        state,
-        carrier,
-        supressedOutame,
-        source,
-        ipAddress,
-        site,
-        status,
-        list,
-        revenue,
-        monthlyIncome,
-        incomeSource,
-        creditScore,
-        wireless,
-        subId,
-        countryCode,
-        activePhone,
-        validStatus,
-        recentAbuse,
-        validMobile,
-        blackListAlliance,
-        clicker,
-        converter,
-        hardBouce,
+      firstName,
+      lastName,
+      email,
+      name,
+      phone,
+      state,
+      carrier,
+      supressedOutame,
+      source,
+      ip,
+      site,
+      status,
+      list,
+      revenue,
+      monthlyIncome,
+      incomeSource,
+      creditScore,
+      zipCode,
+      subId,
+      countryCode,
+      activePhone,
+      validStatus,
+      recentAbuse,
+      validMobile,
+      blackListAlliance,
+      clicker,
+      converter,
+      hardBouce,
+      suppressed,
+      platform,
+      message,
+      fraudScore,
+      lineType,
+      prepaid,
+      risky,
+      city,
+      listID,
+      birthDate,
+      gender,
+      senderID,
+      sendAt,
+      validity,
+      subject,
+      vertical2,
+      vertical3,
     })
 
     if (phoneCreated) {
@@ -274,7 +335,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
         phone: phoneCreated.phone,
         supressedOutame: phoneCreated.supressedOutame,
         source: phoneCreated.source,
-        ipAddress: phoneCreated.ipAddress,
+        ip: phoneCreated.ip,
         site: phoneCreated.site,
         status: phoneCreated.status,
         list: phoneCreated.list,
@@ -285,18 +346,31 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
         creditScore: phoneCreated.creditScore,
         subId: phoneCreated.subId,
         countryCode: phoneCreated.countryCode,
-        wireless: phoneCreated.wireless,
-
         activePhone: phoneCreated.activePhone,
         validStatus: phoneCreated.validStatus,
         recentAbuse: phoneCreated.recentAbuse,
-  
         validMobile: phoneCreated.validMobile,
         blackListAlliance: phoneCreated.blackListAlliance,
         clicker: phoneCreated.clicker,
-  
         converter: phoneCreated.converter,
         hardBouce: phoneCreated.hardBouce,
+        suppressed: phoneCreated.suppressed,
+        platform: phoneCreated.platform,
+        message: phoneCreated.message,
+        fraudScore: phoneCreated.fraudScore,
+        lineType: phoneCreated.lineType,
+        prepaid: phoneCreated.prepaid,
+        risky: phoneCreated.risky,
+        city: phoneCreated.city,
+        listID: phoneCreated.listID,
+        birthDate: phoneCreated.birthDate,
+        senderID: phoneCreated.senderID,
+        sendAt: phoneCreated.sendAt,
+        validity: phoneCreated.validity,
+        subject: phoneCreated.subject,
+        vertical2: phoneCreated.vertical2,
+        vertical3: phoneCreated.vertical3,
+
       })
     } else {
       res.status(400)

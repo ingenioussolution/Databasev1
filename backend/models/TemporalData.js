@@ -6,6 +6,8 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      min: 9,
+      max: 10,
     },
     carrier: {
       type: String,
@@ -55,13 +57,14 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     state: {
       type: String,
     },
+
     monthlyIncome: {
       type: Number,
       default: 0.0,
     },
     incomeSource: {
       type: String,
-      enum: ['benefits', 'job', 'selfEmployed'],
+      enum: ['Benefits', 'Job Income', 'Self employed'],
     },
     creditScore: {
       type: String,
@@ -73,7 +76,6 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     countryCode: {
       type: String,
     },
-
     platform: {
       type: String,
     },
@@ -96,9 +98,8 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     lineType: {
       type: String,
-      enum: ['wireless', 'landline', 'VOIP', 'Mobile'],
+      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi',null],
     },
-
     prepaid: {
       type: Boolean,
     },
@@ -116,8 +117,9 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ['m', 'f'],
+      enum: ['M', 'F'],
     },
+
     senderID: {
       type: String,
     },

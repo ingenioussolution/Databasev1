@@ -6,11 +6,13 @@ const PhoneListSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
       min: 9,
       max: 10,
     },
     carrier: {
       type: String,
+      trim: true,
     },
     clicker: {
       type: Boolean,
@@ -27,7 +29,7 @@ const PhoneListSchema = mongoose.Schema(
     suppressed: {
       type: Boolean,
     },
-    list: { type: String },
+    list: { type: String,trim: true, },
     source: { type: String },
     email: {
       type: String,
@@ -49,7 +51,9 @@ const PhoneListSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['sold', 'reject', 'notQaulifed'],
+      enum: ['sold', 'reject', 'notqaulifed'],
+      lowercase: true,
+      trim: true,
     },
     zipCode: {
       type: String,
@@ -69,6 +73,8 @@ const PhoneListSchema = mongoose.Schema(
     creditScore: {
       type: String,
       enum: ['no', 'poor', 'bad', 'fair', 'good', 'excellent'],
+      lowercase: true,
+      trim: true,
     },
     subId: { type: String },
     vertical: { type: String },
@@ -98,7 +104,8 @@ const PhoneListSchema = mongoose.Schema(
     },
     lineType: {
       type: String,
-      enum: ['wireless', 'landline', 'voip', 'mobile','mobile_prepaid','wifi'],
+      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi','pager','lookup',null],
+      trim: true,
     },
     prepaid: {
       type: Boolean,
@@ -118,6 +125,7 @@ const PhoneListSchema = mongoose.Schema(
     gender: {
       type: String,
       enum: ['M', 'F'],
+      trim: true,
     },
 
     senderID: {

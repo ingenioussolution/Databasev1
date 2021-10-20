@@ -4,12 +4,14 @@ import asyncHandler from 'express-async-handler'
 import ModelTemporal from '../models/TemporalData.js'
 import axios from 'axios'
 
+import EventStream from 'event-stream'
+
 // @routes GET /phoneslist
 // @des GET All Phone List
 // @access  Private/User
 export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
-    const listPhones = await await PhoneList.find().limit(50)
+    const listPhones = await PhoneList.find().limit(10)
     if (!listPhones) throw Error('Not items')
     res.status(200).json(listPhones)
   } catch (error) {

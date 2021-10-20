@@ -27,8 +27,6 @@ const DashboardHome = () => {
 
   //const COLORS = ['#ff9800', '#0277bd']
 
-  //------------------------------
-
   return (
     <Grid container justifyContent="space-around" spacing={3}>
       <Snackbar
@@ -40,12 +38,12 @@ const DashboardHome = () => {
 
       <Grid item xs={12} md={6}>
         <Card>
-          <CardHeader title={'Common'} />
+          <CardHeader title={'Filters'} />
           <CardContent>
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={4}>
                 <DashboardItem
-                  title={'Active talents'}
+                  title={'Active Mobile'}
                   icon={<FaUserFriends />}
                   detailColor="colorLight"
                   bgColor="green"
@@ -59,14 +57,14 @@ const DashboardHome = () => {
                   icon={<FaUserFriends />}
                   detailColor="colorLight"
                   bgColor="red"
-                  value=""
+                  value={'1000'}
                   to="#"
                 />
               </Grid>
 
               <Grid item xs={12} sm={6} md={4}>
                 <DashboardItem
-                  title={'Black List Listen'}
+                  title={'Black List'}
                   icon={<FaTruck />}
                   value={'4000'}
                   detailColor="colorLight"

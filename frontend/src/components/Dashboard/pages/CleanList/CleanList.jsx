@@ -43,8 +43,19 @@ const CleanList = () => {
 
   const filterDB = (phoneClean) => {
     return phoneClean?.filter((phone) => {
-      if (filterState.carrier && !phone.carrier.includes(filterState.carrier))
+      if (filterState.phone && !phone.phone.includes(filterState.phone))
         return false
+      if (filterState.revenue !== '' && phone.revenue !== filterState.revenue)
+        return false
+
+      if (filterState.revenue !== '' && phone.revenue !== filterState.revenue)
+        return false
+      if (
+        filterState.clicker !== '' &&
+        phone.clicker !== filterState.clicker
+      )
+        return false
+
       return true
     })
   }
@@ -98,24 +109,23 @@ const CleanList = () => {
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <TextField
-          margin="normal"
-          label="Search by Revenue"
-          // type='carrier'
-          // name='carrier'
-          fullWidth
-          className="dashboard-input"
-          variant="outlined"
-          onChange={handleFilterChange}
-          //value={filterState.wireless || ''}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <FaSearch />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="revenue-label">Revenue</InputLabel>
+          <Select
+            labelId="revenue-label"
+            name="revenue"
+            onChange={handleFilterChange}
+            label="Revenue"
+            value={filterState.revenue}
+          >
+            <MenuItem value={''}>
+              <em>All</em>
+            </MenuItem>
+            <MenuItem value={'True'}>True</MenuItem>
+            <MenuItem value={'False'}>False</MenuItem>
+            <MenuItem value={''}>Null</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
 
       <Grid item xs={12} md={4}>
@@ -143,17 +153,18 @@ const CleanList = () => {
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="clicker-label">Clicker</InputLabel>
           <Select
-            //  labelId='clicker-label'
-            // name='clicker'
+            labelId='clicker-label'
+            name='clicker'
             onChange={handleFilterChange}
             label="clicker"
-            // value={filterState.clicker}
+            value={filterState.clicker}
           >
             <MenuItem value={''}>
               <em>All</em>
             </MenuItem>
             <MenuItem value={'True'}>True</MenuItem>
             <MenuItem value={'False'}>False</MenuItem>
+            <MenuItem value={''}>Null</MenuItem>
           </Select>
         </FormControl>
       </Grid>

@@ -19,6 +19,7 @@ import {
 
 import {
   FaFileDownload,
+  FaFileUpload,
   // FaPlusCircle,
   // FaChevronDown,
   // FaSyncAlt,
@@ -136,6 +137,18 @@ const DataTableToolbar = ({
           justifyContent='flex-end'
           className={classes.actionsContainer}
         >
+        <Grid item xs={12} sm={3} md={2}>
+            
+              <Button
+                variant='outlined'
+                className={commons.secondaryBtn}
+                endIcon={<FaFileUpload />}
+                disabled
+              >
+                Upload
+              </Button>
+           
+          </Grid>
           <Grid item xs={12} sm={3} md={2}>
             <CsvDownloader
               datas={data}

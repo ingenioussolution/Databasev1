@@ -1,30 +1,22 @@
 import React from 'react'
-import { useLocation, useRouteMatch, Link } from 'react-router-dom'
-import {
-  List,
-  ListItem,
-  ListItemIcon,
-  ListItemText,
-
-} from '@material-ui/core'
+import { useLocation, Link } from 'react-router-dom'
+import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 
 import clsx from 'clsx'
 import { FaListUl } from 'react-icons/fa'
 
-import useStyles from './styles'
+//import useStyles from './styles'
 
-const Navigation = () => {
-  const classes = useStyles()
-  const { path } = useRouteMatch()
+const NavigationLayout = () => {
+  //const classes = useStyles()
   const location = useLocation()
   const { pathname } = location
-
 
   return (
     <React.Fragment>
       <List>
-        <Link to={`${path}`} style={{ textDecoration: 'none' }}>
+        <Link to={'/dashboard'} style={{ textDecoration: 'none' }}>
           <ListItem
             button
             key="dashboard"
@@ -39,12 +31,14 @@ const Navigation = () => {
           </ListItem>
         </Link>
 
-        <Link to={`${path}/list-data`} >
+        <Link to={'/dashboard/list-data'}>
           <ListItem
-            button  key='dashboard-listData'
+            button
+            key="dashboard-listData"
             className={clsx({
-              active:pathname === `${path}/list-data`,
-            })}>
+              active: pathname === '/dashboard/list-data',
+            })}
+          >
             <ListItemIcon>
               <FaListUl />
             </ListItemIcon>
@@ -56,4 +50,4 @@ const Navigation = () => {
   )
 }
 
-export default Navigation
+export default NavigationLayout

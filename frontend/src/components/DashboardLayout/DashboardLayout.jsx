@@ -14,9 +14,7 @@ const DashboardLayout = ({
   const classes = useStyles()
   const today = new Date()
 
-  const login = true
   const [drawerClosed, setDraweClosed] = useState(false)
-
   return  (
     <div className={clsx('dashboard', classes.root)}>
       <CssBaseline />
@@ -52,4 +50,3 @@ DashboardLayout.propTypes = {
 
 export default DashboardLayout
 
-// {React.createElement(dashboardRouter)}

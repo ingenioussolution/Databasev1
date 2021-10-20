@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-//import Swal from 'sweetalert2/src/sweetalert2.js'
 import {
   FormControl,
   Grid,
@@ -16,7 +15,7 @@ import { useDispatch, useSelector } from 'react-redux'
 import DataTable from '../../../DataTable/DataTable'
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
 import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
-import {listPhoneClean } from '../../../../actions/phoneListCleanActions'
+import { listPhoneClean } from '../../../../actions/phoneListCleanActions'
 import Message from '../../../message/Message'
 
 import useStyles from './styles'
@@ -35,31 +34,27 @@ const CleanList = () => {
     phoneClean,
   } = listPhone
 
-  console.log(phoneClean);
+  console.log(phoneClean)
   const clearFilters = {
-    wireless: '',
+    status: '',
   }
 
   const [filterState, setFilterState] = useState(clearFilters)
 
   const filterDB = (phoneClean) => {
     return phoneClean?.filter((phone) => {
-      if (
-        filterState.carrier &&
-        !phone.carrier.includes(filterState.carrier)
-      )
+      if (filterState.carrier && !phone.carrier.includes(filterState.carrier))
         return false
       return true
     })
   }
 
-  // const handleRefresh = () => {
-  //   dispatch(listPhoneClean())
-  //   setFilterState(clearFilters)
-  //   history.push('/clean-list')
-  // }
+  const handleRefresh = () => {
+    dispatch(listPhoneClean())
+    setFilterState(clearFilters)
+    history.push('/dashboard/list-data')
+  }
 
-  
   const handleFilterChange = (evt) => {
     const { value, name } = evt.target
     setFilterState({ ...filterState, [name]: value })
@@ -67,7 +62,6 @@ const CleanList = () => {
 
   useEffect(() => {
     document.title = 'Data Base List | Ingenious Solution Group'
-
     dispatch(listPhoneClean())
   }, [dispatch, history])
 
@@ -84,18 +78,18 @@ const CleanList = () => {
     <Grid container spacing={4} className={classes.filtersSection}>
       <Grid item xs={12} md={4}>
         <TextField
-          margin='normal'
-          label='Search by Carrier'
+          margin="normal"
+          label="Search by Carrier"
           //type='carrier'
-         // name='carrier'
+          // name='carrier'
           fullWidth
-          className='dashboard-input'
-          variant='outlined'
+          className="dashboard-input"
+          variant="outlined"
           onChange={handleFilterChange}
-         // value={filterState.carrier || ''}
+          // value={filterState.carrier || ''}
           InputProps={{
             startAdornment: (
-              <InputAdornment position='start'>
+              <InputAdornment position="start">
                 <FaSearch />
               </InputAdornment>
             ),
@@ -105,18 +99,18 @@ const CleanList = () => {
 
       <Grid item xs={12} md={4}>
         <TextField
-          margin='normal'
-          label='Search by Revenue'
-         // type='carrier'
-         // name='carrier'
+          margin="normal"
+          label="Search by Revenue"
+          // type='carrier'
+          // name='carrier'
           fullWidth
-          className='dashboard-input'
-          variant='outlined'
+          className="dashboard-input"
+          variant="outlined"
           onChange={handleFilterChange}
           //value={filterState.wireless || ''}
           InputProps={{
             startAdornment: (
-              <InputAdornment position='start'>
+              <InputAdornment position="start">
                 <FaSearch />
               </InputAdornment>
             ),
@@ -126,18 +120,18 @@ const CleanList = () => {
 
       <Grid item xs={12} md={4}>
         <TextField
-          margin='normal'
-          label='Search by Credit Score'
-        //  type='carrier'
-        //  name='carrier'
+          margin="normal"
+          label="Search by Credit Score"
+          //  type='carrier'
+          //  name='carrier'
           fullWidth
-          className='dashboard-input'
-          variant='outlined'
+          className="dashboard-input"
+          variant="outlined"
           onChange={handleFilterChange}
-         // value={filterState.wireless || ''}
+          // value={filterState.wireless || ''}
           InputProps={{
             startAdornment: (
-              <InputAdornment position='start'>
+              <InputAdornment position="start">
                 <FaSearch />
               </InputAdornment>
             ),
@@ -146,14 +140,14 @@ const CleanList = () => {
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <FormControl variant='outlined' className={classes.formControl}>
-          <InputLabel id='clicker-label'>Clicker</InputLabel>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="clicker-label">Clicker</InputLabel>
           <Select
-          //  labelId='clicker-label'
-           // name='clicker'
+            //  labelId='clicker-label'
+            // name='clicker'
             onChange={handleFilterChange}
-            label='clicker'
-           // value={filterState.clicker}
+            label="clicker"
+            // value={filterState.clicker}
           >
             <MenuItem value={''}>
               <em>All</em>
@@ -164,15 +158,15 @@ const CleanList = () => {
         </FormControl>
       </Grid>
       <Grid item xs={12} md={4}>
-        <FormControl variant='outlined' className={classes.formControl}>
-          <InputLabel id='incomeSource-label'>Income Source</InputLabel>
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="incomeSource-label">Income Source</InputLabel>
           <Select
-           // labelId='incomeSource-label'
-            name='incomeSource'
+            // labelId='incomeSource-label'
+            name="incomeSource"
             onChange={handleFilterChange}
-           // label='incomeSource'
-            //value={filterState.incomeSource} 
-            >
+            // label='incomeSource'
+            //value={filterState.incomeSource}
+          >
             <MenuItem value={''}>
               <em>All</em>
             </MenuItem>
@@ -182,27 +176,25 @@ const CleanList = () => {
         </FormControl>
       </Grid>
       <Grid item xs={12} md={4}>
-      <FormControl variant='outlined' className={classes.formControl}>
-        <InputLabel id='lineType-label'>Line Type</InputLabel>
-        <Select
-          //labelId='lineType-label'
-          //name='lineType'
-          onChange={handleFilterChange}
-          label='lineType'
-         // value={filterState.lineType}
-        >
-          <MenuItem value={''}>
-            <em>All</em>
-          </MenuItem>
-          <MenuItem value={'True'}>True</MenuItem>
-          <MenuItem value={'False'}>False</MenuItem>
-        </Select>
-      </FormControl>
-    </Grid>
-
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="lineType-label">Line Type</InputLabel>
+          <Select
+            //labelId='lineType-label'
+            //name='lineType'
+            onChange={handleFilterChange}
+            label="lineType"
+            // value={filterState.lineType}
+          >
+            <MenuItem value={''}>
+              <em>All</em>
+            </MenuItem>
+            <MenuItem value={'True'}>True</MenuItem>
+            <MenuItem value={'False'}>False</MenuItem>
+          </Select>
+        </FormControl>
+      </Grid>
     </Grid>
   )
-
 
   return (
     <Grid container item xs={12}>
@@ -211,13 +203,7 @@ const CleanList = () => {
         autoHideDuration={5000}
         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       >
-        <Message severity="error"></Message>
-      </Snackbar>
-      <Snackbar
-        autoHideDuration={5000}
-        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      >
-        <Message severity="success"></Message>
+        <Message severity="error">{errorListClean}</Message>
       </Snackbar>
       <DataTable
         title="Ingenious Solution Group"
@@ -226,7 +212,8 @@ const CleanList = () => {
         rows={createRows(filterDB(phoneClean))}
         cantRowsPerPage={10}
         rowsIdentity="phone"
-         filters={filters}
+        handleRefresh={() => handleRefresh()}
+        filters={filters}
       />
     </Grid>
   )

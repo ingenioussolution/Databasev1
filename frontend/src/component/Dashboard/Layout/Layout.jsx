@@ -1,5 +1,5 @@
 import React from 'react'
-import Navigation from '../Navigation/Navigation'
+import NavigationLayout from '../NavigationLayout/NavigationLayout'
 import DashboardLayout from '../../DashboardLayout/DashboardLayout'
 import DashBoardRouter from '../RouterDashboard/RouterDashboard'
 
@@ -7,10 +7,9 @@ const Layout = () => {
  
   return (
     <DashboardLayout
-      dashboardMenuContent={<Navigation />}
+      dashboardMenuContent={<NavigationLayout/>}
       dashboardUrl='/dashboard'
       dashboardRouter={DashBoardRouter}
-     
     />
   )
 }

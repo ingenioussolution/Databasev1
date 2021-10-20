@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 export default makeStyles((theme) => ({
   collapse: {
     borderLeft: `1px solid ${theme.palette.dashboard.mainLight}`,
-    marginLeft: theme.spacing(6),
+    marginLeft: theme.spacing(4),
   },
   nested: {
     '&:hover': {

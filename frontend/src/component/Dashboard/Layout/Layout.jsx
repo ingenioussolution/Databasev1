@@ -8,8 +8,9 @@ const Layout = () => {
   return (
     <DashboardLayout
       dashboardMenuContent={<Navigation />}
-      dashboardUrl="/clean-list"
+      dashboardUrl='/dashboard'
       dashboardRouter={DashBoardRouter}
+     
     />
   )
 }

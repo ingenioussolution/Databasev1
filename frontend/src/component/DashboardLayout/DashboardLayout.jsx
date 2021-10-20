@@ -6,7 +6,7 @@ import { Grid, Toolbar } from '@material-ui/core'
 import DashBoardNavigation from '../DashboardNavigation/DashboardNavigation'
 import useStyles from './styles'
 
-const DashboardLayout = ({ dashboardMenuContent, dashboardUrl,dashboardRouter }) => {
+const DashboardLayout = ({ dashboardMenuContent, dashboardUrl,dashboardRouter}) => {
   const classes = useStyles()
   const today = new Date()
 
@@ -19,6 +19,7 @@ const DashboardLayout = ({ dashboardMenuContent, dashboardUrl,dashboardRouter })
         onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
         drawerContent={dashboardMenuContent}
         dashboardUrl={dashboardUrl}
+        dashboardRouter={dashboardRouter}
       />
       <div className={classes.sectionWrapper}>
         <Toolbar />
@@ -26,8 +27,11 @@ const DashboardLayout = ({ dashboardMenuContent, dashboardUrl,dashboardRouter })
           className={clsx(classes.mainSection, {
             expanded: drawerClosed,
           })}
-        ></main>
+        >
+        
         {React.createElement(dashboardRouter)}
+        </main>
+        
         <Grid item container className={classes.copyright} xs={11} md={12}>
           Copyright {today.getFullYear()} Ingenious Solution DB. All rights
           reserved. | &nbsp;Designed by: Ingenious Solution Group
@@ -38,11 +42,12 @@ const DashboardLayout = ({ dashboardMenuContent, dashboardUrl,dashboardRouter })
 }
 
 DashboardLayout.propTypes = {
+  dashboardRouter: PropTypes.any.isRequired,
   dashboardMenuContent: PropTypes.node.isRequired,
   dashboardUrl: PropTypes.string.isRequired,
-  dashboardRouter: PropTypes.any.isRequired,
+  
+ 
 }
 
 export default DashboardLayout
 
-// {React.createElement(dashboardRouter)}

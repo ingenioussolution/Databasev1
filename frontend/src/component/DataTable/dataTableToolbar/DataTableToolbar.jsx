@@ -17,12 +17,12 @@ import {
   MenuList,
 } from '@material-ui/core'
 
-// import {
-//   FaFileDownload,
-//   FaPlusCircle,
-//   FaChevronDown,
-//   FaSyncAlt,
-// } from 'react-icons/fa'
+import {
+  FaFileDownload,
+  // FaPlusCircle,
+  // FaChevronDown,
+  // FaSyncAlt,
+} from 'react-icons/fa'
 
 import CsvDownloader from 'react-csv-downloader'
 
@@ -147,7 +147,7 @@ const DataTableToolbar = ({
               <Button
                 variant='outlined'
                 className={commons.secondaryBtn}
-                // endIcon={<FaFileDownload />}
+                endIcon={<FaFileDownload />}
               >
                 Export
               </Button>

@@ -1,8 +1,8 @@
-//import { dollarUS } from '../format'
+import { dollarUS } from '../format'
 
 export const phone = {
   field: 'phone',
-  label: 'Phone Number',
+  label: 'Phone',
 }
 export const name = {
   field: 'name',
@@ -20,18 +20,20 @@ export const carrier = {
   label: 'Carrier',
 }
 
-export const validMobile = {
-  field: 'validMobile',
-  label: 'validMobile',
+export const blackListAlliance = {
+  field: 'blackListAlliance',
+  label: 'Black List',
+  align: 'center'
 }
 
 export const incomeSource = {
   field: 'incomeSource',
-  label: 'Monthly Income($)',
+  label: 'Income Source',
 }
 export const monthlyIncome = {
   field: 'monthlyIncome',
-  label: 'Income Source',
+  label: 'Monthly Income($)',
+  align: 'right'
 }
 
 export const status = {
@@ -59,6 +61,16 @@ export const revenue = {
 export const creditScore = {
   field: 'creditScore',
   label: 'Credit Score',
+}
+
+
+export const formatBlackList = (blackListAlliance) => {
+  switch (blackListAlliance.toString()) {
+    case 'true':
+      return <span className='text-success'>{'true'}</span>
+    default:
+      return <span className='text-false'>{blackListAlliance}</span>
+  }
 }
 
 export const formatStatus = (status) => {
@@ -114,6 +126,10 @@ export const createRows = (data) => {
             case 'name': {
               return `${el.firstName} ${el.lastName}`
             }
+
+            case 'blackListAlliance': {
+              return formatBlackList(el.blackListAlliance)
+            }
             case 'status': {
               return formatStatus(el.status)
             }
@@ -123,9 +139,9 @@ export const createRows = (data) => {
             case 'creditScore': {
               return formatCreditScore(el.creditScore)
             }
-            // case 'monthlyIncome': {
-            //   return dollarUS.format(el.monthlyIncome)
-            // }
+            case 'monthlyIncome': {
+              return dollarUS.format(el.monthlyIncome)
+            }
             default:
               return el[columnName]
           }
@@ -139,12 +155,12 @@ export const createRows = (data) => {
 }
 
 export const defaultColumns = [
-  name,
-  email,
   phone,
   carrier,
+  name,
+  email,
   monthlyIncome,
-  validMobile,
+  blackListAlliance,
   status,
   incomeSource,
 ]

@@ -8,7 +8,7 @@ const customTheme = createTheme({
       dark: '#000000',
       text: '#888888',
       bgLight: '#ffffff',
-      lineLight: '#cfcfcf',
+      lineLight: '',
     },
     secondary: {
       main: '#f03c6b',

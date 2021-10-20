@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
-import Swal from 'sweetalert2/src/sweetalert2.js'
+//import Swal from 'sweetalert2/src/sweetalert2.js'
 import {
   FormControl,
   Grid,
@@ -36,7 +36,6 @@ const CleanList = () => {
   } = listPhone
 
   console.log(phoneClean);
-
   const clearFilters = {
     wireless: '',
   }
@@ -54,11 +53,11 @@ const CleanList = () => {
     })
   }
 
-  const handleRefresh = () => {
-    dispatch(listPhoneClean())
-    setFilterState(clearFilters)
-    history.push('/clean-list')
-  }
+  // const handleRefresh = () => {
+  //   dispatch(listPhoneClean())
+  //   setFilterState(clearFilters)
+  //   history.push('/clean-list')
+  // }
 
   
   const handleFilterChange = (evt) => {
@@ -227,10 +226,6 @@ const CleanList = () => {
         rows={createRows(filterDB(phoneClean))}
         cantRowsPerPage={10}
         rowsIdentity="phone"
-        //addHandler={addHandler}
-        //handleRefresh={() => handleRefresh()}
-        //editHandler={(id) => editHandler(id)}
-        // deleteHandler={(id) => deleteHandler(id)}
          filters={filters}
       />
     </Grid>

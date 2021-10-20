@@ -63,7 +63,7 @@ const DashboardNavigation = ({
                 src={LogoImg}
                 alt='logo'
               />
-              <h1>ISG-DB</h1>
+               <h3>ISG-DB</h3>
                 </Link>
               </Grid>
             </Grid>
@@ -75,7 +75,7 @@ const DashboardNavigation = ({
               justifyContent='space-between'
             >
             <img className={classes.logo} src={LogoImg} alt='logo' />
-            <h1>ISG-DB</h1>
+            <h3>ISG-DB</h3>
               <IconButton
                 color='inherit'
                 aria-label='drawerOpen drawer'

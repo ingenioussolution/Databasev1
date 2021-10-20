@@ -7,12 +7,11 @@ import {
 } from 'react-router-dom'
 import Layout from './component/Dashboard/Layout/Layout'
 
-// <Route path="/" exact component={DashboardLayout} />
 const App = () => {
   return (
     <Router>
       <Switch>
-        <Route path="/clean-list" exact component={Layout} />
+        <Route path='/dashboard' exact component={Layout} />
       </Switch>
     </Router>
   )

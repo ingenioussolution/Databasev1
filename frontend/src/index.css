@@ -6,12 +6,13 @@
 }
 
 body {
+  font-family: 'Dosis', sans-serif !important;
+  font-size: clamp(0.8em, 0.94vw, 1em);
+  font-weight: 400;
+  padding: 0;
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+  color: 'black';
+  background-color: #ffffff !important;
 }
 
 .full-wrapper {
@@ -20,7 +21,368 @@ body {
   overflow: hidden;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+h1 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(4.8em, 4.17vw, 5em);
+  line-height: 120%;
+  font-weight: 900;
+}
+
+h1.big {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(7.6em, 6.51vw, 7.8em);
+  line-height: 120%;
+  font-weight: 900;
+}
+
+h2 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(2.925em, 2.6vw, 3.125em);
+  line-height: 120%;
+  font-weight: 900;
+}
+
+.h2-small {
+  font-family: 'Dosis', sans-serif !important;
+  font-size: clamp(1.175em, 1.15vw, 1.375em);
+  line-height: 120%;
+  font-weight: 500;
+}
+
+h3 {
+  font-family: 'Dosis', sans-serif;
+  font-size: clamp(1.8em, 1.67vw, 2em);
+  line-height: 120%;
+  font-weight: 500;
+ 
+}
+
+h4 {
+  font-family: 'Playfair Display', serif;
+  font-size: clamp(1.48em, 1.45vw, 1.68em);
+  line-height: 140%;
+  margin-bottom: 10px;
+}
+
+h5 {
+  font-family: 'Dosis', sans-serif;
+  font-size: clamp(1.8em, 1.67vw, 2em);
+  line-height: 120%;
+  font-weight: 400;
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+/* 1.375em */
+h6 {
+  font-family: 'Dosis', sans-serif;
+  font-size: clamp(1.175em, 1.25vw,1.375em);
+  line-height: 120%;
+  font-weight: 500;
+  margin-bottom: 5px;
+}
+
+ul li {
+  font-family: 'Dosis', sans-serif;
+}
+
+.li-last {
+  margin-bottom: 20px !important;
+}
+
+.h6-height {
+  line-height: 180%;
+  font-weight: 600;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+
+p {
+  font-size: clamp(0.9em, 0.94vw, 1em);
+  line-height: 160%;
+  margin-bottom: 0px;
+}
+
+.p-small {
+  font-size: clamp(0.67em 0.74vw 0.87em);
+}
+
+.p-big {
+  font-size: clamp(0.9em, 1.3vw, 2em) !important;
+}
+
+.p-last{
+  margin-top: 10px;
+  margin-bottom: 30px;
+}
+
+.full-width {
+  width: 100%;
+}
+.clickable {
+  cursor: pointer;
+}
+
+.text-success {
+  border-radius: 16px;
+  padding: .6vw;
+  background: #00e676;
+}
+
+.text-false{
+  border-radius: 16px;
+  padding: .6vw;
+  background: #ff0000;
+}
+
+.text-warning {
+  border-radius: 16px;
+  padding: .6vw;
+  background: #ffe57f;
+}
+
+.text-error {
+  border-radius: 16px;
+  padding: .6vw;
+  background: #f44336;
+}
+
+@media (max-width: 1023px) {
+  .text-success,
+  .text-warning,
+  .text-error {
+    padding: 1.5vw;
+  }
+}
+
+.high-z-index {
+  z-index: 9999 !important;
+}
+
+.dot-gradient {
+  font-family: 'Dosis', sans-serif;
+  background: -webkit-linear-gradient( #f58031 , #f03c6b);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  margin-left: 5px;
+}
+
+/* Material UI classes */
+
+.front-sidebar .MuiDrawer-paper {
+  width: 100%;
+  max-width: 36.97vw;
+}
+@media (max-width: 767px) {
+  .front-sidebar .MuiDrawer-paper {
+    width: 100%;
+    max-width: 56.97vw;
+  }
+}
+@media (max-width: 480px) {
+  .front-sidebar .MuiDrawer-paper {
+    width: 100%;
+    max-width: 76.97vw;
+  }
+}
+@media (max-width: 375px) {
+  .front-sidebar .MuiDrawer-paper {
+    width: 100%;
+    max-width: 100vw;
+  }
+}
+
+.MuiInputBase-input {
+  font-family: 'Dosis', sans-serif !important;
+  font-weight: 400;
+}
+.MuiFormLabel-root {
+  font-family: 'Dosis', sans-serif !important;
+  font-weight: 500 !important;
+  color: black !important;
+}
+
+.MuiInput-underline:before {
+  border-bottom: 1px solid black !important;
+}
+
+#white_inputs .MuiInput-underline:before {
+  border-bottom: 1px solid white !important;
+}
+
+#white_inputs .MuiFormLabel-root {
+  font-family: 'Dosis', sans-serif !important;
+  font-weight: 500 !important;
+  color: white !important;
+}
+
+#white_inputs .MuiInput-underline:after {
+  border-bottom: 2px solid #f03c6b !important;
+}
+#white_inputs .MuiFormLabel-root.Mui-focused {
+  color: #f03c6b !important;
+}
+#white_inputs .MuiInputBase-input {
+  font-family: 'Dosis', sans-serif !important;
+  font-weight: 400;
+  color: white;
+}
+
+#white_inputs .MuiTypography-colorTextSecondary {
+  color: white !important;
+}
+
+#about-bio .MuiFilledInput-root {
+  background-color: #ffffff !important;
+}
+
+.MuiSvgIcon-root {
+  width: clamp(0.8em, 0.94vw, 1em) !important;
+  height: clamp(0.8em, 0.94vw, 1em) !important;
+}
+
+.MuiInput-underline:after {
+  border-bottom: 2px solid #f03c6b !important;
+}
+.MuiFormLabel-root.Mui-focused {
+  color: #f03c6b !important;
+}
+.MuiBreadcrumbs-separator {
+  color: black !important;
+}
+
+.MuiFormControl-marginNormal {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
+}
+
+.MuiTooltip-tooltipArrow {
+  background-color: black !important;
+  padding: 10px !important;
+  text-align: center !important;
+}
+.MuiTooltip-arrow {
+  color: black !important;
+}
+
+.MuiTooltip-popperArrow {
+  max-width: 200px !important;
+}
+
+.MuiDropzoneArea-icon {
+  color: #f79623 !important;
+  transition: all ease 0.3s !important;
+  font-size: 50px !important;
+}
+.MuiDropzoneArea-icon:hover {
+  color: #000000 !important;
+}
+.MuiDropzoneArea-root {
+  outline: none !important;
+}
+
+.MuiSwitch-track {
+  background-color: #888 !important;
+}
+.MuiSwitch-colorPrimary.Mui-checked + .MuiSwitch-track {
+  background-color: #f79623 !important;
+}
+
+.MuiTab-textColorInherit.Mui-selected {
+  color: #f03c6b;
+  border-bottom: none !important;
+}
+#custom-tabs .MuiTabs-indicator {
+  background-color: transparent;
+}
+.MuiTablePagination-caption{
+  font-family: 'Dosis', sans-serif !important;
+  font-weight: 600 !important;
+}
+
+#search-input .MuiInput-formControl {
+  margin-top: 0px !important;
+}
+#search-input .MuiInputLabel-formControl {
+  transform: translate(0, 5px) scale(1);
+}
+#search-input .MuiInputLabel-shrink {
+  transform: translate(0, -5px) scale(0.60);
+}
+#search-by-name-popup li {
+  background-color: white;
+}
+#search-by-name-popup li:hover {
+  background-color: #f7f7f7;
+}
+.MuiPaper-root.MuiAutocomplete-paper.MuiPaper-elevation1.MuiPaper-rounded {
+  box-shadow: 1px 7px 7px 0px #ffd2e250 !important;
+}
+
+#category-list .Mui-selected {
+  color: black;
+  background-color: white;
+}
+
+
+/* Dashboard */
+
+
+.dashboard {
+  scrollbar-width: thin;
+}
+
+/* Material UI dashboard */
+.dashboard .MuiCard-root {
+  border-radius: 12px !important;
+  border: 1px solid rgba(144, 202, 249, 0.46);
+  box-shadow: none !important;
+}
+
+.dashboard .MuiCardHeader-root {
+  border-bottom: 1px solid #eeeeee;
+  padding: 2vw !important;
+}
+
+.dashboard .MuiCardContent-root:not(.dashboard-item-content) {
+  padding: 2vw !important;
+}
+
+@media (max-width: 480px) {
+  .dashboard .MuiCardHeader-root {
+    padding: 4vw !important;
+  }
+
+  .dashboard .MuiCardContent-root:not(.dashboard-item-content)  {
+    padding: 3vw !important;
+  }
+}
+
+.dashboard .dashboard-input {
+  border-radius: 13px;
+  color: rgba(0, 0, 0, 0.54);
+}
+
+.dashboard .dashboard-input svg {
+  color: rgba(0, 0, 0, 0.54);
+  font-size: 0.8em;
+  font-weight: lighter;
+}
+
+
+.MuiPickersDay-daySelected{
+  background-color: #e3f2fd !important;
+}
+
+.MuiPickersDay-current {
+  color: #119da4 !important;
+}
+
+.MuiLinearProgress-colorPrimary{
+  min-height: 6px;
+  border-radius:25px;
 }

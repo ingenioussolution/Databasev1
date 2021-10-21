@@ -193,7 +193,6 @@ export const vertical3 = {
   label: 'Vertical3',
 }
 
-
 export const formatBlackList = (blackListAlliance) => {
   switch (blackListAlliance.toString()) {
     case 'true':
@@ -254,7 +253,10 @@ export const createRows = (data) => {
         getValueAt(columnName) {
           switch (columnName) {
             case 'name': {
-              return `${el.firstName} ${el.lastName}`
+              return (
+                `${el.firstName}` +
+                (`${el.lastName}` === 'undefined' ? '' : `${el.lastName}`)
+              )
             }
 
             case 'blackListAlliance': {
@@ -325,5 +327,4 @@ export const defaultColumns = [
   subject,
   vertical2,
   vertical3,
-
 ]

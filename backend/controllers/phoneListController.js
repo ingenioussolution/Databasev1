@@ -11,7 +11,7 @@ import EventStream from 'event-stream'
 // @access  Private/User
 export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
-    const listPhones = await PhoneList.find().limit(10)
+    const listPhones = await PhoneList.find().limit(10000)
     if (!listPhones) throw Error('Not items')
     res.status(200).json(listPhones)
   } catch (error) {

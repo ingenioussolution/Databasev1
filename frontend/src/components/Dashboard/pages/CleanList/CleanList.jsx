@@ -34,25 +34,34 @@ const CleanList = () => {
     phoneClean,
   } = listPhone
 
-  console.log(phoneClean)
   const clearFilters = {
-    status: '',
+    carrier: '',
+    revenue: '',
+    incomeSource: '',
+    clicker: '',
+    creditScore: '',
   }
 
   const [filterState, setFilterState] = useState(clearFilters)
 
   const filterDB = (phoneClean) => {
     return phoneClean?.filter((phone) => {
-      if (filterState.phone && !phone.phone.includes(filterState.phone))
+      if (filterState.carrier && !phone.carrier.includes(filterState.carrier))
         return false
       if (filterState.revenue !== '' && phone.revenue !== filterState.revenue)
         return false
 
-      if (filterState.revenue !== '' && phone.revenue !== filterState.revenue)
-        return false
       if (
-        filterState.clicker !== '' &&
-        phone.clicker !== filterState.clicker
+        filterState.incomeSource !== '' &&
+        phone.incomeSource !== filterState.incomeSource
+      )
+        return false
+      if (filterState.clicker !== '' && phone.clicker !== filterState.clicker)
+        return false
+
+      if (
+        filterState.creditScore !== '' &&
+        phone.creditScore !== filterState.creditScore
       )
         return false
 
@@ -91,13 +100,13 @@ const CleanList = () => {
         <TextField
           margin="normal"
           label="Search by Carrier"
-          //type='carrier'
-          // name='carrier'
+          type="carrier"
+          name="carrier"
           fullWidth
           className="dashboard-input"
           variant="outlined"
           onChange={handleFilterChange}
-          // value={filterState.carrier || ''}
+          value={filterState.carrier || ''}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -123,38 +132,39 @@ const CleanList = () => {
             </MenuItem>
             <MenuItem value={'True'}>True</MenuItem>
             <MenuItem value={'False'}>False</MenuItem>
-            <MenuItem value={''}>Null</MenuItem>
           </Select>
         </FormControl>
       </Grid>
 
       <Grid item xs={12} md={4}>
-        <TextField
-          margin="normal"
-          label="Search by Credit Score"
-          //  type='carrier'
-          //  name='carrier'
-          fullWidth
-          className="dashboard-input"
-          variant="outlined"
-          onChange={handleFilterChange}
-          // value={filterState.wireless || ''}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <FaSearch />
-              </InputAdornment>
-            ),
-          }}
-        />
+        <FormControl variant="outlined" className={classes.formControl}>
+          <InputLabel id="clicker-label">creditScore</InputLabel>
+          <Select
+            labelId="creditScore-label"
+            name="creditScore"
+            onChange={handleFilterChange}
+            label="creditScore"
+            value={filterState.creditScore}
+          >
+            <MenuItem value={''}>
+              <em>All</em>
+            </MenuItem>
+            <MenuItem value={'no'}>No</MenuItem>
+            <MenuItem value={'poor'}>Poor</MenuItem>
+            <MenuItem value={'bad'}>Bad</MenuItem>
+            <MenuItem value={'fair'}>Fair</MenuItem>
+            <MenuItem value={'good'}>Good</MenuItem>
+            <MenuItem value={'excellent'}>Excellent</MenuItem>
+          </Select>
+        </FormControl>
       </Grid>
 
       <Grid item xs={12} md={4}>
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="clicker-label">Clicker</InputLabel>
           <Select
-            labelId='clicker-label'
-            name='clicker'
+            labelId="clicker-label"
+            name="clicker"
             onChange={handleFilterChange}
             label="clicker"
             value={filterState.clicker}
@@ -172,17 +182,18 @@ const CleanList = () => {
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="incomeSource-label">Income Source</InputLabel>
           <Select
-            // labelId='incomeSource-label'
+            labelId="incomeSource-label"
             name="incomeSource"
             onChange={handleFilterChange}
-            // label='incomeSource'
-            //value={filterState.incomeSource}
+            label="incomeSource"
+            value={filterState.incomeSource}
           >
             <MenuItem value={''}>
               <em>All</em>
             </MenuItem>
-            <MenuItem value={'True'}>True</MenuItem>
-            <MenuItem value={'False'}>False</MenuItem>
+            <MenuItem value={'Benefits'}>Benefits</MenuItem>
+            <MenuItem value={'Job Income'}>Job Income</MenuItem>
+            <MenuItem value={'Self employed'}>Self employed</MenuItem>
           </Select>
         </FormControl>
       </Grid>

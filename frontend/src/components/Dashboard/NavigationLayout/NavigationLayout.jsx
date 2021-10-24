@@ -31,18 +31,19 @@ const NavigationLayout = () => {
           </ListItem>
         </Link>
 
-        <Link to={'/dashboard/list-data'}>
+
+        <Link to={'/dashboard/data-table-phones'}>
           <ListItem
             button
-            key="dashboard-listData"
+            key="dashboard-data-table-phones"
             className={clsx({
-              active: pathname === '/dashboard/list-data',
+              active: pathname === '/dashboard/data-table-phones',
             })}
           >
             <ListItemIcon>
               <FaListUl />
             </ListItemIcon>
-            <ListItemText>List Data</ListItemText>
+            <ListItemText>Data Table</ListItemText>
           </ListItem>
         </Link>
       </List>

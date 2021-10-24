@@ -6,14 +6,40 @@ import axios from 'axios'
 
 import EventStream from 'event-stream'
 
-// @routes GET /phoneslist
+// @routes GET /phoneslist/
 // @des GET All Phone List
 // @access  Private/User
 export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
-    const listPhones = await PhoneList.find().limit(10000)
+    // const pageSize = 10
+    // const page = parseInt(req.query.pageNumber) || 1
+
+    // const count = await PhoneList.countDocuments()
+    // const listPhones = await PhoneList.find()
+    // .limit(pageSize)
+    // .skip(pageSize * (page - 1))
+
+    // res.status(200).json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+
+    //const options = req.query
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const totalPages = parseInt(req.query.totalPages)
+    const listPhones = await PhoneList.paginate({}, { page, limit, totalPages })
+
     if (!listPhones) throw Error('Not items')
-    res.status(200).json(listPhones)
+    res.status(200).json({
+      data: listPhones.docs,
+      limit: listPhones.limit,
+      page: listPhones.page,
+      nextPage: listPhones.nextPage,
+      prevPage: listPhones.prevPage,
+      hasNextPage: listPhones.hasNextPage,
+      hasPrevPage: listPhones.hasPrevPage,
+      totalPages: listPhones.totalPages,
+      pagingCounter: listPhones.pagingCounter,
+      offset: listPhones.offset,
+    })
   } catch (error) {
     next(error)
   }
@@ -171,23 +197,22 @@ export const getPhoneListByPhone = asyncHandler(async (req, res, next) => {
   }
 })
 
-// @routes GET /phoneslist by carriers
-// @des GET List Phones By Carriers
-// @access  Private/User
-export const getPhoneListByCarriers = asyncHandler(async (req, res, next) => {})
-
 // @routes GET /phoneslist by status
 // @des GET List Phones By status
 // @access  Private/User
 export const getPhoneListByStatus = asyncHandler(async (req, res, next) => {
   try {
-    const status = await PhoneList.find({ status: req.body.status })
-    if (status) {
-      res.json(status)
-    } else {
-      res.status(404)
-      throw new Error('Phone not found')
-    }
+    const pageSize = 10
+    const page = parseInt(req.query.pageNumber) || 1
+    const status = req.query.status
+    const count = await PhoneList.countDocuments({ status: status })
+    const listPhones = await PhoneList.find({ status: status })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
+
+    res
+      .status(200)
+      .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
   } catch (error) {
     next(error)
   }
@@ -199,13 +224,194 @@ export const getPhoneListByStatus = asyncHandler(async (req, res, next) => {
 export const getPhoneListByCreditScore = asyncHandler(
   async (req, res, next) => {
     try {
-      const creditScore = await PhoneList.find({ status: req.body.creditScore })
+      const pageSize = 10
+      const page = parseInt(req.query.pageNumber) || 1
+      const creditScore = req.query.creditScore
+      const count = await PhoneList.countDocuments({ creditScore: creditScore })
+      const listPhones = await PhoneList.find({ creditScore: creditScore })
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
+
       if (creditScore) {
-        res.json(creditScore)
+        res
+          .status(200)
+          .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
       } else {
         res.status(404)
         throw new Error('Phone not found')
       }
+    } catch (error) {
+      next(error)
+    }
+  }
+)
+
+// @routes GET /phoneslist by filters
+// @des GET List Phones By creditScore
+// @access  Private/User
+export const getPhoneListByCombineFilters = asyncHandler(
+  async (req, res, next) => {
+    try {
+      const pageSize = 10
+      const page = parseInt(req.query.pageNumber) || 1
+      const creditScore = req.query.creditScore
+      const status = req.query.status
+      const incomeSource = req.query.incomeSource
+
+      console.log(creditScore, status, incomeSource)
+
+      if (creditScore & status & incomeSource) {
+        console.log('3 exist')
+
+        const count = await PhoneList.countDocuments({
+          and: [
+            { creditScore: creditScore },
+            { status: status },
+            { incomeSource: incomeSource },
+          ],
+        })
+
+        console.log('count', count)
+
+        const listPhones = await PhoneList.find({
+          and: [
+            { creditScore: creditScore },
+            { status: status },
+            { incomeSource: incomeSource },
+          ],
+        })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+
+        if (listPhones) {
+          res
+            .status(200)
+            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+        } else {
+          res.status(404)
+          throw new Error('Filter not found')
+        }
+      } else if ((creditScore !== undefined) & (status !== undefined)) {
+        const count = await PhoneList.countDocuments({
+          $and: [{ creditScore: creditScore }, { status: status }],
+        })
+        const listPhones = await PhoneList.find({
+          $and: [{ creditScore: creditScore }, { status: status }],
+        })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+
+        if (listPhones) {
+          res
+            .status(200)
+            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+        } else {
+          res.status(404)
+          throw new Error('Filter not found')
+        }
+      } else if ((status !== undefined) & (incomeSource !== undefined)) {
+        const count = await PhoneList.countDocuments({
+          $and: [{ incomeSource: incomeSource }, { status: status }],
+        })
+        const listPhones = await PhoneList.find({
+          $and: [{ incomeSource: incomeSource }, { status: status }],
+        })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+
+        if (listPhones) {
+          res
+            .status(200)
+            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+        } else {
+          res.status(404)
+          throw new Error('Filter not found')
+        }
+      } else if (creditScore & incomeSource) {
+        const count = await PhoneList.countDocuments({
+          $and: [{ creditScore: creditScore }, { incomeSource: incomeSource }],
+        })
+        const listPhones = await PhoneList.find({
+          $and: [{ creditScore: creditScore }, { incomeSource: incomeSource }],
+        })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+
+        if (listPhones) {
+          res
+            .status(200)
+            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+        } else {
+          res.status(404)
+          throw new Error('Filter not found')
+        }
+      } else if (incomeSource) {
+        console.log('income')
+        const count = await PhoneList.countDocuments({
+          incomeSource: incomeSource,
+        })
+        const listPhones = await PhoneList.find({ incomeSource: incomeSource })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+
+        if (listPhones) {
+          res
+            .status(200)
+            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+        } else {
+          res.status(404)
+          throw new Error('Filter not found')
+        }
+      }
+
+      //if (creditScore !== undefined) {
+      //   const count = await PhoneList.countDocuments({
+      //     creditScore: creditScore,
+      //   })
+      //   const listPhones = await PhoneList.find({ creditScore: creditScore })
+      //     .limit(pageSize)
+      //     .skip(pageSize * (page - 1))
+
+      //   if (listPhones) {
+      //     res
+      //       .status(200)
+      //       .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+      //   } else {
+      //     res.status(404)
+      //     throw new Error('Filter not found')
+      //   }
+      // } else if (status !== undefined) {
+      //   const count = await PhoneList.countDocuments({ status: status })
+      //   const listPhones = await PhoneList.find({ status: status })
+      //     .limit(pageSize)
+      //     .skip(pageSize * (page - 1))
+
+      //   if (listPhones) {
+      //     res
+      //       .status(200)
+      //       .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+      //   } else {
+      //     res.status(404)
+      //     throw new Error('Filter not found')
+      //   }
+      // } else
+
+      // console.log("si no hay ningun parametro");
+      // const count = await PhoneList.countDocuments({
+      //   incomeSource: incomeSource,
+      // })
+      // const listPhones = await PhoneList.find({ incomeSource: incomeSource })
+      //   .limit(pageSize)
+      //   .skip(pageSize * (page - 1))
+
+      // if (listPhones) {
+      //   res
+      //     .status(200)
+      //     .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+      // } else {
+      //   res.status(404)
+      //   throw new Error('Filter not found')
+      // }
     } catch (error) {
       next(error)
     }
@@ -484,7 +690,6 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
-
   const TemporalData = await ModelTemporal.find()
   console.log('TemporalData', TemporalData.length)
   TemporalData.forEach(async (prev, phoneCount) => {
@@ -494,80 +699,186 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
     })
     console.log('phoneCount', phoneCount)
 
-    console.log("blackListAlliance",TemporalData[phoneCount].phone);
+    console.log('blackListAlliance', TemporalData[phoneCount].phone)
 
     if (phoneExists) {
       console.log('phoneExists')
 
-      phoneExists.firstName = phoneExists.firstName === undefined ? TemporalData[phoneCount].firstName : phoneExists.firstName
-      phoneExists.lastName = phoneExists.lastName === undefined ? TemporalData[phoneCount].lastName : phoneExists.lastName
-      phoneExists.name = phoneExists.name === undefined ? TemporalData[phoneCount].name : phoneExists.name
-      phoneExists.email = phoneExists.email === undefined ? TemporalData[phoneCount].email : phoneExists.email
-      phoneExists.state = phoneExists.state === undefined ? TemporalData[phoneCount].state : phoneExists.state
-      phoneExists.supressedOutame = phoneExists.supressedOutame === undefined ? TemporalData[phoneCount].supressedOutame : phoneExists.supressedOutame
-      phoneExists.source = phoneExists.source === undefined ? TemporalData[phoneCount].source : phoneExists.source
-      phoneExists.ip = phoneExists.ip === undefined ? TemporalData[phoneCount].ip : phoneExists.ip
-      phoneExists.site = phoneExists.site === undefined ? TemporalData[phoneCount].site : phoneExists.site
-      phoneExists.status = phoneExists.status === undefined ? TemporalData[phoneCount].status : phoneExists.status
-      phoneExists.list = phoneExists.list === undefined ? TemporalData[phoneCount].list : phoneExists.list
-      phoneExists.revenue = phoneExists.revenue === undefined ?
-        TemporalData[phoneCount].revenue : phoneExists.revenue
-      phoneExists.monthlyIncome = phoneExists.monthlyIncome === undefined ?
-        TemporalData[phoneCount].monthlyIncome : phoneExists.monthlyIncome
-      phoneExists.incomeSource = phoneExists.incomeSource === undefined ?
-        TemporalData[phoneCount].incomeSource : phoneExists.incomeSource
-      phoneExists.carrier = phoneExists.carrier === undefined ?
-        TemporalData[phoneCount].carrier : phoneExists.carrier
-      phoneExists.creditScore = phoneExists.creditScore === undefined ?
-        TemporalData[phoneCount].creditScore : phoneExists.creditScore
-      phoneExists.subId = phoneExists.subId  === undefined ? TemporalData[phoneCount].subId : phoneExists.subId
-      phoneExists.countryCode = phoneExists.countryCode === undefined ?
-        TemporalData[phoneCount].countryCode : phoneExists.countryCode
-      phoneExists.activePhone = phoneExists.activePhone === undefined ?
-        TemporalData[phoneCount].activePhone : phoneExists.activePhone
-      phoneExists.validStatus = phoneExists.validStatus === undefined ? TemporalData[phoneCount].validStatus : phoneExists.validStatus
-      phoneExists.recentAbuse =  phoneExists.recentAbuse === undefined ?
-        TemporalData[phoneCount].recentAbuse : phoneExists.recentAbuse
-      phoneExists.validMobile = phoneExists.validMobile === undefined ? TemporalData[phoneCount].validMobile : phoneExists.validMobile
-      phoneExists.blackListAlliance = phoneExists.blackListAlliance === undefined ? TemporalData[phoneCount].blackListAlliance : phoneExists.blackListAlliance
-      phoneExists.clicker =  phoneExists.clicker === undefined ?
-        TemporalData[phoneCount].clicker : phoneExists.clicker
-      phoneExists.converter = phoneExists.converter === undefined ?
-        TemporalData[phoneCount].converter : phoneExists.converter
-      phoneExists.hardBouce = phoneExists.hardBouce === undefined ?
-        TemporalData[phoneCount].hardBouce : phoneExists.hardBouce
-      phoneExists.suppressed = phoneExists.suppressed === undefined ?
-        TemporalData[phoneCount].suppressed : phoneExists.suppressed
-      phoneExists.platform = phoneExists.platform === undefined ?
-        TemporalData[phoneCount].platform : phoneExists.platform
-      phoneExists.message = phoneExists.message === undefined ?
-        TemporalData[phoneCount].message : phoneExists.message
-      phoneExists.fraudScore = phoneExists.fraudScore === undefined ?
-        TemporalData[phoneCount].fraudScore : phoneExists.fraudScore
-      phoneExists.lineType = phoneExists.lineType === undefined ?
-        TemporalData[phoneCount].lineType : phoneExists.lineType
-      phoneExists.prepaid = phoneExists.prepaid === undefined ?
-        TemporalData[phoneCount].prepaid : phoneExists.prepaid
-      phoneExists.risky =  phoneExists.risky === undefined ? TemporalData[phoneCount].risky : phoneExists.risky
-      phoneExists.city = phoneExists.city === undefined ? TemporalData[phoneCount].city : phoneExists.city
-      phoneExists.listID = phoneExists.listID === undefined ? TemporalData[phoneCount].listID : phoneExists.listID
-      phoneExists.birthDate = phoneExists.birthDate === undefined ?
-        TemporalData[phoneCount].birthDate : phoneExists.birthDate
-      phoneExists.gender = phoneExists.gender === undefined ? TemporalData[phoneCount].gender : phoneExists.gender
-      phoneExists.senderID = phoneExists.senderID === undefined ?
-        TemporalData[phoneCount].senderID : phoneExists.senderID
-      phoneExists.sendAt = phoneExists.sendAt === undefined ? TemporalData[phoneCount].sendAt : phoneExists.sendAt
-      phoneExists.validity = phoneExists.validity === undefined ?
-        TemporalData[phoneCount].validity : phoneExists.validity
-      phoneExists.subject =  phoneExists.subject === undefined ?
-        TemporalData[phoneCount].subject : phoneExists.subject
-      phoneExists.vertical2 = phoneExists.vertical2 === undefined ?
-        TemporalData[phoneCount].vertical2 : phoneExists.vertical2
-      phoneExists.vertical3 = phoneExists.vertical3 === undefined ?
-        TemporalData[phoneCount].vertical3 : phoneExists.vertical3
+      phoneExists.firstName =
+        phoneExists.firstName === undefined
+          ? TemporalData[phoneCount].firstName
+          : phoneExists.firstName
+      phoneExists.lastName =
+        phoneExists.lastName === undefined
+          ? TemporalData[phoneCount].lastName
+          : phoneExists.lastName
+      phoneExists.name =
+        phoneExists.name === undefined
+          ? TemporalData[phoneCount].name
+          : phoneExists.name
+      phoneExists.email =
+        phoneExists.email === undefined
+          ? TemporalData[phoneCount].email
+          : phoneExists.email
+      phoneExists.state =
+        phoneExists.state === undefined
+          ? TemporalData[phoneCount].state
+          : phoneExists.state
+      phoneExists.supressedOutame =
+        phoneExists.supressedOutame === undefined
+          ? TemporalData[phoneCount].supressedOutame
+          : phoneExists.supressedOutame
+      phoneExists.source =
+        phoneExists.source === undefined
+          ? TemporalData[phoneCount].source
+          : phoneExists.source
+      phoneExists.ip =
+        phoneExists.ip === undefined
+          ? TemporalData[phoneCount].ip
+          : phoneExists.ip
+      phoneExists.site =
+        phoneExists.site === undefined
+          ? TemporalData[phoneCount].site
+          : phoneExists.site
+      phoneExists.status =
+        phoneExists.status === undefined
+          ? TemporalData[phoneCount].status
+          : phoneExists.status
+      phoneExists.list =
+        phoneExists.list === undefined
+          ? TemporalData[phoneCount].list
+          : phoneExists.list
+      phoneExists.revenue =
+        phoneExists.revenue === undefined
+          ? TemporalData[phoneCount].revenue
+          : phoneExists.revenue
+      phoneExists.monthlyIncome =
+        phoneExists.monthlyIncome === undefined
+          ? TemporalData[phoneCount].monthlyIncome
+          : phoneExists.monthlyIncome
+      phoneExists.incomeSource =
+        phoneExists.incomeSource === undefined
+          ? TemporalData[phoneCount].incomeSource
+          : phoneExists.incomeSource
+      phoneExists.carrier =
+        phoneExists.carrier === undefined
+          ? TemporalData[phoneCount].carrier
+          : phoneExists.carrier
+      phoneExists.creditScore =
+        phoneExists.creditScore === undefined
+          ? TemporalData[phoneCount].creditScore
+          : phoneExists.creditScore
+      phoneExists.subId =
+        phoneExists.subId === undefined
+          ? TemporalData[phoneCount].subId
+          : phoneExists.subId
+      phoneExists.countryCode =
+        phoneExists.countryCode === undefined
+          ? TemporalData[phoneCount].countryCode
+          : phoneExists.countryCode
+      phoneExists.activePhone =
+        phoneExists.activePhone === undefined
+          ? TemporalData[phoneCount].activePhone
+          : phoneExists.activePhone
+      phoneExists.validStatus =
+        phoneExists.validStatus === undefined
+          ? TemporalData[phoneCount].validStatus
+          : phoneExists.validStatus
+      phoneExists.recentAbuse =
+        phoneExists.recentAbuse === undefined
+          ? TemporalData[phoneCount].recentAbuse
+          : phoneExists.recentAbuse
+      phoneExists.validMobile =
+        phoneExists.validMobile === undefined
+          ? TemporalData[phoneCount].validMobile
+          : phoneExists.validMobile
+      phoneExists.blackListAlliance =
+        phoneExists.blackListAlliance === undefined
+          ? TemporalData[phoneCount].blackListAlliance
+          : phoneExists.blackListAlliance
+      phoneExists.clicker =
+        phoneExists.clicker === undefined
+          ? TemporalData[phoneCount].clicker
+          : phoneExists.clicker
+      phoneExists.converter =
+        phoneExists.converter === undefined
+          ? TemporalData[phoneCount].converter
+          : phoneExists.converter
+      phoneExists.hardBouce =
+        phoneExists.hardBouce === undefined
+          ? TemporalData[phoneCount].hardBouce
+          : phoneExists.hardBouce
+      phoneExists.suppressed =
+        phoneExists.suppressed === undefined
+          ? TemporalData[phoneCount].suppressed
+          : phoneExists.suppressed
+      phoneExists.platform =
+        phoneExists.platform === undefined
+          ? TemporalData[phoneCount].platform
+          : phoneExists.platform
+      phoneExists.message =
+        phoneExists.message === undefined
+          ? TemporalData[phoneCount].message
+          : phoneExists.message
+      phoneExists.fraudScore =
+        phoneExists.fraudScore === undefined
+          ? TemporalData[phoneCount].fraudScore
+          : phoneExists.fraudScore
+      phoneExists.lineType =
+        phoneExists.lineType === undefined
+          ? TemporalData[phoneCount].lineType
+          : phoneExists.lineType
+      phoneExists.prepaid =
+        phoneExists.prepaid === undefined
+          ? TemporalData[phoneCount].prepaid
+          : phoneExists.prepaid
+      phoneExists.risky =
+        phoneExists.risky === undefined
+          ? TemporalData[phoneCount].risky
+          : phoneExists.risky
+      phoneExists.city =
+        phoneExists.city === undefined
+          ? TemporalData[phoneCount].city
+          : phoneExists.city
+      phoneExists.listID =
+        phoneExists.listID === undefined
+          ? TemporalData[phoneCount].listID
+          : phoneExists.listID
+      phoneExists.birthDate =
+        phoneExists.birthDate === undefined
+          ? TemporalData[phoneCount].birthDate
+          : phoneExists.birthDate
+      phoneExists.gender =
+        phoneExists.gender === undefined
+          ? TemporalData[phoneCount].gender
+          : phoneExists.gender
+      phoneExists.senderID =
+        phoneExists.senderID === undefined
+          ? TemporalData[phoneCount].senderID
+          : phoneExists.senderID
+      phoneExists.sendAt =
+        phoneExists.sendAt === undefined
+          ? TemporalData[phoneCount].sendAt
+          : phoneExists.sendAt
+      phoneExists.validity =
+        phoneExists.validity === undefined
+          ? TemporalData[phoneCount].validity
+          : phoneExists.validity
+      phoneExists.subject =
+        phoneExists.subject === undefined
+          ? TemporalData[phoneCount].subject
+          : phoneExists.subject
+      phoneExists.vertical2 =
+        phoneExists.vertical2 === undefined
+          ? TemporalData[phoneCount].vertical2
+          : phoneExists.vertical2
+      phoneExists.vertical3 =
+        phoneExists.vertical3 === undefined
+          ? TemporalData[phoneCount].vertical3
+          : phoneExists.vertical3
 
       await phoneExists.save()
-  
+
       const DeletePhone = await ModelTemporal.findOne({
         phone: TemporalData[phoneCount].phone,
       })
@@ -615,7 +926,10 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
         platform: TemporalData[phoneCount].platform,
         message: TemporalData[phoneCount].message,
         fraudScore: TemporalData[phoneCount].fraudScore,
-        lineType: TemporalData[phoneCount].lineType === "unknown" ? null : TemporalData[phoneCount].lineType,
+        lineType:
+          TemporalData[phoneCount].lineType === 'unknown'
+            ? null
+            : TemporalData[phoneCount].lineType,
         prepaid: TemporalData[phoneCount].prepaid,
         risky: TemporalData[phoneCount].risky,
         city: TemporalData[phoneCount].city,
@@ -680,12 +994,10 @@ export const updatePhoneList = async (req, res) => {
   }
 }
 
-
 // @routes POST /register-data
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 export const RegisterDataList = asyncHandler(async (req, res, next) => {
-
   const TemporalData = await ModelTemporal.find()
 
   console.log('TemporalData', TemporalData.length)
@@ -697,80 +1009,186 @@ export const RegisterDataList = asyncHandler(async (req, res, next) => {
     })
     console.log('phoneCount', phoneCount)
 
-    console.log("blackListAlliance",TemporalData[phoneCount].phone);
+    console.log('blackListAlliance', TemporalData[phoneCount].phone)
 
     if (phoneExists) {
       console.log('phoneExists')
 
-      phoneExists.firstName = phoneExists.firstName === undefined ? TemporalData[phoneCount].firstName : phoneExists.firstName
-      phoneExists.lastName = phoneExists.lastName === undefined ? TemporalData[phoneCount].lastName : phoneExists.lastName
-      phoneExists.name = phoneExists.name === undefined ? TemporalData[phoneCount].name : phoneExists.name
-      phoneExists.email = phoneExists.email === undefined ? TemporalData[phoneCount].email : phoneExists.email
-      phoneExists.state = phoneExists.state === undefined ? TemporalData[phoneCount].state : phoneExists.state
-      phoneExists.supressedOutame = phoneExists.supressedOutame === undefined ? TemporalData[phoneCount].supressedOutame : phoneExists.supressedOutame
-      phoneExists.source = phoneExists.source === undefined ? TemporalData[phoneCount].source : phoneExists.source
-      phoneExists.ip = phoneExists.ip === undefined ? TemporalData[phoneCount].ip : phoneExists.ip
-      phoneExists.site = phoneExists.site === undefined ? TemporalData[phoneCount].site : phoneExists.site
-      phoneExists.status = phoneExists.status === undefined ? TemporalData[phoneCount].status : phoneExists.status
-      phoneExists.list = phoneExists.list === undefined ? TemporalData[phoneCount].list : phoneExists.list
-      phoneExists.revenue = phoneExists.revenue === undefined ?
-        TemporalData[phoneCount].revenue : phoneExists.revenue
-      phoneExists.monthlyIncome = phoneExists.monthlyIncome === undefined ?
-        TemporalData[phoneCount].monthlyIncome : phoneExists.monthlyIncome
-      phoneExists.incomeSource = phoneExists.incomeSource === undefined ?
-        TemporalData[phoneCount].incomeSource : phoneExists.incomeSource
-      phoneExists.carrier = phoneExists.carrier === undefined ?
-        TemporalData[phoneCount].carrier : phoneExists.carrier
-      phoneExists.creditScore = phoneExists.creditScore === undefined ?
-        TemporalData[phoneCount].creditScore : phoneExists.creditScore
-      phoneExists.subId = phoneExists.subId  === undefined ? TemporalData[phoneCount].subId : phoneExists.subId
-      phoneExists.countryCode = phoneExists.countryCode === undefined ?
-        TemporalData[phoneCount].countryCode : phoneExists.countryCode
-      phoneExists.activePhone = phoneExists.activePhone === undefined ?
-        TemporalData[phoneCount].activePhone : phoneExists.activePhone
-      phoneExists.validStatus = phoneExists.validStatus === undefined ? TemporalData[phoneCount].validStatus : phoneExists.validStatus
-      phoneExists.recentAbuse =  phoneExists.recentAbuse === undefined ?
-        TemporalData[phoneCount].recentAbuse : phoneExists.recentAbuse
-      phoneExists.validMobile = phoneExists.validMobile === undefined ? TemporalData[phoneCount].validMobile : phoneExists.validMobile
-      phoneExists.blackListAlliance = phoneExists.blackListAlliance === undefined ? TemporalData[phoneCount].blackListAlliance : phoneExists.blackListAlliance
-      phoneExists.clicker =  phoneExists.clicker === undefined ?
-        TemporalData[phoneCount].clicker : phoneExists.clicker
-      phoneExists.converter = phoneExists.converter === undefined ?
-        TemporalData[phoneCount].converter : phoneExists.converter
-      phoneExists.hardBouce = phoneExists.hardBouce === undefined ?
-        TemporalData[phoneCount].hardBouce : phoneExists.hardBouce
-      phoneExists.suppressed = phoneExists.suppressed === undefined ?
-        TemporalData[phoneCount].suppressed : phoneExists.suppressed
-      phoneExists.platform = phoneExists.platform === undefined ?
-        TemporalData[phoneCount].platform : phoneExists.platform
-      phoneExists.message = phoneExists.message === undefined ?
-        TemporalData[phoneCount].message : phoneExists.message
-      phoneExists.fraudScore = phoneExists.fraudScore === undefined ?
-        TemporalData[phoneCount].fraudScore : phoneExists.fraudScore
-      phoneExists.lineType = phoneExists.lineType === undefined ?
-        TemporalData[phoneCount].lineType : phoneExists.lineType
-      phoneExists.prepaid = phoneExists.prepaid === undefined ?
-        TemporalData[phoneCount].prepaid : phoneExists.prepaid
-      phoneExists.risky =  phoneExists.risky === undefined ? TemporalData[phoneCount].risky : phoneExists.risky
-      phoneExists.city = phoneExists.city === undefined ? TemporalData[phoneCount].city : phoneExists.city
-      phoneExists.listID = phoneExists.listID === undefined ? TemporalData[phoneCount].listID : phoneExists.listID
-      phoneExists.birthDate = phoneExists.birthDate === undefined ?
-        TemporalData[phoneCount].birthDate : phoneExists.birthDate
-      phoneExists.gender = phoneExists.gender === undefined ? TemporalData[phoneCount].gender : phoneExists.gender
-      phoneExists.senderID = phoneExists.senderID === undefined ?
-        TemporalData[phoneCount].senderID : phoneExists.senderID
-      phoneExists.sendAt = phoneExists.sendAt === undefined ? TemporalData[phoneCount].sendAt : phoneExists.sendAt
-      phoneExists.validity = phoneExists.validity === undefined ?
-        TemporalData[phoneCount].validity : phoneExists.validity
-      phoneExists.subject =  phoneExists.subject === undefined ?
-        TemporalData[phoneCount].subject : phoneExists.subject
-      phoneExists.vertical2 = phoneExists.vertical2 === undefined ?
-        TemporalData[phoneCount].vertical2 : phoneExists.vertical2
-      phoneExists.vertical3 = phoneExists.vertical3 === undefined ?
-        TemporalData[phoneCount].vertical3 : phoneExists.vertical3
+      phoneExists.firstName =
+        phoneExists.firstName === undefined
+          ? TemporalData[phoneCount].firstName
+          : phoneExists.firstName
+      phoneExists.lastName =
+        phoneExists.lastName === undefined
+          ? TemporalData[phoneCount].lastName
+          : phoneExists.lastName
+      phoneExists.name =
+        phoneExists.name === undefined
+          ? TemporalData[phoneCount].name
+          : phoneExists.name
+      phoneExists.email =
+        phoneExists.email === undefined
+          ? TemporalData[phoneCount].email
+          : phoneExists.email
+      phoneExists.state =
+        phoneExists.state === undefined
+          ? TemporalData[phoneCount].state
+          : phoneExists.state
+      phoneExists.supressedOutame =
+        phoneExists.supressedOutame === undefined
+          ? TemporalData[phoneCount].supressedOutame
+          : phoneExists.supressedOutame
+      phoneExists.source =
+        phoneExists.source === undefined
+          ? TemporalData[phoneCount].source
+          : phoneExists.source
+      phoneExists.ip =
+        phoneExists.ip === undefined
+          ? TemporalData[phoneCount].ip
+          : phoneExists.ip
+      phoneExists.site =
+        phoneExists.site === undefined
+          ? TemporalData[phoneCount].site
+          : phoneExists.site
+      phoneExists.status =
+        phoneExists.status === undefined
+          ? TemporalData[phoneCount].status
+          : phoneExists.status
+      phoneExists.list =
+        phoneExists.list === undefined
+          ? TemporalData[phoneCount].list
+          : phoneExists.list
+      phoneExists.revenue =
+        phoneExists.revenue === undefined
+          ? TemporalData[phoneCount].revenue
+          : phoneExists.revenue
+      phoneExists.monthlyIncome =
+        phoneExists.monthlyIncome === undefined
+          ? TemporalData[phoneCount].monthlyIncome
+          : phoneExists.monthlyIncome
+      phoneExists.incomeSource =
+        phoneExists.incomeSource === undefined
+          ? TemporalData[phoneCount].incomeSource
+          : phoneExists.incomeSource
+      phoneExists.carrier =
+        phoneExists.carrier === undefined
+          ? TemporalData[phoneCount].carrier
+          : phoneExists.carrier
+      phoneExists.creditScore =
+        phoneExists.creditScore === undefined
+          ? TemporalData[phoneCount].creditScore
+          : phoneExists.creditScore
+      phoneExists.subId =
+        phoneExists.subId === undefined
+          ? TemporalData[phoneCount].subId
+          : phoneExists.subId
+      phoneExists.countryCode =
+        phoneExists.countryCode === undefined
+          ? TemporalData[phoneCount].countryCode
+          : phoneExists.countryCode
+      phoneExists.activePhone =
+        phoneExists.activePhone === undefined
+          ? TemporalData[phoneCount].activePhone
+          : phoneExists.activePhone
+      phoneExists.validStatus =
+        phoneExists.validStatus === undefined
+          ? TemporalData[phoneCount].validStatus
+          : phoneExists.validStatus
+      phoneExists.recentAbuse =
+        phoneExists.recentAbuse === undefined
+          ? TemporalData[phoneCount].recentAbuse
+          : phoneExists.recentAbuse
+      phoneExists.validMobile =
+        phoneExists.validMobile === undefined
+          ? TemporalData[phoneCount].validMobile
+          : phoneExists.validMobile
+      phoneExists.blackListAlliance =
+        phoneExists.blackListAlliance === undefined
+          ? TemporalData[phoneCount].blackListAlliance
+          : phoneExists.blackListAlliance
+      phoneExists.clicker =
+        phoneExists.clicker === undefined
+          ? TemporalData[phoneCount].clicker
+          : phoneExists.clicker
+      phoneExists.converter =
+        phoneExists.converter === undefined
+          ? TemporalData[phoneCount].converter
+          : phoneExists.converter
+      phoneExists.hardBouce =
+        phoneExists.hardBouce === undefined
+          ? TemporalData[phoneCount].hardBouce
+          : phoneExists.hardBouce
+      phoneExists.suppressed =
+        phoneExists.suppressed === undefined
+          ? TemporalData[phoneCount].suppressed
+          : phoneExists.suppressed
+      phoneExists.platform =
+        phoneExists.platform === undefined
+          ? TemporalData[phoneCount].platform
+          : phoneExists.platform
+      phoneExists.message =
+        phoneExists.message === undefined
+          ? TemporalData[phoneCount].message
+          : phoneExists.message
+      phoneExists.fraudScore =
+        phoneExists.fraudScore === undefined
+          ? TemporalData[phoneCount].fraudScore
+          : phoneExists.fraudScore
+      phoneExists.lineType =
+        phoneExists.lineType === undefined
+          ? TemporalData[phoneCount].lineType
+          : phoneExists.lineType
+      phoneExists.prepaid =
+        phoneExists.prepaid === undefined
+          ? TemporalData[phoneCount].prepaid
+          : phoneExists.prepaid
+      phoneExists.risky =
+        phoneExists.risky === undefined
+          ? TemporalData[phoneCount].risky
+          : phoneExists.risky
+      phoneExists.city =
+        phoneExists.city === undefined
+          ? TemporalData[phoneCount].city
+          : phoneExists.city
+      phoneExists.listID =
+        phoneExists.listID === undefined
+          ? TemporalData[phoneCount].listID
+          : phoneExists.listID
+      phoneExists.birthDate =
+        phoneExists.birthDate === undefined
+          ? TemporalData[phoneCount].birthDate
+          : phoneExists.birthDate
+      phoneExists.gender =
+        phoneExists.gender === undefined
+          ? TemporalData[phoneCount].gender
+          : phoneExists.gender
+      phoneExists.senderID =
+        phoneExists.senderID === undefined
+          ? TemporalData[phoneCount].senderID
+          : phoneExists.senderID
+      phoneExists.sendAt =
+        phoneExists.sendAt === undefined
+          ? TemporalData[phoneCount].sendAt
+          : phoneExists.sendAt
+      phoneExists.validity =
+        phoneExists.validity === undefined
+          ? TemporalData[phoneCount].validity
+          : phoneExists.validity
+      phoneExists.subject =
+        phoneExists.subject === undefined
+          ? TemporalData[phoneCount].subject
+          : phoneExists.subject
+      phoneExists.vertical2 =
+        phoneExists.vertical2 === undefined
+          ? TemporalData[phoneCount].vertical2
+          : phoneExists.vertical2
+      phoneExists.vertical3 =
+        phoneExists.vertical3 === undefined
+          ? TemporalData[phoneCount].vertical3
+          : phoneExists.vertical3
 
       await phoneExists.save()
-  
+
       const DeletePhone = await ModelTemporal.findOne({
         phone: TemporalData[phoneCount].phone,
       })

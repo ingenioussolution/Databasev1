@@ -28,7 +28,8 @@
     "heroku": "^7.59.0",
     "heroku-cli": "^7.0.9",
     "jsonwebtoken": "^8.5.1",
-    "mongoose": "^6.0.8"
+    "mongoose": "^6.0.8",
+    "mongoose-paginate-v2": "^1.4.2"
   },
   "devDependencies": {
     "concurrently": "^6.3.0",

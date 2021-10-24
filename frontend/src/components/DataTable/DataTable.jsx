@@ -1,6 +1,6 @@
-import React, { useState } from 'react'
+import React, { useState , useEffect} from 'react'
 import { Link } from 'react-router-dom'
-
+import Pagination from '@mui/material/Pagination';
 import Swal from 'sweetalert2/src/sweetalert2.js'
 import {
   Card,
@@ -17,14 +17,16 @@ import {
   IconButton,
   Tooltip,
 } from '@material-ui/core'
-//import { FaPen, FaTrash, FaEye } from 'react-icons/fa'
+import { FaPen, FaTrash, FaEye } from 'react-icons/fa'
 
 import { getComparator, stableSort } from '../../utils/table'
 import DataTableHead from './dataTableHead/DataTableHead'
 import DataTableToolbar from './dataTableToolbar/DataTableToolbar'
+import { listPhoneClean } from '../../actions/phoneListCleanActions'
 
 import useStyles from './styles'
 import { mdDown } from '../../utils/breakpoints'
+import { useDispatch } from 'react-redux'
 
 const DataTable = ({
   title,
@@ -43,17 +45,20 @@ const DataTable = ({
   bulkActions,
   cantRowsPerPage,
   width,
+  totalPages,
 }) => {
   const classes = useStyles()
   const theme = useTheme()
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState(columns ? columns[0].field : '')
   const [selected, setSelected] = useState([])
+ // const [page, setPage] = useState(0)
   const [page, setPage] = useState(0)
-  const [rowsPerPage, setRowsPerPage] = useState(cantRowsPerPage || 5)
+  const [rowsPerPage, setRowsPerPage] = useState(cantRowsPerPage || 10)
+  const dispatch = useDispatch()
 
+  //--------------------
 
-  console.log("loading",loading);
   const handleRequestSort = (event, property) => {
     const isAsc = orderBy === property && order === 'asc'
     setOrder(isAsc ? 'desc' : 'asc')
@@ -89,15 +94,25 @@ const DataTable = ({
     setSelected(newSelected)
   }
 
-  const handleChangePage = (event, newPage) => {
+  const handleChangePage = async(event, newPage) => {
+
     setPage(newPage)
+    await console.log("page table -", newPage);
   }
+
+  
+  useEffect(() => {
+    dispatch(listPhoneClean(page === 0 ? 1 : page))
+  }, [dispatch])
 
   const handleChangeRowsPerPage = (event) => {
+    
     setRowsPerPage(parseInt(event.target.value, 10))
     setPage(0)
-  }
 
+    console.log("page table +", page);
+
+  }
   const isSelected = (name) => selected.indexOf(name) !== -1
 
   const emptyRows = rows
@@ -188,8 +203,8 @@ const DataTable = ({
       <TableContainer>
         <Table
           className={classes.table}
-          aria-labelledby='tableTitle'
-          aria-label='enhanced table'
+          aria-labelledby="tableTitle"
+          aria-label="enhanced table"
         >
           <DataTableHead
             classes={classes}
@@ -212,14 +227,14 @@ const DataTable = ({
                   return (
                     <TableRow
                       hover
-                      role='checkbox'
+                      role="checkbox"
                       aria-checked={isItemSelected}
                       tabIndex={-1}
                       key={row[rowsIdentity]}
                       selected={isItemSelected}
                     >
                       <TableCell
-                        padding='checkbox'
+                        padding="checkbox"
                         onClick={(event) =>
                           handleClick(event, row[rowsIdentity])
                         }
@@ -244,43 +259,39 @@ const DataTable = ({
                         </TableCell>
                       ))}
                       {actionsColCalc > 0 && (
-                        <TableCell align='center'>
+                        <TableCell align="center">
                           <Grid
                             container
                             className={classes.actionsCol}
                             direction={mdDown(width) ? 'column' : 'row'}
-                            alignItems='center'
-                            justifyContent='flex-start'
+                            alignItems="center"
+                            justifyContent="flex-start"
                             spacing={
                               width === 'sm' ? 2 : width === 'md' ? 3 : 1
                             }
                           >
                             {viewHandler && (
                               <Grid item xs={actionColsW}>
-                                <Tooltip title='View element' aria-label='view'>
+                                <Tooltip title="View element" aria-label="view">
                                   <Link to={handleViewClick(row[rowsIdentity])}>
                                     <IconButton
-                                      size='small'
+                                      size="small"
                                       className={classes.actionBtn}
-                                      aria-label='edit'
-                                    >
-                                    
-                                    </IconButton>
+                                      aria-label="edit"
+                                    ></IconButton>
                                   </Link>
                                 </Tooltip>
                               </Grid>
                             )}
                             {editHandler && (
                               <Grid item xs={actionColsW}>
-                                <Tooltip title='Edit element' aria-label='edit'>
+                                <Tooltip title="Edit element" aria-label="edit">
                                   <Link to={handleEditClick(row[rowsIdentity])}>
                                     <IconButton
-                                      size='small'
+                                      size="small"
                                       className={classes.actionBtn}
-                                      aria-label='edit'
-                                    >
-                                  
-                                    </IconButton>
+                                      aria-label="edit"
+                                    ></IconButton>
                                   </Link>
                                 </Tooltip>
                               </Grid>
@@ -288,19 +299,17 @@ const DataTable = ({
                             {deleteHandler && (
                               <Grid item xs={actionColsW}>
                                 <Tooltip
-                                  title='Remove element'
-                                  aria-label='remove'
+                                  title="Remove element"
+                                  aria-label="remove"
                                 >
                                   <IconButton
-                                    size='small'
-                                    aria-label='edit'
+                                    size="small"
+                                    aria-label="edit"
                                     className={classes.actionBtn}
                                     onClick={() =>
                                       handleDeleteClick(row[rowsIdentity])
                                     }
-                                  >
-                                   
-                                  </IconButton>
+                                  ></IconButton>
                                 </Tooltip>
                               </Grid>
                             )}
@@ -317,7 +326,7 @@ const DataTable = ({
                                   aria-label={action.title || ''}
                                 >
                                   <IconButton
-                                    size='small'
+                                    size="small"
                                     aria-label={action.title}
                                     className={classes.actionBtn}
                                     onClick={(evt) => {
@@ -366,17 +375,26 @@ const DataTable = ({
           )}
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[5, 10, 25]}
-        component='div'
-        count={rows?.length || 0}
-        rowsPerPage={rowsPerPage}
+
+      <Pagination
+       count={totalPages}
         page={page}
-        onPageChange={handleChangePage}
-        onRowsPerPageChange={handleChangeRowsPerPage}
-      />
+        onChange={handleChangePage}
+        />
+     
     </Card>
   )
 }
 
 export default withWidth()(DataTable)
+
+
+// <TablePagination
+//   rowsPerPageOptions={[5, 10, 25]}
+//   component="div"
+//   count={totalPages || 0}
+//   rowsPerPage={rowsPerPage}
+//   page={page}
+//   onPageChange={handleChangePage}
+//   onRowsPerPageChange={handleChangeRowsPerPage}
+// />

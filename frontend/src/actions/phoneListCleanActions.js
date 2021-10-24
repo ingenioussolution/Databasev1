@@ -45,85 +45,83 @@ export const phoneListRegister = (phoneClean) => async (dispatch) => {
   }
 }
 
-export const listPhoneClean =
-  () =>
-  async (dispatch) => {
-    try {
-      dispatch({
-        type: PHONE_CLEAN_LIST_REQUEST,
-      })
+export const listPhoneClean = (page) => async (dispatch) => {
 
-      const { data } = await axios.get(`/phoneslist`)
+  console.log("page",page);
+  try {
+    dispatch({
+      type: PHONE_CLEAN_LIST_REQUEST,
+    })
 
-      dispatch({
-        type: PHONE_CLEAN_LIST_SUCCESS,
-        payload: data,
-      })
-    } catch (error) {
-      dispatch({
-        type: PHONE_CLEAN_LIST_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      })
-    }
+    const { data } = await axios.get(`/phoneslist?page=${page}`)
+
+    dispatch({
+      type: PHONE_CLEAN_LIST_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PHONE_CLEAN_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
   }
+}
 
-  export const deletePhoneListClean = (id) => async (dispatch) => {
-    try {
-      dispatch({
-        type: PHONE_CLEAN_DELETE_REQUEST,
-      })
-  
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-  
-      await axios.delete(`/phoneslist/${id}`, config)
-  
-      dispatch({
-        type: PHONE_CLEAN_DELETE_SUCCESS,
-      })
-    } catch (error) {
-      dispatch({
-        type: PHONE_CLEAN_DELETE_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      })
+export const deletePhoneListClean = (id) => async (dispatch) => {
+  try {
+    dispatch({
+      type: PHONE_CLEAN_DELETE_REQUEST,
+    })
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
     }
+
+    await axios.delete(`/phoneslist/${id}`, config)
+
+    dispatch({
+      type: PHONE_CLEAN_DELETE_SUCCESS,
+    })
+  } catch (error) {
+    dispatch({
+      type: PHONE_CLEAN_DELETE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
   }
+}
 
+export const updateListPhoneClean = (phoneList) => async (dispatch) => {
+  try {
+    dispatch({
+      type: PHONE_CLEAN_UPDATE_REQUEST,
+    })
 
-  export const updateListPhoneClean =
-  (phoneList) => async (dispatch) => {
-    try {
-      dispatch({
-        type: PHONE_CLEAN_UPDATE_REQUEST,
-      })
-
-      const config = {
-        headers: {
-          'Content-Type': 'application/json',
-        },
-      }
-
-      await axios.put(`/phoneslist/${phoneList.phone}`, phoneList, config)
-
-      dispatch({
-        type: PHONE_CLEAN_UPDATE_SUCCESS,
-      })
-    } catch (error) {
-      dispatch({
-        type: PHONE_CLEAN_UPDATE_FAIL,
-        payload:
-          error.response && error.response.data.message
-            ? error.response.data.message
-            : error.message,
-      })
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
     }
+
+    await axios.put(`/phoneslist/${phoneList.phone}`, phoneList, config)
+
+    dispatch({
+      type: PHONE_CLEAN_UPDATE_SUCCESS,
+    })
+  } catch (error) {
+    dispatch({
+      type: PHONE_CLEAN_UPDATE_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
   }
+}

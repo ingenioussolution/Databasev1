@@ -1,4 +1,5 @@
 import mongoose from 'mongoose'
+import Pagination from 'mongoose-paginate-v2'
 
 const PhoneListSchema = mongoose.Schema(
   {
@@ -146,7 +147,10 @@ const PhoneListSchema = mongoose.Schema(
   }
 )
 
+PhoneListSchema.plugin(Pagination)
+
 const PhoneList = mongoose.model('PhoneList', PhoneListSchema)
+
 export default PhoneList
 
 

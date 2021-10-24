@@ -2,195 +2,195 @@ import { dollarUS } from '../format'
 
 export const phone = {
   field: 'phone',
-  label: 'Phone',
+  title: 'Phone',
 }
 export const name = {
   field: 'name',
-  label: 'Name',
+  title: 'Name',
   compareBy: 'firstName',
 }
 
 export const email = {
   field: 'email',
-  label: 'Email Address',
+  title: 'Email Address',
 }
 
 export const carrier = {
   field: 'carrier',
-  label: 'Carrier',
+  title: 'Carrier',
 }
 
 export const blackListAlliance = {
   field: 'blackListAlliance',
-  label: 'Black List',
+  title: 'Black List',
   align: 'center',
 }
 
 export const incomeSource = {
   field: 'incomeSource',
-  label: 'Income Source',
+  title: 'Income Source',
 }
 export const monthlyIncome = {
   field: 'monthlyIncome',
-  label: 'Monthly Income($)',
+  title: 'Monthly Income($)',
   align: 'right',
 }
 
 export const status = {
   field: 'status',
-  label: 'Status',
+  title: 'Status',
   align: 'center',
 }
 
 export const countryCode = {
   field: 'countryCode',
-  label: 'Country Code',
+  title: 'Country Code',
   align: 'center',
 }
 
 export const state = {
   field: 'state',
-  label: 'State',
+  title: 'State',
 }
 
 export const revenue = {
   field: 'revenue',
-  label: 'Revenue',
+  title: 'Revenue',
 }
 
 export const creditScore = {
   field: 'creditScore',
-  label: 'Credit Score',
+  title: 'Credit Score',
 }
 
 export const clicker = {
   field: 'clicker',
-  label: 'Clicker',
+  title: 'Clicker',
 }
 
 export const converter = {
   field: 'converter',
-  label: 'Converter',
+  title: 'Converter',
 }
 
 export const hardBouce = {
   field: 'hardBouce',
-  label: 'Hard Bouce',
+  title: 'Hard Bouce',
 }
 
 export const suppressed = {
   field: 'suppressed',
-  label: 'Suppressed',
+  title: 'Suppressed',
 }
 
 export const list = {
   field: 'list',
-  label: 'List',
+  title: 'List',
 }
 
 export const source = {
   field: 'source',
-  label: 'Source',
+  title: 'Source',
 }
 
 export const ip = {
   field: 'ip',
-  label: 'IP',
+  title: 'IP',
 }
 
 export const site = {
   field: 'site',
-  label: 'Site',
+  title: 'Site',
 }
 
 export const zipCode = {
   field: 'zipCode',
-  label: 'Zip Code',
+  title: 'Zip Code',
 }
 
 export const subId = {
   field: 'subId',
-  label: 'SubId',
+  title: 'SubId',
 }
 export const vertical = {
   field: 'vertical',
-  label: 'Vertical',
+  title: 'Vertical',
 }
 export const platform = {
   field: 'platform',
-  label: 'Platform',
+  title: 'Platform',
 }
 export const message = {
   field: 'message',
-  label: 'Message',
+  title: 'Message',
 }
 export const recentAbuse = {
   field: 'recentAbuse',
-  label: 'Recent Abuse',
+  title: 'Recent Abuse',
 }
 export const fraudScore = {
   field: 'fraudScore',
-  label: 'FraudScore',
+  title: 'FraudScore',
 }
 export const validMobile = {
   field: 'validMobile',
-  label: 'Valid Mobile',
+  title: 'Valid Mobile',
 }
 export const lineType = {
   field: 'lineType',
-  label: 'Line Type',
+  title: 'Line Type',
 }
 export const prepaid = {
   field: 'prepaid',
-  label: 'Prepaid',
+  title: 'Prepaid',
 }
 export const risky = {
   field: 'risky',
-  label: 'Risky',
+  title: 'Risky',
 }
 export const city = {
   field: 'city',
-  label: 'City',
+  title: 'City',
 }
 export const listID = {
   field: 'listID',
-  label: 'ListID',
+  title: 'ListID',
 }
 export const birthDate = {
   field: 'birthDate',
-  label: 'Birth date',
+  title: 'Birth date',
 }
 export const gender = {
   field: 'gender',
-  label: 'Gender',
+  title: 'Gender',
 }
 export const senderID = {
   field: 'senderID',
-  label: 'SenderID',
+  title: 'SenderID',
 }
 export const sendAt = {
   field: 'sendAt',
-  label: 'SendAt',
+  title: 'SendAt',
 }
 
 export const validity = {
   field: 'validity',
-  label: 'validity',
+  title: 'validity',
 }
 
 export const subject = {
   field: 'subject',
-  label: 'Subject',
+  title: 'Subject',
 }
 
 export const vertical2 = {
   field: 'vertical2',
-  label: 'Vertical2',
+  title: 'Vertical2',
 }
 
 export const vertical3 = {
   field: 'vertical3',
-  label: 'Vertical3',
+  title: 'Vertical3',
 }
 
 export const formatBlackList = (blackListAlliance) => {

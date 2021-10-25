@@ -4,8 +4,6 @@ import asyncHandler from 'express-async-handler'
 import ModelTemporal from '../models/TemporalData.js'
 import axios from 'axios'
 
-import EventStream from 'event-stream'
-
 // @routes GET /phoneslist/
 // @des GET All Phone List
 // @access  Private/User
@@ -185,9 +183,16 @@ const getApiCarrierData = (phoneNumber) => {
 // @access  Private/User
 export const getPhoneListByPhone = asyncHandler(async (req, res, next) => {
   try {
-    const phone = await PhoneList.findOne({ phone: req.body.phone })
-    if (phone) {
-      res.json(phone)
+    const pageSize = 10
+    const page = parseInt(req.query.pageNumber) || 1
+    const phone = req.query.phone
+    const count = await PhoneList.countDocuments({ phone: phone })
+    const listPhones = await PhoneList.findOne({ phone: phone })      
+    .limit(pageSize)
+    .skip(pageSize * (page - 1))
+
+    if (listPhones) {
+      res.json({ listPhones, page, pages: Math.ceil(count / pageSize) })
     } else {
       res.status(404)
       throw new Error('Phone not found')
@@ -238,7 +243,7 @@ export const getPhoneListByCreditScore = asyncHandler(
           .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
       } else {
         res.status(404)
-        throw new Error('Phone not found')
+        throw new Error('creditScore not found')
       }
     } catch (error) {
       next(error)
@@ -260,38 +265,7 @@ export const getPhoneListByCombineFilters = asyncHandler(
 
       console.log(creditScore, status, incomeSource)
 
-      if (creditScore & status & incomeSource) {
-        console.log('3 exist')
-
-        const count = await PhoneList.countDocuments({
-          and: [
-            { creditScore: creditScore },
-            { status: status },
-            { incomeSource: incomeSource },
-          ],
-        })
-
-        console.log('count', count)
-
-        const listPhones = await PhoneList.find({
-          and: [
-            { creditScore: creditScore },
-            { status: status },
-            { incomeSource: incomeSource },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        if (listPhones) {
-          res
-            .status(200)
-            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-        } else {
-          res.status(404)
-          throw new Error('Filter not found')
-        }
-      } else if ((creditScore !== undefined) & (status !== undefined)) {
+      if ((creditScore !== undefined) & (status !== undefined)) {
         const count = await PhoneList.countDocuments({
           $and: [{ creditScore: creditScore }, { status: status }],
         })
@@ -364,54 +338,55 @@ export const getPhoneListByCombineFilters = asyncHandler(
         }
       }
 
-      //if (creditScore !== undefined) {
-      //   const count = await PhoneList.countDocuments({
-      //     creditScore: creditScore,
-      //   })
-      //   const listPhones = await PhoneList.find({ creditScore: creditScore })
-      //     .limit(pageSize)
-      //     .skip(pageSize * (page - 1))
+      if (creditScore !== undefined) {
+        const count = await PhoneList.countDocuments({
+          creditScore: creditScore,
+        })
+        const listPhones = await PhoneList.find({ creditScore: creditScore })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
 
-      //   if (listPhones) {
-      //     res
-      //       .status(200)
-      //       .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-      //   } else {
-      //     res.status(404)
-      //     throw new Error('Filter not found')
-      //   }
-      // } else if (status !== undefined) {
-      //   const count = await PhoneList.countDocuments({ status: status })
-      //   const listPhones = await PhoneList.find({ status: status })
-      //     .limit(pageSize)
-      //     .skip(pageSize * (page - 1))
+        if (listPhones) {
+          res
+            .status(200)
+            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+        } else {
+          res.status(404)
+          throw new Error('Filter not found')
+        }
+      } else if (status !== undefined) {
+        const count = await PhoneList.countDocuments({ status: status })
+        const listPhones = await PhoneList.find({ status: status })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
 
-      //   if (listPhones) {
-      //     res
-      //       .status(200)
-      //       .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-      //   } else {
-      //     res.status(404)
-      //     throw new Error('Filter not found')
-      //   }
-      // } else
+        if (listPhones) {
+          res
+            .status(200)
+            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+        } else {
+          res.status(404)
+          throw new Error('Filter not found')
+        }
+      } else
 
-      // console.log("si no hay ningun parametro");
-      // const count = await PhoneList.countDocuments({
-      //   incomeSource: incomeSource,
-      // })
-      // const listPhones = await PhoneList.find({ incomeSource: incomeSource })
-      //   .limit(pageSize)
-      //   .skip(pageSize * (page - 1))
+      console.log("si no hay ningun parametro");
+      const count = await PhoneList.countDocuments({
+        incomeSource: incomeSource,
+      })
+      const listPhones = await PhoneList.find({ incomeSource: incomeSource })
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
 
-      // if (listPhones) {
-      //   res
-      //     .status(200)
-      //     .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-      // } else {
-      //   res.status(404)
-      //   throw new Error('Filter not found')
-      // }
+      if (listPhones) {
+        res
+          .status(200)
+          .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+      } else {
+        res.status(404)
+        throw new Error('Filter not found')
+      }
+
     } catch (error) {
       next(error)
     }

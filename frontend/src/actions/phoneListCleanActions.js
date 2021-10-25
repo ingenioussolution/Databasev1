@@ -45,14 +45,17 @@ export const phoneListRegister = (phoneClean) => async (dispatch) => {
   }
 }
 
-export const listPhoneClean = (page) => async (dispatch) => {
+export const listPhoneData = (page) => async (dispatch) => {
 
-  console.log("page",page);
+  console.log("page Action: ",page);
+  if (page === 0 ? 1 : page)
+  console.log("page Action2: ",page);
   try {
     dispatch({
       type: PHONE_CLEAN_LIST_REQUEST,
     })
 
+    //const { data } = await axios.get(url)
     const { data } = await axios.get(`/phoneslist?page=${page}`)
 
     dispatch({

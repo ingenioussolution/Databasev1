@@ -14,7 +14,7 @@ import {
 import NavigatorLayout from './components/DashboardNavigation/DashboardNavigation'
 import Navigation from './components/Dashboard/NavigationLayout/NavigationLayout'
 import DashboardHome from './components/Dashboard/pages/DashboardHome/DashboardHome'
-//import CleanList from './components/Dashboard/pages/CleanList/CleanList'
+import CleanList from './components/Dashboard/pages/CleanList/CleanList'
 import DataTablePhones from './components/Dashboard/pages/DataTablePhones/DataTablePhones'
 
 const App = () => {
@@ -43,18 +43,17 @@ const App = () => {
         >
           <Switch>
             <Route path="/dashboard" exact component={DashboardHome} />
-            
+            <Route path="/dashboard/list-phones" exact component={CleanList} />
             <Route path="/dashboard/data-table-phones" exact component={DataTablePhones} />
           </Switch>
         </main>
         <Grid item container className={classes.copyright} xs={11} md={12}>
-          Copyright {today.getFullYear()} Celeb Gap. All rights reserved. |
+          Copyright {today.getFullYear()} Ingenious Solution Group. All rights reserved.
           <a
-            href="https://yourdigitalresource.com/"
+            href="#"
             target="_blank"
             rel="noopener noreferrer nofollow"
           >
-            &nbsp;Designed by: Digital Resource
           </a>
         </Grid>
       </div>

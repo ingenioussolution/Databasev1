@@ -386,3 +386,12 @@ p {
   min-height: 6px;
   border-radius:25px;
 }
+
+.MuiAppBar-colorPrimary{
+  color: #fafafa !important;
+  background-color: #673ab7 !important;
+}
+
+.MuiAppBar-root{
+  z-index: 99999 !important;
+}

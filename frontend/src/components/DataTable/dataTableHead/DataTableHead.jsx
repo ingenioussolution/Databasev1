@@ -25,10 +25,12 @@ const DataTableHead = ({
     onRequestSort(event, property)
   }
 
+  console.log('columns', columns)
+
   return (
     <TableHead>
       <TableRow>
-        <TableCell padding='checkbox'>
+        <TableCell padding="checkbox">
           <Checkbox
             indeterminate={numSelected > 0 && numSelected < rowCount}
             checked={rowCount > 0 && numSelected === rowCount}
@@ -57,7 +59,7 @@ const DataTableHead = ({
                 direction={orderBy === compareBy ? order : 'asc'}
                 onClick={createSortHandler(compareBy)}
               >
-                {headCell.label}
+                {headCell.title}
                 {orderBy === compareBy ? (
                   <span className={classes.visuallyHidden}>
                     {order === 'desc'
@@ -70,9 +72,7 @@ const DataTableHead = ({
           )
         })}
         {actionsColCalc > 0 && (
-          <TableCell className={classes.tableHead}>
-            Actions
-          </TableCell>
+          <TableCell className={classes.tableHead}>Actions</TableCell>
         )}
       </TableRow>
     </TableHead>

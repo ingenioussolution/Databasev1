@@ -38,6 +38,9 @@ export default makeStyles((theme) => ({
     '& h5': {
       margin: 'auto',
     },
+    [theme.breakpoints.up('xl')]: {
+      display: 'none',
+    },
     [theme.breakpoints.up('lg')]: {
       display: 'none',
     },

@@ -28,7 +28,7 @@ export const listPhoneCleanReducer = (state = { listPhones: [] }, action) => {
     case PHONE_CLEAN_LIST_FAIL:
       return { loading: false, error: action.payload }
     case PHONE_CLEAN_LIST_RESET:
-      return { phoneClean: [] }
+      return { listPhones: [] }
     default:
       return state
   }

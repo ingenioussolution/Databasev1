@@ -4,10 +4,14 @@ export const phone = {
   field: 'phone',
   title: 'Phone',
 }
-export const name = {
-  field: 'name',
-  title: 'Name',
-  compareBy: 'firstName',
+export const firstName = {
+  field: 'firstName',
+  title: 'First Name',
+}
+
+export const lastName = {
+  field: 'lastName',
+  title: 'Last Name',
 }
 
 export const email = {
@@ -198,7 +202,25 @@ export const formatBlackList = (blackListAlliance) => {
     case 'true':
       return <span className="text-success">{'true'}</span>
     default:
-      return <span className="text-false">{blackListAlliance}</span>
+      return <span className="text-false">{'false'}</span>
+  }
+}
+
+export const formatRisky = (risky) => {
+  switch (risky.toString()) {
+    case 'true':
+      return <span className="text-success">{'true'}</span>
+    default:
+      return <span className="text-false">{'false'}</span>
+  }
+}
+
+export const formatClicker = (clicker) => {
+  switch (clicker.toString()) {
+    case 'true':
+      return <span className="text-success">{'true'}</span>
+    default:
+      return <span className="text-false">{'false'}</span>
   }
 }
 
@@ -262,6 +284,12 @@ export const createRows = (data) => {
             case 'blackListAlliance': {
               return formatBlackList(el.blackListAlliance)
             }
+            case 'risky': {
+              return formatRisky(el.risky)
+            }
+            case 'clicker': {
+              return formatClicker(el.clicker)
+            }
             case 'status': {
               return formatStatus(el.status)
             }
@@ -289,7 +317,8 @@ export const createRows = (data) => {
 export const defaultColumns = [
   phone,
   carrier,
-  name,
+  firstName,
+  lastName === "" ? null : lastName,
   email,
   monthlyIncome,
   validMobile,

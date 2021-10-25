@@ -22,7 +22,7 @@ import { FaPen, FaTrash, FaEye } from 'react-icons/fa'
 import { getComparator, stableSort } from '../../utils/table'
 import DataTableHead from './dataTableHead/DataTableHead'
 import DataTableToolbar from './dataTableToolbar/DataTableToolbar'
-import { listPhoneClean } from '../../actions/phoneListCleanActions'
+import { listPhoneData } from '../../actions/phoneListCleanActions'
 
 import useStyles from './styles'
 import { mdDown } from '../../utils/breakpoints'
@@ -102,7 +102,7 @@ const DataTable = ({
 
   
   useEffect(() => {
-    dispatch(listPhoneClean(page === 0 ? 1 : page))
+    dispatch(listPhoneData(page === 0 ? 1 : page))
   }, [dispatch])
 
   const handleChangeRowsPerPage = (event) => {

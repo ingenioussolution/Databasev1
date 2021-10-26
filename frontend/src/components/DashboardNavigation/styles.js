@@ -19,8 +19,11 @@ export default makeStyles((theme) => ({
     paddingLeft: '1.5vw',
     alignItems: 'center',
     justifyContent: 'space-between',
+    [theme.breakpoints.up('xl')]: {
+      display: 'none',
+    },
     [theme.breakpoints.up('lg')]: {
-      display: 'flex',
+      display: 'none',
     },
   },
   mobileLogoLink: {

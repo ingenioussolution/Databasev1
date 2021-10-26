@@ -56,7 +56,7 @@ export const listPhoneData = (page) => async (dispatch) => {
     })
 
     //const { data } = await axios.get(url)
-    const { data } = await axios.get(`/phoneslist?page=${page}`)
+    const { data } = await axios.get(`/phoneslist?pageNumber=${page}`)
 
     dispatch({
       type: PHONE_CLEAN_LIST_SUCCESS,

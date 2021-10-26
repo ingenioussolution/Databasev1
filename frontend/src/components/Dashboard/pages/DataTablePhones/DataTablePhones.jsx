@@ -64,9 +64,9 @@ const DataTablePhones = () => {
 
       //searching
       if (query.search) {
-        url += `&_q=${query.search}`
+        url += '&q='+(query.search)
       }
-      url += '&page=' + (query.page + 1)
+      url += '&pageNumber=' + (query.page + 1)
 
       fetch(url)
         .then((response) => response.json())
@@ -120,6 +120,7 @@ const DataTablePhones = () => {
           options={{
             exportButton: true,
             paging: true,
+            pageSize: 10,
           }}
           data={dataPagination}
         />

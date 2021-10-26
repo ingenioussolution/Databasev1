@@ -109,8 +109,8 @@ const CleanList = () => {
       if (filterState.phone && !phones.phone.includes(filterState.phone))
         return false
 
-      if (filterState.clicker !== '' && phones.clicker !== filterState.clicker)
-        return false
+      // if (filterState.clicker !== '' && phones.clicker !== filterState.clicker)
+      //   return false
 
       return true
     })

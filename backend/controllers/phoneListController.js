@@ -7,37 +7,72 @@ import axios from 'axios'
 // @routes GET /phoneslist/
 // @des GET All Phone List
 // @access  Private/User
+
 export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
-    // const pageSize = 10
-    // const page = parseInt(req.query.pageNumber) || 1
+    let regex = req.query.q
+    let search = { $regex: regex, $options: 'i' }
 
-    // const count = await PhoneList.countDocuments()
-    // const listPhones = await PhoneList.find()
-    // .limit(pageSize)
-    // .skip(pageSize * (page - 1))
+    const pageSize = 10
+    const page = parseInt(req.query.pageNumber) || 1
 
-    // res.status(200).json({ listPhones, page, pages: Math.ceil(count / pageSize) })
+    if (regex) {
+      const count = await PhoneList.countDocuments({ carrier: search })
+      const data = await PhoneList.find({ carrier: search })
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
 
-    //const options = req.query
-    const page = parseInt(req.query.page) || 1
-    const limit = parseInt(req.query.limit) || 10
-    const totalPages = parseInt(req.query.totalPages)
-    const listPhones = await PhoneList.paginate({}, { page, limit, totalPages })
+      res
+        .status(200)
+        .json({ data, search, page, totalPages: Math.ceil(count / pageSize) })
+    } else {
+      const count = await PhoneList.countDocuments({})
+      const data = await PhoneList.find({})
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
 
-    if (!listPhones) throw Error('Not items')
-    res.status(200).json({
-      data: listPhones.docs,
-      limit: listPhones.limit,
-      page: listPhones.page,
-      nextPage: listPhones.nextPage,
-      prevPage: listPhones.prevPage,
-      hasNextPage: listPhones.hasNextPage,
-      hasPrevPage: listPhones.hasPrevPage,
-      totalPages: listPhones.totalPages,
-      pagingCounter: listPhones.pagingCounter,
-      offset: listPhones.offset,
-    })
+      res
+        .status(200)
+        .json({ data, search, page, totalPages: Math.ceil(count / pageSize) })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
+// Controller test GET SHOW ALL DATA
+export const getPhoneListFrontEnd1 = asyncHandler(async (req, res, next) => {
+  try {
+    const pageSize = 10
+    const page = parseInt(req.query.pageNumber) || 1
+
+    const count = await PhoneList.countDocuments()
+    const data = await PhoneList.find()
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
+
+    res
+      .status(200)
+      .json({ data, page, totalPages: Math.ceil(count / pageSize) })
+
+    // const page = parseInt(req.query.page) || 1
+    // const limit = parseInt(req.query.limit) || 10
+    // const totalPages = parseInt(req.query.totalPages)
+    // const listPhones = await PhoneList.paginate({}, { page, limit, totalPages })
+
+    // if (!listPhones) throw Error('Not items')
+    // res.status(200).json({
+    //   data: listPhones.docs,
+    //   limit: listPhones.limit,
+    //   page: listPhones.page,
+    //   nextPage: listPhones.nextPage,
+    //   prevPage: listPhones.prevPage,
+    //   hasNextPage: listPhones.hasNextPage,
+    //   hasPrevPage: listPhones.hasPrevPage,
+    //   totalPages: listPhones.totalPages,
+    //   pagingCounter: listPhones.pagingCounter,
+    //   offset: listPhones.offset,
+    //})
   } catch (error) {
     next(error)
   }
@@ -187,9 +222,9 @@ export const getPhoneListByPhone = asyncHandler(async (req, res, next) => {
     const page = parseInt(req.query.pageNumber) || 1
     const phone = req.query.phone
     const count = await PhoneList.countDocuments({ phone: phone })
-    const listPhones = await PhoneList.findOne({ phone: phone })      
-    .limit(pageSize)
-    .skip(pageSize * (page - 1))
+    const listPhones = await PhoneList.findOne({ phone: phone })
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
 
     if (listPhones) {
       res.json({ listPhones, page, pages: Math.ceil(count / pageSize) })
@@ -368,9 +403,7 @@ export const getPhoneListByCombineFilters = asyncHandler(
           res.status(404)
           throw new Error('Filter not found')
         }
-      } else
-
-      console.log("si no hay ningun parametro");
+      } else console.log('si no hay ningun parametro')
       const count = await PhoneList.countDocuments({
         incomeSource: incomeSource,
       })
@@ -386,7 +419,6 @@ export const getPhoneListByCombineFilters = asyncHandler(
         res.status(404)
         throw new Error('Filter not found')
       }
-
     } catch (error) {
       next(error)
     }
@@ -665,7 +697,7 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
-  const TemporalData = await ModelTemporal.find()
+  const TemporalData = await ModelTemporal.find().limit(40000)
   console.log('TemporalData', TemporalData.length)
   TemporalData.forEach(async (prev, phoneCount) => {
     await prev

@@ -41,7 +41,7 @@ const NavigationLayout = () => {
             <ListItemIcon>
               <FaListUl />
             </ListItemIcon>
-            <ListItemText>Data Table</ListItemText>
+            <ListItemText>Data Table V1</ListItemText>
           </ListItem>
         </Link>
 
@@ -56,7 +56,7 @@ const NavigationLayout = () => {
             <ListItemIcon>
               <FaListUl />
             </ListItemIcon>
-            <ListItemText>Data Table</ListItemText>
+            <ListItemText>Data Table V2</ListItemText>
           </ListItem>
         </Link>
       </List>

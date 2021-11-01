@@ -24,7 +24,7 @@ const PhoneListSchema = mongoose.Schema(
     converter: {
       type: Boolean,
     },
-    hardBouce: {
+    hardBounce: {
       type: Boolean,
     },
     suppressed: {
@@ -105,7 +105,7 @@ const PhoneListSchema = mongoose.Schema(
     },
     lineType: {
       type: String,
-      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi','pager','lookup',null],
+      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi','pager','lookup','wireless_prepaid',null],
       trim: true,
     },
     prepaid: {

@@ -21,7 +21,7 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     converter: {
       type: Boolean,
     },
-    hardBouce: {
+    hardBounce: {
       type: Boolean,
     },
     suppressed: {

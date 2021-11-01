@@ -121,6 +121,7 @@ const DataTablePhones = () => {
             exportButton: true,
             paging: true,
             pageSize: 10,
+            filters:true,
           }}
           data={dataPagination}
         />

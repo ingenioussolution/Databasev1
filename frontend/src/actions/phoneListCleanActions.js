@@ -19,7 +19,6 @@ export const phoneListRegister = (phoneClean) => async (dispatch) => {
     dispatch({
       type: PHONE_CLEAN_REGISTER_REQUEST,
     })
-
     const config = {
       headers: {
         'Content-Type': 'application/json',
@@ -46,31 +45,27 @@ export const phoneListRegister = (phoneClean) => async (dispatch) => {
 }
 
 export const listPhoneData = (page) => async (dispatch) => {
-
-  console.log("page Action: ",page);
   if (page === 0 ? 1 : page)
-  console.log("page Action2: ",page);
-  try {
-    dispatch({
-      type: PHONE_CLEAN_LIST_REQUEST,
-    })
+    try {
+      dispatch({
+        type: PHONE_CLEAN_LIST_REQUEST,
+      })
 
-    //const { data } = await axios.get(url)
-    const { data } = await axios.get(`/phoneslist?pageNumber=${page}`)
+      const { data } = await axios.get(`/phoneslist?pageNumber=${page}`)
 
-    dispatch({
-      type: PHONE_CLEAN_LIST_SUCCESS,
-      payload: data,
-    })
-  } catch (error) {
-    dispatch({
-      type: PHONE_CLEAN_LIST_FAIL,
-      payload:
-        error.response && error.response.data.message
-          ? error.response.data.message
-          : error.message,
-    })
-  }
+      dispatch({
+        type: PHONE_CLEAN_LIST_SUCCESS,
+        payload: data,
+      })
+    } catch (error) {
+      dispatch({
+        type: PHONE_CLEAN_LIST_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
 }
 
 export const deletePhoneListClean = (id) => async (dispatch) => {

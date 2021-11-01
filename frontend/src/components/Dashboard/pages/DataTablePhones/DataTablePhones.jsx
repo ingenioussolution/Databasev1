@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
 import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import Loader from '../../../Loader/Loader'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowUpward from '@material-ui/icons/ArrowUpward'
@@ -53,9 +53,6 @@ const tableIcons = {
 const DataTablePhones = () => {
   const dispatch = useDispatch()
 
-  const listPhone = useSelector((state) => state.listPhoneClean)
-  const { loading, error, listPhones, page, pages } = listPhone
-
   const [data, setData] = useState([])
 
   const dataPagination = (query) =>
@@ -84,7 +81,7 @@ const DataTablePhones = () => {
     document.title = 'Data Base List | Ingenious Solution Group'
 
     const listPhoneClean = () => {
-      console.log('page Action: ', data)
+    
       try {
         dispatch({
           type: PHONE_CLEAN_LIST_REQUEST,

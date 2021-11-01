@@ -49,12 +49,6 @@ const App = () => {
         </main>
         <Grid item container className={classes.copyright} xs={11} md={12}>
           Copyright {today.getFullYear()} Ingenious Solution Group. All rights reserved.
-          <a
-            href="#"
-            target="_blank"
-            rel="noopener noreferrer nofollow"
-          >
-          </a>
         </Grid>
       </div>
     </div>

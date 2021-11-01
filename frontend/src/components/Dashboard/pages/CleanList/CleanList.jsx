@@ -11,8 +11,6 @@ import DataTableToolbar from '../../../DataTable/dataTableToolbar/DataTableToolb
 import {
   Card,
   Grid,
-  useTheme,
-  withWidth,
   Table,
   TableBody,
   TableCell,
@@ -26,12 +24,9 @@ import {
   Select,
   TextField,
   FormControl,
-  IconButton,
-  Tooltip,
+  
 } from '@material-ui/core'
 import { FaSearch } from 'react-icons/fa'
-import { getComparator, stableSort } from '../../../../utils/table'
-
 import Loader from '../../../Loader/Loader'
 import Message from '../../../message/Message'
 
@@ -50,7 +45,7 @@ const CleanList = () => {
   const { loading, error, listPhones, page, pages } = listPhone
 
   const [rowsPerPage, setRowsPerPage] = useState(10 || 5)
-  const theme = useTheme()
+
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState(listPhones ? listPhones : '')
   const [pageState, setPageState] = useState(page || 0)
@@ -59,10 +54,6 @@ const CleanList = () => {
   const clearFilters = {}
 
   const [filterState, setFilterState] = useState(clearFilters)
-
-  console.log('listPhones', listPhones)
-  console.log('page', page)
-  console.log('pages', pages)
 
   useEffect(() => {
     document.title = 'Data Base List | Ingenious Solution Group'
@@ -247,7 +238,6 @@ const CleanList = () => {
           rowsPerPage={rowsPerPage}
           page={pageState}
           onPageChange={handleChangePage}
-          // onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </Card>
     </Grid>

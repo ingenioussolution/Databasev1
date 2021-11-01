@@ -25,8 +25,6 @@ const DataTableHead = ({
     onRequestSort(event, property)
   }
 
-  console.log('columns', columns)
-
   return (
     <TableHead>
       <TableRow>

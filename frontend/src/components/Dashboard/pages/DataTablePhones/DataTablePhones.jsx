@@ -54,16 +54,32 @@ const DataTablePhones = () => {
   const dispatch = useDispatch()
 
   const [data, setData] = useState([])
+  
 
   const dataPagination = (query) =>
     new Promise((resolve, reject) => {
       let url = '/phoneslist?'
 
+      console.log("query",query);
       //searching
       if (query.search) {
         url += '&q='+(query.search)
       }
+
+     //filtering
+     if (query.filters.length) {
+      const filter = query.filters.map(filter => {
+        return `&${filter.column.field}${filter.operator}${filter.value}`
+      })
+      url += filter.join('')
+    }
+      
+    //sorting 
+    if (query.orderBy) {
+      url += '&sort='(query.orderBy.field)+'&order='(query.orderDirection)
+    }
       url += '&pageNumber=' + (query.page + 1)
+      console.log("URL",url);
 
       fetch(url)
         .then((response) => response.json())
@@ -76,6 +92,7 @@ const DataTablePhones = () => {
           setData(result)
         })
     })
+
 
   useEffect(() => {
     document.title = 'Data Base List | Ingenious Solution Group'
@@ -118,7 +135,10 @@ const DataTablePhones = () => {
             exportButton: true,
             paging: true,
             pageSize: 10,
-            filters:true,
+            selection: true,
+            padding: 'default',
+            pageSizeOptions: [5, 10],
+            filtering:true,
           }}
           data={dataPagination}
         />

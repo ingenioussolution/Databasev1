@@ -140,7 +140,6 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     phone,
     state,
     carrier,
-    supressedOutame,
     source,
     ip,
     site,
@@ -160,7 +159,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     blackListAlliance,
     clicker,
     converter,
-    hardBouce,
+    hardBounce,
     suppressed,
     platform,
     message,
@@ -189,7 +188,6 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     phoneExists.name = name || phoneExists.name
     phoneExists.email = email || phoneExists.email
     phoneExists.state = state || phoneExists.state
-    phoneExists.supressedOutame = supressedOutame || phoneExists.supressedOutame
     phoneExists.source = source || phoneExists.source
     phoneExists.ipAddress = ipAddress || phoneExists.ipAddress
     phoneExists.site = site || phoneExists.site
@@ -210,7 +208,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
       blackListAlliance || phoneExists.blackListAlliance
     phoneExists.clicker = clicker || phoneExists.clicker
     phoneExists.converter = converter || phoneExists.converter
-    phoneExists.hardBouce = hardBouce || phoneExists.hardBouce
+    phoneExists.hardBounce = hardBounce || phoneExists.hardBounce
     phoneExists.suppressed = suppressed || phoneExists.suppressed
     phoneExists.platform = platform || phoneExists.platform
     phoneExists.message = message || phoneExists.message
@@ -237,7 +235,6 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
       lastName: updatedPhonesList.lastName,
       email: updatedPhonesList.email,
       state: updatedPhonesList.state,
-      supressedOutame: updatedPhonesList.supressedOutame,
       source: updatedPhonesList.source,
       ipAddress: updatedPhonesList.ipAddress,
       site: updatedPhonesList.site,
@@ -257,7 +254,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
       blackListAlliance: updatedPhonesList.blackListAlliance,
       clicker: updatedPhonesList.clicker,
       converter: updatedPhonesList.converter,
-      hardBouce: updatedPhonesList.hardBouce,
+      hardBounce: updatedPhonesList.hardBounce,
       suppressed: updatedPhonesList.suppressed,
       platform: updatedPhonesList.platform,
       message: updatedPhonesList.message,
@@ -284,7 +281,6 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
       phone,
       state,
       carrier,
-      supressedOutame,
       source,
       ip,
       site,
@@ -304,7 +300,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
       blackListAlliance,
       clicker,
       converter,
-      hardBouce,
+      hardBounce,
       suppressed,
       platform,
       message,
@@ -332,8 +328,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
         name: phoneCreated.name,
         email: phoneCreated.email,
         state: phoneCreated.state,
-        phone: phoneCreated.phone,
-        supressedOutame: phoneCreated.supressedOutame,
+        phone: phoneCreated.phone, 
         source: phoneCreated.source,
         ip: phoneCreated.ip,
         site: phoneCreated.site,
@@ -353,7 +348,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
         blackListAlliance: phoneCreated.blackListAlliance,
         clicker: phoneCreated.clicker,
         converter: phoneCreated.converter,
-        hardBouce: phoneCreated.hardBouce,
+        hardBounce: phoneCreated.hardBounce,
         suppressed: phoneCreated.suppressed,
         platform: phoneCreated.platform,
         message: phoneCreated.message,

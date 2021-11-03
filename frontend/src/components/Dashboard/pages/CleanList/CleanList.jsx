@@ -19,12 +19,11 @@ import {
   TableRow,
   Checkbox,
   InputAdornment,
-  InputLabel,
-  MenuItem,
-  Select,
+  //InputLabel,
+  //MenuItem,
+  //Select,
   TextField,
-  FormControl,
-  
+  //FormControl,
 } from '@material-ui/core'
 import { FaSearch } from 'react-icons/fa'
 import Loader from '../../../Loader/Loader'
@@ -138,8 +137,8 @@ const CleanList = () => {
           }}
         />
       </Grid>
-
-      <Grid item xs={12} md={4}>
+  {/*
+  <Grid item xs={12} md={4}>
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="clicker-label">Clicker</InputLabel>
           <Select
@@ -157,6 +156,7 @@ const CleanList = () => {
           </Select>
         </FormControl>
       </Grid>
+  */}
     </Grid>
   )
 

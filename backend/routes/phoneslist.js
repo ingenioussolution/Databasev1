@@ -10,12 +10,12 @@ import {
   getPhoneListFrontEnd1,
 } from '../controllers/phoneListController.js'
 
-import {UploadData} from '../controllers/UploadPhoneList.js'
+import {UploadData, getPhoneListPagination} from '../controllers/UploadPhoneList.js'
 const route = express.Router()
 
 route.get('/', getPhoneListFrontEnd)
 route.get('/status', getPhoneListByStatus)
-route.get('/credit-score', getPhoneListByCreditScore)
+route.get('/pagination', getPhoneListPagination)
 route.get('/filters', getPhoneListFrontEnd1)
 route.post('/', registerPhoneList)
 route.post('/register-data', AddPhoneList)

@@ -7,6 +7,7 @@ export const phone = {
 export const firstName = {
   field: 'firstName',
   title: 'First Name',
+  
 }
 
 export const lastName = {
@@ -77,9 +78,9 @@ export const converter = {
   title: 'Converter',
 }
 
-export const hardBouce = {
-  field: 'hardBouce',
-  title: 'Hard Bouce',
+export const hardBounce = {
+  field: 'hardBounce',
+  title: 'hardBounce',
 }
 
 export const suppressed = {
@@ -329,7 +330,7 @@ export const defaultColumns = [
   risky,
   clicker,
   converter,
-  hardBouce,
+  hardBounce,
   lineType,
   creditScore,
   suppressed,

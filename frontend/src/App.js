@@ -15,6 +15,7 @@ import NavigatorLayout from './components/DashboardNavigation/DashboardNavigatio
 import Navigation from './components/Dashboard/NavigationLayout/NavigationLayout'
 import DashboardHome from './components/Dashboard/pages/DashboardHome/DashboardHome'
 import DataTablePhones from './components/Dashboard/pages/DataTablePhones/DataTablePhones'
+import CleanList from './components/Dashboard/pages/CleanList/CleanList'
 
 const App = () => {
   const classes = StyleApp()
@@ -43,6 +44,7 @@ const App = () => {
           <Switch>
             <Route path="/dashboard" exact component={DashboardHome} />
             <Route path="/dashboard/data-table-phones" exact component={DataTablePhones} />
+            <Route path="/dashboard/list-phones" exact component={CleanList} />
           </Switch>
         </main>
         <Grid item container className={classes.copyright} xs={11} md={12}>

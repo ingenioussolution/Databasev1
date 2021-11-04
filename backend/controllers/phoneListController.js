@@ -20,8 +20,9 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const suppressed = req.query.suppressed
     let carrierFilter = req.query.carrier
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
-    const firstName = req.query.firstName
-    //let firstName = { $regex: `${firstNameFilter}`, $options: 'i' }
+    const firstNameFilter = req.query.firstName
+    let firstName = { $regex: `${firstNameFilter}`, $options: 'i' }
+    let arrayFilters = []
 
     let regex = req.query.q
     let search = { $regex: regex, $options: 'i' }
@@ -29,49 +30,39 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const pageSize = 10
     const page = parseInt(req.query.pageNumber) || 1
 
-    // if(clicker || hardBounce || phone || revenue || converter || suppressed ){
-    //   console.log("H C",clicker,hardBounce, phone);
+    if (clicker || hardBounce || phone || revenue || converter || suppressed || firstNameFilter || carrierFilter) {
+      if(clicker){
+        arrayFilters.push({clicker:clicker})
+      }
+      if(hardBounce){
+        arrayFilters.push({hardBounce:hardBounce})
+      }
+      if(revenue){
+        arrayFilters.push({revenue:revenue})
+      }
+      if(phone){
+        arrayFilters.push({phone:phone})
+      }
+      if(converter){
+        arrayFilters.push({converter:converter})
 
-    //   //$exists: true, $nin: [
-    //   const count = await PhoneList.countDocuments({phone: phone, clicker: clicker, hardBounce: hardBounce, revenue: revenue, converter: converter, suppressed: suppressed })
-    //   const data = await PhoneList.find({phone: phone, clicker: clicker, hardBounce: hardBounce, revenue: revenue, converter: converter, suppressed: suppressed})
-    //     .limit(pageSize)
-    //     .skip(pageSize * (page - 1))
+      }if(suppressed){
+        arrayFilters.push({suppressed:suppressed})
+      }
+      if(carrierFilter){
+        arrayFilters.push({carrier:carrier})
+      }
+      if(firstNameFilter){
+        arrayFilters.push({firstName:firstName})
+      }
 
-    //     console.log("data: ",data);
-    //   res
-    //     .status(200)
-    //     .json({ data,clicker, phone, revenue, suppressed, converter, hardBounce, search, page, totalPages: Math.ceil(count / pageSize) })
-    // } else
-
-    if (clicker || hardBounce || phone || revenue || converter || suppressed) {
-      if (
-        clicker &&
-        hardBounce &&
-        phone &&
-        revenue &&
-        converter &&
-        suppressed
-      ) {
+      console.log("Array:", ...arrayFilters);
+      if (arrayFilters) {
         const count = await PhoneList.countDocuments({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
+          $and: arrayFilters,
         })
         const data = await PhoneList.find({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
+          $and: arrayFilters,
         })
           .limit(pageSize)
           .skip(pageSize * (page - 1))
@@ -89,399 +80,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           totalPages: Math.ceil(count / pageSize),
         })
       }
-      //---------------------------------------
-      if (clicker && hardBounce && phone && revenue && converter) {
-        const count = await PhoneList.countDocuments({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-          ],
-        })
-        const data = await PhoneList.find({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        res.status(200).json({
-          data,
-          clicker,
-          phone,
-          revenue,
-          converter,
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //------------------------------------
-      if (clicker && hardBounce && phone && revenue && suppressed) {
-        const count = await PhoneList.countDocuments({
-          $and: [
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-        const data = await PhoneList.find({
-          $and: [
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        res.status(200).json({
-          data,
-          clicker,
-          phone,
-          revenue,
-          suppressed,
-
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //-------------------------------------
-      if (clicker && hardBounce && phone && converter && suppressed) {
-        const count = await PhoneList.countDocuments({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-
-            { suppressed: suppressed },
-          ],
-        })
-        const data = await PhoneList.find({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-
-            { suppressed: suppressed },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        res.status(200).json({
-          data,
-          clicker,
-          phone,
-
-          suppressed,
-          converter,
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //--------------------------------------
-      if (clicker && hardBounce && revenue && converter && suppressed) {
-        const count = await PhoneList.countDocuments({
-          $and: [
-            { converter: converter },
-
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-        const data = await PhoneList.find({
-          $and: [
-            { converter: converter },
-
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        res.status(200).json({
-          data,
-          clicker,
-          revenue,
-          suppressed,
-          converter,
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //-------------------------------------
-
-      if (hardBounce && phone && revenue && converter && suppressed) {
-        const count = await PhoneList.countDocuments({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-        const data = await PhoneList.find({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        res.status(200).json({
-          data,
-
-          phone,
-          revenue,
-          suppressed,
-          converter,
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //----------------------------------
-
-      if (clicker && hardBounce && phone && revenue) {
-        const count = await PhoneList.countDocuments({
-          $and: [
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-          ],
-        })
-        const data = await PhoneList.find({
-          $and: [
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        res.status(200).json({
-          data,
-          clicker,
-          phone,
-          revenue,
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //---------------------------------------
-
-      if (
-        clicker &&
-        hardBounce &&
-        phone &&
-        revenue &&
-        converter &&
-        suppressed
-      ) {
-        const count = await PhoneList.countDocuments({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-        const data = await PhoneList.find({
-          $and: [
-            { converter: converter },
-            { phone: phone },
-            { clicker: clicker },
-            { hardBounce: hardBounce },
-            { revenue: revenue },
-            { suppressed: suppressed },
-          ],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        res.status(200).json({
-          data,
-          clicker,
-          phone,
-          revenue,
-          suppressed,
-          converter,
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //---------------------------------------
-
-      if (clicker && phone) {
-        console.log('P C', clicker, phone)
-        const count = await PhoneList.countDocuments({
-          $and: [{ phone: phone }, { clicker: clicker }],
-        })
-        const data = await PhoneList.find({
-          $and: [{ phone: phone }, { clicker: clicker }],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-        res.status(200).json({
-          data,
-          clicker,
-          phone,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      // -----------------------------------
-      if (clicker && hardBounce) {
-        console.log('H C', clicker, hardBounce)
-        const count = await PhoneList.countDocuments({
-          $and: [{ hardBounce: hardBounce }, { clicker: clicker }],
-        })
-        const data = await PhoneList.find({
-          $and: [{ hardBounce: hardBounce }, { clicker: clicker }],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-        res.status(200).json({
-          data,
-          clicker,
-          hardBounce,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      // -----------------------------------
-      if (clicker && converter) {
-        console.log('C C', clicker, converter)
-        const count = await PhoneList.countDocuments({
-          $and: [{ converter: converter }, { clicker: clicker }],
-        })
-        const data = await PhoneList.find({
-          $and: [{ converter: converter }, { clicker: clicker }],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-        res.status(200).json({
-          data,
-          clicker,
-          converter,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      // -----------------------------------
-      if (clicker && revenue) {
-        console.log('R C', clicker, revenue)
-        const count = await PhoneList.countDocuments({
-          $and: [{ revenue: revenue }, { clicker: clicker }],
-        })
-        const data = await PhoneList.find({
-          $and: [{ revenue: revenue }, { clicker: clicker }],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-        res.status(200).json({
-          data,
-          clicker,
-          revenue,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-
-      // -----------------------------------
-      if (clicker) {
-        console.log('R C', clicker, revenue)
-        const count = await PhoneList.countDocuments({
-          clicker: clicker,
-        })
-        const data = await PhoneList.find({
-          clicker: clicker,
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-        res.status(200).json({
-          data,
-          clicker,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //--------------------------
-      if (phone) {
-        console.log('phone', phone)
-        const count = await PhoneList.countDocuments({ phone: phone })
-        const data = await PhoneList.find({ phone: phone })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-  
-        res.status(200).json({
-          data,
-          phone,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      }
-      //----------------------
-      if (hardBounce) {
-        console.log('hardBounce', hardBounce)
-        const count = await PhoneList.countDocuments({ hardBounce: hardBounce })
-        const data = await PhoneList.find({ hardBounce: hardBounce })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-  
-        res.status(200).json({
-          data,
-          hardBounce,
-          search,
-          page,
-          totalPages: Math.ceil(count / pageSize),
-        })
-      } 
-    }
+    }else
     //------------------------------------
    if (regex) {
       console.log('search', regex)
@@ -521,84 +120,15 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
 export const getPhoneListFrontEnd1 = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
-
-    const orderByDate = req.query.order_by_date || 'updatedAt'
-    const orderByDirection = req.query.order_by_direction || 'desc'
-    const hardBounceFilter = req.query.hardBounce
-    const clickerFilter = req.query.clicker
-
     let regex = req.query.q
-    console.log('regex', regex)
     let search = { $regex: regex, $options: 'i' }
 
     const pageSize = 10
     const page = parseInt(req.query.pageNumber) || 1
 
-    if (regex && hardBounceFilter && clickerFilter) {
-      console.log('regex, hardBounceFilter', regex || hardBounceFilter)
-
-      const count = await PhoneList.countDocuments({
-        $and: [
-          { hardBounce: hardBounceFilter },
-          { carrier: search },
-          { clicker: clickerFilter },
-        ],
-      })
-
-      const data = await PhoneList.find({
-        $and: [
-          { hardBounce: hardBounceFilter },
-          { carrier: search },
-          { clicker: clickerFilter },
-        ],
-      })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      res.status(200).json({
-        data,
-        search,
-        hardBounceFilter,
-        page,
-        totalPages: Math.ceil(count / pageSize),
-      })
-    } else if (regex) {
-      const count = await PhoneList.countDocuments({ carrier: search })
-
-      console.log('count', count)
-
-      const data = await PhoneList.find({ carrier: search })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      res.status(200).json({
-        data,
-        search,
-        hardBounceFilter,
-        page,
-        totalPages: Math.ceil(count / pageSize),
-      })
-    } else if (hardBounceFilter) {
-      const count = await PhoneList.countDocuments({
-        hardBounce: hardBounceFilter,
-      })
-
-      console.log('count', count)
-
-      const data = await PhoneList.find({ hardBounce: hardBounceFilter })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      res.status(200).json({
-        data,
-        search,
-        hardBounceFilter,
-        page,
-        totalPages: Math.ceil(count / pageSize),
-      })
-    } else {
-      const count = await PhoneList.countDocuments({})
-      const data = await PhoneList.find({})
+    if (regex) {
+      const count = await PhoneList.countDocuments({carrier: search})
+      const data = await PhoneList.find({carrier: search})
         .limit(pageSize)
         .skip(pageSize * (page - 1))
 
@@ -606,10 +136,9 @@ export const getPhoneListFrontEnd1 = asyncHandler(async (req, res, next) => {
         data,
         search,
         page,
-        hardBounceFilter,
         totalPages: Math.ceil(count / pageSize),
       })
-    }
+    } 
   } catch (error) {
     next(error)
   }

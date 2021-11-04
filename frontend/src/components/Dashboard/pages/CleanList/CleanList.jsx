@@ -26,8 +26,8 @@ import {
   //FormControl,
 } from '@material-ui/core'
 import { FaSearch } from 'react-icons/fa'
-import Loader from '../../../Loader/Loader'
-import Message from '../../../message/Message'
+//import Loader from '../../../Loader/Loader'
+//import Message from '../../../message/Message'
 
 import dataStyle from '../../../DataTable/styles'
 import useStyles from './styles'
@@ -94,11 +94,14 @@ const CleanList = () => {
     setFilterState({ ...filterState, [name]: value })
   }
 
+  console.log(filterState);
+
   const filterListPhones = (listPhones) => {
     return listPhones?.filter((phones) => {
       if (filterState.phone && !phones.phone.includes(filterState.phone))
         return false
-
+      if (filterState.revenue && !phones.revenue.includes(filterState.revenue))
+        return false
       // if (filterState.clicker !== '' && phones.clicker !== filterState.clicker)
       //   return false
 
@@ -110,10 +113,14 @@ const CleanList = () => {
     if (query) {
       for (const filter of query.keys()) {
         setFilterState({ ...filterState, [filter]: query.get(filter) })
+        
       }
     }
+    
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
+
+  
 
   const filters = (
     <Grid container spacing={4} className={classes.filtersSection}>
@@ -128,6 +135,26 @@ const CleanList = () => {
           variant="outlined"
           onChange={handleFilterChange}
           value={filterState.phone || ''}
+          InputProps={{
+            startAdornment: (
+              <InputAdornment position="start">
+                <FaSearch />
+              </InputAdornment>
+            ),
+          }}
+        />
+      </Grid>
+      <Grid item xs={12} md={4}>
+        <TextField
+          margin="normal"
+          label="Search by Revenue"
+          type="revenue"
+          name="revenue"
+          fullWidth
+          className="dashboard-input"
+          variant="outlined"
+          onChange={handleFilterChange}
+          value={filterState.revenue || ''}
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
@@ -188,7 +215,6 @@ const CleanList = () => {
               columns={defaultColumns}
               onRequestSort={handleRequestSort}
             />
-
             {!loading ? (
               <TableBody>
                 {createRows(filterListPhones(listPhones)).map((row, index) => {

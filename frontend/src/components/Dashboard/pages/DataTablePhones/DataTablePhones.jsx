@@ -54,32 +54,31 @@ const DataTablePhones = () => {
   const dispatch = useDispatch()
 
   const [data, setData] = useState([])
-  
 
   const dataPagination = (query) =>
     new Promise((resolve, reject) => {
       let url = '/phoneslist?'
 
-      console.log("query",query);
+      console.log('query', query)
       //searching
       if (query.search) {
-        url += '&q='+(query.search)
+        url += '&q=' + query.search
       }
 
-     //filtering
-     if (query.filters.length) {
-      const filter = query.filters.map(filter => {
-        return `&${filter.column.field}${filter.operator}${filter.value}`
-      })
-      url += filter.join('')
-    }
-      
-    //sorting 
-    if (query.orderBy) {
-      url += '&sort='(query.orderBy.field)+'&order='(query.orderDirection)
-    }
+      //filtering
+      if (query.filters.length) {
+        const filter = query.filters.map((filter) => {
+          return `&${filter.column.field}${filter.operator}${filter.value}`
+        })
+        url += filter.join('')
+      }
+
+      //sorting
+      if (query.orderBy) {
+        url += '&sort='(query.orderBy.field) + '&order='(query.orderDirection)
+      }
       url += '&pageNumber=' + (query.page + 1)
-      console.log("URL",url);
+      console.log('URL', url)
 
       fetch(url)
         .then((response) => response.json())
@@ -93,12 +92,10 @@ const DataTablePhones = () => {
         })
     })
 
-
   useEffect(() => {
     document.title = 'Data Base List | Ingenious Solution Group'
 
     const listPhoneClean = () => {
-    
       try {
         dispatch({
           type: PHONE_CLEAN_LIST_REQUEST,
@@ -123,14 +120,14 @@ const DataTablePhones = () => {
   }, [data])
 
   return (
-    <div >
-      
+    <div>
       {data ? (
         <MaterialTable
-          style={{padding:'20px'}}
-          title="List Phones"
+          style={{ padding: '20px' }}
+          title="Ingenious Solution"
           columns={defaultColumns}
           icons={tableIcons}
+          
           options={{
             exportButton: true,
             paging: true,
@@ -138,7 +135,7 @@ const DataTablePhones = () => {
             selection: true,
             padding: 'default',
             pageSizeOptions: [5, 10],
-            filtering:true,
+            filtering: true,
           }}
           data={dataPagination}
         />

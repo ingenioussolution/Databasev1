@@ -7,7 +7,7 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
       required: true,
       unique: true,
       min: 9,
-      max: 10,
+      max: 11,
     },
     carrier: {
       type: String,

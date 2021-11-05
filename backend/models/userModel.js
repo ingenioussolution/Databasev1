@@ -16,10 +16,22 @@ const userSchema = mongoose.Schema(
       require: 'Please enter your email address',
       unique: true,
     },
+    avatar: {
+      type: String,
+    },
     username: {
       type: String,
       require: 'Please enter a username',
       unique: true,
+    },
+    isAdmin: {
+      type: Boolean,
+      require: true,
+      default: false,
+    },
+    status: {
+      type: String,
+      enum: ['active', 'inactive'],
     },
     password: {
       type: String,
@@ -49,6 +61,7 @@ userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)
 })
+userSchema.index({isAdmin: 1}, {unique: true, partialFilterExpression: {isAdmin: true}});
 
 const User = mongoose.model('User', userSchema)
 

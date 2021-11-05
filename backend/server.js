@@ -10,6 +10,7 @@ import phoneslistRoutes from './routes/phoneslist.js'
 import phoneRoutes from './routes/phone.js'
 import carrierRoutes from './routes/carrierRouters.js'
 import ModelTemporal from './routes/TemporalDataRouters.js'
+import userRoutes from './routes/userRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -23,6 +24,7 @@ app.options('*', cors())
 
 // Use routes
 app.use('/phoneslist', phoneslistRoutes)
+app.use('/users', userRoutes)
 app.use('/phone', phoneRoutes)
 app.use('/carrier', carrierRoutes)
 app.use('/data-temporal', ModelTemporal)

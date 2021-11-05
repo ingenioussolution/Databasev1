@@ -15,9 +15,9 @@ import NavigatorLayout from './components/DashboardNavigation/DashboardNavigatio
 import Navigation from './components/Dashboard/NavigationLayout/NavigationLayout'
 import DashboardHome from './components/Dashboard/pages/DashboardHome/DashboardHome'
 import DataTablePhones from './components/Dashboard/pages/DataTablePhones/DataTablePhones'
-import CleanList from './components/Dashboard/pages/CleanList/CleanList'
+import Login from './components/Dashboard/pages/Login/Login'
 
-const App = () => {
+const App = ({ location }) => {
   const classes = StyleApp()
   const [drawerClosed, setDraweClosed] = useState(false)
 
@@ -25,33 +25,39 @@ const App = () => {
 
   return (
     <Router>
-    <div className={clsx('dashboard', classes.root)}>
-      <CssBaseline />
+      <div className={clsx('dashboard', classes.root)}>
+        <CssBaseline />
+        {location.pathname.includes('dashboard') && (
+          <NavigatorLayout
+            onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
+            dashboardUrl="/dashboard"
+            drawerContent={<Navigation />}
+          />
+        )}
 
-      <NavigatorLayout
-        onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
-        dashboardUrl="/dashboard"
-        drawerContent={<Navigation/>}
-      />
-
-      <div className={classes.sectionWrapper}>
-        <Toolbar />
-        <main
-          className={clsx(classes.mainSection, {
-            expanded: drawerClosed,
-          })}
-        >
-          <Switch>
-            <Route path="/dashboard" exact component={DashboardHome} />
-            <Route path="/dashboard/data-table-phones" exact component={DataTablePhones} />
-            <Route path="/dashboard/list-phones" exact component={CleanList} />
-          </Switch>
-        </main>
-        <Grid item container className={classes.copyright} xs={11} md={12}>
-          Copyright {today.getFullYear()} Ingenious Solution Group. All rights reserved.
-        </Grid>
+        <div className={classes.sectionWrapper}>
+          <Toolbar />
+          <main
+            className={clsx(classes.mainSection, {
+              expanded: drawerClosed,
+            })}
+          >
+            <Switch>
+              <Route path="/" exact component={Login} />
+              <Route path="/dashboard" exact component={DashboardHome} />
+              <Route
+                path="/dashboard/data-table-phones"
+                exact
+                component={DataTablePhones}
+              />
+            </Switch>
+          </main>
+          <Grid item container className={classes.copyright} xs={11} md={12}>
+            Copyright {today.getFullYear()} Ingenious Solution Group. All rights
+            reserved.
+          </Grid>
+        </div>
       </div>
-    </div>
     </Router>
   )
 }

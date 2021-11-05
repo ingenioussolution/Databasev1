@@ -18,6 +18,7 @@ export default makeStyles((theme) => ({
   sectionWrapper: {
     paddingLeft: theme.spacing(3),
     paddingRight: theme.spacing(3),
+    margin: '0 auto',
     [theme.breakpoints.down('md')]: {
       paddingLeft: theme.spacing(8),
       paddingRight: theme.spacing(8),
@@ -104,4 +105,5 @@ export default makeStyles((theme) => ({
       },
     },
   },
+
 }))

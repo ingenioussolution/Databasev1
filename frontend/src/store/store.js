@@ -13,7 +13,15 @@ import {
   registerPhoneCarrierReducer,
 } from '../reducers/backListPhonesCleanReducer'
 
-import {listPhoneCleanReducer} from '../reducers/phoneListCleanReducer'
+import {
+  adminUserLoginReducer,
+  userLoginReducer,
+  adminUserForgotPasswordReducer,
+  userForgotPasswordReducer,
+  userResetPasswordReducer,
+} from '../reducers/userReducers'
+
+import { listPhoneCleanReducer } from '../reducers/phoneListCleanReducer'
 
 const reducer = combineReducers({
   //List Phones reducers
@@ -24,10 +32,29 @@ const reducer = combineReducers({
   deletePhoneCarrier: deletePhoneCarrierReducer,
   phoneCarrierList: phoneCarrierListReducer,
   listPhoneClean: listPhoneCleanReducer,
+
+  userLogin: userLoginReducer,
+  userForgotPassword : userForgotPasswordReducer,
+  userResetPassword: userResetPasswordReducer,
+
+  adminUserLogin: adminUserLoginReducer,
+  adminUserForgotPassword: adminUserForgotPasswordReducer,
+  
+
 })
 
+const userInfoFromStorage = localStorage.getItem('userInfo')
+  ? JSON.parse(localStorage.getItem('userInfo'))
+  : null
+const adminUserInfoFromStorage = localStorage.getItem('adminUserInfo')
+  ? JSON.parse(localStorage.getItem('adminUserInfo'))
+  : null
+
 const middleware = [thunk]
-const initialState = {}
+const initialState = {
+  userLogin: { userInfo: userInfoFromStorage },
+  adminUserLogin: { adminUserInfo: adminUserInfoFromStorage },
+}
 
 const store = createStore(
   reducer,

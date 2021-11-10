@@ -18,18 +18,22 @@ const PhoneListSchema = mongoose.Schema(
     },
     clicker: {
       type: Boolean,
+      default:false,
     },
     revenue: {
       type: String,
     },
     converter: {
       type: Boolean,
+      default:false,
     },
     hardBounce: {
       type: Boolean,
+      default:false,
     },
     suppressed: {
       type: Boolean,
+      default:false,
     },
     list: { type: String,trim: true, },
     source: { type: String },
@@ -111,9 +115,11 @@ const PhoneListSchema = mongoose.Schema(
     },
     prepaid: {
       type: Boolean,
+      default:false,
     },
     risky: {
       type: Boolean,
+      default:false,
     },
     city: {
       type: String,
@@ -138,6 +144,7 @@ const PhoneListSchema = mongoose.Schema(
     },
     validity: {
       type: Boolean,
+      default:false,
     },
     subject: { type: String },
     vertical2: { type: String },

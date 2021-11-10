@@ -19,10 +19,10 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined'
 import { useLocation, useHistory } from 'react-router-dom'
 import PasswordInput from '../../../passwordInput/PasswordInput'
 import {
-    login,
-    ForgotPassword,
-    resetPassword,
-  } from '../../../../actions/userActions'
+  login,
+  ForgotPassword,
+  resetPassword,
+} from '../../../../actions/userActions'
 import Message from '../../../message/Message'
 import Loader from '../../../Loader/Loader'
 import layoutStyles from '../../../DashboardLayout/styles'
@@ -36,7 +36,9 @@ const Login = () => {
   const dispatch = useDispatch()
 
   const [isPasswordForgot, setIsPasswordForgot] = useState(false)
-  const redirect = location.search ? location.search.split('=')[1] : '/'
+  const redirect = location.search
+    ? location.search.split('=')[1]
+    : '/dashboard'
 
   const [Credentials, setCredentials] = useState({
     email: '',
@@ -44,18 +46,12 @@ const Login = () => {
   })
 
   const { email, password } = Credentials
- //---------- Actions. ------------------
+  //---------- Actions. ------------------
 
   const UserLogin = useSelector((state) => state.userLogin)
-  const {
-    loading: loginLoading,
-    error: loginError,
-    userInfo,
-  } = UserLogin
+  const { loading: loginLoading, error: loginError, userInfo } = UserLogin
 
-  const userForgotPassword = useSelector(
-    (state) => state.userForgotPassword
-  )
+  const userForgotPassword = useSelector((state) => state.userForgotPassword)
   const {
     loading: forgotLoading,
     error: forgotError,
@@ -66,9 +62,9 @@ const Login = () => {
     setIsPasswordForgot(!isPasswordForgot)
   }
 
-//------------- Actions ---------
+  //------------- Actions ---------
 
-const handleLoginSubmit = (e) => {
+  const handleLoginSubmit = (e) => {
     e.preventDefault()
     dispatch(login(email, password))
   }
@@ -79,7 +75,6 @@ const handleLoginSubmit = (e) => {
     setCredentials({ ...Credentials, [name]: value })
   }
 
-
   useEffect(() => {
     document.title = 'Data Base - Login'
 
@@ -88,7 +83,7 @@ const handleLoginSubmit = (e) => {
     }
     if (forgotSuccess) {
       const backToLogin = () => {
-    dispatch(resetPassword())
+        dispatch(resetPassword())
         handleForgotClick()
       }
       setTimeout(backToLogin, 2000)
@@ -130,14 +125,12 @@ const handleLoginSubmit = (e) => {
               justifyContent="center"
               alignItems="center"
             >
-              {/*
-                {loginLoading && <Loader />}
-                    {loginError && (
-                    <Message severity='error' className={classes.loginError}>
-                        {loginError}
-                    </Message>
-                )}
-            */}
+              {loginLoading && <Loader />}
+              {loginError && (
+                <Message severity="error" className={classes.loginError}>
+                  {loginError}
+                </Message>
+              )}
             </Grid>
 
             <Grid container item xs={12}>
@@ -149,7 +142,7 @@ const handleLoginSubmit = (e) => {
                 name="email"
                 required
                 fullWidth
-                //onChange={handleChange}
+                onChange={handleChange}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">
@@ -168,9 +161,9 @@ const handleLoginSubmit = (e) => {
                 margin="normal"
                 name="password"
                 label="password"
-                //value={agentCredentials.password}
+                value={Credentials.password}
                 id="password"
-                //onChange={handleChange}
+                onChange={handleChange}
               />
             </Grid>
 
@@ -180,6 +173,7 @@ const handleLoginSubmit = (e) => {
                 variant="contained"
                 className={classes.btnStyle}
                 fullWidth
+                onClick={handleLoginSubmit}
               >
                 Login
               </Button>
@@ -228,19 +222,17 @@ const handleLoginSubmit = (e) => {
               justifyContent="center"
               alignItems="center"
             >
-              {/*
-                {forgotLoading && <Loader />}
-                {forgotError && (
-                  <Message severity='error' className={classes.loginError}>
-                    {forgotError}
-                  </Message>
-                )}
-                {forgotSuccess && (
-                  <Message severity='success' className={classes.loginError}>
-                    Soon you will receive and email with instructions.
-                  </Message>
-                )}
-            */}
+              {forgotLoading && <Loader />}
+              {forgotError && (
+                <Message severity="error" className={classes.loginError}>
+                  {forgotError}
+                </Message>
+              )}
+              {forgotSuccess && (
+                <Message severity="success" className={classes.loginError}>
+                  Soon you will receive and email with instructions.
+                </Message>
+              )}
             </Grid>
 
             <Grid container item xs={12}>

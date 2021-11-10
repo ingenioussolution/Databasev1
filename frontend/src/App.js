@@ -11,6 +11,9 @@ import {
   withRouter,
 } from 'react-router-dom'
 
+import {logout} from './actions/userActions'
+import { useSelector } from 'react-redux'
+
 import NavigatorLayout from './components/DashboardNavigation/DashboardNavigation'
 import Navigation from './components/Dashboard/NavigationLayout/NavigationLayout'
 import DashboardHome from './components/Dashboard/pages/DashboardHome/DashboardHome'
@@ -21,6 +24,13 @@ const App = ({ location }) => {
   const classes = StyleApp()
   const [drawerClosed, setDraweClosed] = useState(false)
 
+  const UserLogin = useSelector((state) => state.userLogin)
+  const {
+    loading: loginLoading,
+    error: loginError,
+    userInfo,
+  } = UserLogin
+
   const today = new Date()
 
   return (
@@ -29,6 +39,8 @@ const App = ({ location }) => {
         <CssBaseline />
         {location.pathname.includes('dashboard') && (
           <NavigatorLayout
+            authenticatedUser={userInfo}
+            logoutAction={logout}
             onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
             dashboardUrl="/dashboard"
             drawerContent={<Navigation />}

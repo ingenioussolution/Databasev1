@@ -32,15 +32,13 @@ const reducer = combineReducers({
   deletePhoneCarrier: deletePhoneCarrierReducer,
   phoneCarrierList: phoneCarrierListReducer,
   listPhoneClean: listPhoneCleanReducer,
-
+  //User reducers
   userLogin: userLoginReducer,
-  userForgotPassword : userForgotPasswordReducer,
+  userForgotPassword: userForgotPasswordReducer,
   userResetPassword: userResetPasswordReducer,
-
+  // Admin Reducers
   adminUserLogin: adminUserLoginReducer,
   adminUserForgotPassword: adminUserForgotPasswordReducer,
-  
-
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

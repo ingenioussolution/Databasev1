@@ -9,8 +9,10 @@ export const authUser = asyncHandler(async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email: email })
+    console.log("email exist:" , user);
 
     if (user && (await user.matchPassword(password))) {
+      console.log("auth exist math");
       res.json({
         _id: user._id,
         firstName: user.firstName,

@@ -24,7 +24,7 @@ const PasswordInput = ({id, name, label, value, onChange, variant}) => {
       id={id}
       required
       fullWidth
-      //onChange={(evt) => onChange(evt)}
+      onChange={(evt) => onChange(evt)}
       variant={variant}
       InputProps={{
         endAdornment: (

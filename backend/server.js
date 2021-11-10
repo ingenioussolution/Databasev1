@@ -11,6 +11,7 @@ import phoneRoutes from './routes/phone.js'
 import carrierRoutes from './routes/carrierRouters.js'
 import ModelTemporal from './routes/TemporalDataRouters.js'
 import userRoutes from './routes/userRoutes.js'
+import badAreaCodeRoutes from './routes/badAreaCodeRouters.js'
 
 dotenv.config()
 connectDB()
@@ -28,6 +29,7 @@ app.use('/users', userRoutes)
 app.use('/phone', phoneRoutes)
 app.use('/carrier', carrierRoutes)
 app.use('/data-temporal', ModelTemporal)
+app.use('/api/bad-area-code', badAreaCodeRoutes)
 
 app.get('/', (req, res) => {
   res.send('Hello from node')

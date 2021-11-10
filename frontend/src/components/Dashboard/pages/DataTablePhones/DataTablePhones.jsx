@@ -136,6 +136,7 @@ const DataTablePhones = () => {
             padding: 'default',
             pageSizeOptions: [5, 10],
             filtering: true,
+        
           }}
           data={dataPagination}
         />

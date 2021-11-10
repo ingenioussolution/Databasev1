@@ -16,17 +16,19 @@ import MenuIcon from '@material-ui/icons/Menu'
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew'
 import useStyles from './styles.js'
 import { Link } from 'react-router-dom'
-
-
-
+import Swal from 'sweetalert2'
+import { useDispatch } from 'react-redux'
 
 const DashBoardNavigation = ({
   onDrawerToogle,
   drawerContent,
   dashboardUrl,
+  authenticatedUser,
+  logoutAction,
 }) => {
   const classes = useStyles()
   const theme = useTheme()
+  const dispatch = useDispatch()
 
   const [drawerOpen, setDrawerOpen] = useState(true)
   const [mobileOpen, setMobileOpen] = useState(false)
@@ -41,12 +43,29 @@ const DashBoardNavigation = ({
     onDrawerToogle(drawerOpen)
   }
 
+  const handleLogout = () => {
+    Swal.fire({
+      title: 'Logout?',
+      text: 'Are you sure you want to logout?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: `Yes, I'm out!`,
+      confirmButtonColor: theme.palette.dashboard.alertConfirm,
+      cancelButtonText: 'No, stay here!',
+      cancelButtonColor: theme.palette.dashboard.alertCancel,
+      customClass: {
+        container: 'high-z-index',
+      },
+    }).then((result) => {
+      if (result.isConfirmed) {
+        if (typeof logoutAction === 'function') dispatch(logoutAction())
+      }
+    })
+  }
+
   return (
     <>
-      <AppBar
-        position="fixed"
-        className={classes.appBar}
-      >
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
           <Grid container justifyContent="space-between">
             <Grid
@@ -54,7 +73,6 @@ const DashBoardNavigation = ({
               container
               xs={6}
               className={classes.logoMobileSection}
-              
               alignItems="center"
             >
               <IconButton
@@ -99,7 +117,7 @@ const DashBoardNavigation = ({
               alignItems="center"
             >
               <Hidden xsDown>
-                <h6>{`Hi, Lisandra`}</h6>
+                <h6> {authenticatedUser ? `Hi, ${authenticatedUser.firstName}` : ''}</h6>
               </Hidden>
 
               <Grid item>
@@ -108,6 +126,7 @@ const DashBoardNavigation = ({
                     aria-label="logout"
                     aria-haspopup="true"
                     color="inherit"
+                    onClick={handleLogout}
                   >
                     <PowerSettingsNewIcon />
                   </IconButton>
@@ -117,8 +136,7 @@ const DashBoardNavigation = ({
           </Grid>
         </Toolbar>
       </AppBar>
-    
-      
+
       <Hidden lgUp implementation="css">
         <SwipeableDrawer
           anchor={theme.direction === 'rtl' ? 'right' : 'left'}

@@ -19,6 +19,7 @@ import Navigation from './components/Dashboard/NavigationLayout/NavigationLayout
 import DashboardHome from './components/Dashboard/pages/DashboardHome/DashboardHome'
 import DataTablePhones from './components/Dashboard/pages/DataTablePhones/DataTablePhones'
 import Login from './components/Dashboard/pages/Login/Login'
+import CleanList from './components/Dashboard/pages/CleanList/CleanList'
 
 const App = ({ location }) => {
   const classes = StyleApp()
@@ -26,8 +27,6 @@ const App = ({ location }) => {
 
   const UserLogin = useSelector((state) => state.userLogin)
   const {
-    loading: loginLoading,
-    error: loginError,
     userInfo,
   } = UserLogin
 
@@ -37,7 +36,7 @@ const App = ({ location }) => {
     <Router>
       <div className={clsx('dashboard', classes.root)}>
         <CssBaseline />
-        {location.pathname.includes('dashboard') && (
+        
           <NavigatorLayout
             authenticatedUser={userInfo}
             logoutAction={logout}
@@ -45,7 +44,6 @@ const App = ({ location }) => {
             dashboardUrl="/dashboard"
             drawerContent={<Navigation />}
           />
-        )}
 
         <div className={classes.sectionWrapper}>
           <Toolbar />
@@ -62,6 +60,7 @@ const App = ({ location }) => {
                 exact
                 component={DataTablePhones}
               />
+              <Route path="/dashboard/list-phones" exact component={CleanList} />
             </Switch>
           </main>
           <Grid item container className={classes.copyright} xs={11} md={12}>

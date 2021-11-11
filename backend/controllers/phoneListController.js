@@ -805,7 +805,7 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
       phone: TemporalData[phoneCount].phone,
     })
 
-    console.log('TemporalData: ', TemporalData[phoneCount].phone)
+    //console.log('TemporalData: ', TemporalData[phoneCount])
     console.log('Phone Count: ', phoneCount)
 
     if (phoneExists) {
@@ -1211,7 +1211,9 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
       if (DeletePhone) {
         console.log('Phone Update delete')
         await DeletePhone.remove()
-      } //else {
+      }
+      
+      //else {
       //   res.status(404)
       //   throw new Error('Phone not found')
       // }

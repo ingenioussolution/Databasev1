@@ -14,23 +14,32 @@ import {
   PHONE_CLEAN_LIST_FAIL,
 } from '../constants/phonesListClean'
 
-export const phoneListRegister = (phoneClean) => async (dispatch) => {
+export const phoneListRegister = (phoneClean) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PHONE_CLEAN_REGISTER_REQUEST,
     })
+   
+    const {
+      userInfo: { userInfo },
+    } = getState()
+
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
     }
 
     const { data } = await axios.post('/phoneslist', phoneClean, config)
 
+    
+
     dispatch({
       type: PHONE_CLEAN_REGISTER_SUCCESS,
       payload: data,
     })
+
+    
 
     localStorage.setItem('phoneListInfo', JSON.stringify(data))
   } catch (error) {
@@ -44,14 +53,29 @@ export const phoneListRegister = (phoneClean) => async (dispatch) => {
   }
 }
 
-export const listPhoneData = (page) => async (dispatch) => {
-  if (page === 0 ? 1 : page)
+export const listPhoneData = (page) => async (dispatch, getState) => {
+  //if (page === 0 ? 1 : page)
+
+  console.log("page action",page);
     try {
       dispatch({
         type: PHONE_CLEAN_LIST_REQUEST,
       })
 
-      const { data } = await axios.get(`/phoneslist?pageNumber=${page}`)
+      const {
+        userLogin: { userInfo },
+      } = getState()
+  
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+          Authorization: `Bearer ${userInfo.token}`,
+        },
+      }
+
+      const { data } = await axios.get(`/phoneslist?pageNumber=${page}`,config)
+      
+      console.log("data Action",data);
 
       dispatch({
         type: PHONE_CLEAN_LIST_SUCCESS,
@@ -68,15 +92,20 @@ export const listPhoneData = (page) => async (dispatch) => {
     }
 }
 
-export const deletePhoneListClean = (id) => async (dispatch) => {
+
+export const deletePhoneListClean = (id) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PHONE_CLEAN_DELETE_REQUEST,
     })
 
+    const {
+      userInfo: { userInfo },
+    } = getState()
+
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
     }
 
@@ -96,15 +125,19 @@ export const deletePhoneListClean = (id) => async (dispatch) => {
   }
 }
 
-export const updateListPhoneClean = (phoneList) => async (dispatch) => {
+export const updateListPhoneClean = (phoneList) => async (dispatch, getState) => {
   try {
     dispatch({
       type: PHONE_CLEAN_UPDATE_REQUEST,
     })
 
+    const {
+      userInfo: { userInfo },
+    } = getState()
+
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
       },
     }
 

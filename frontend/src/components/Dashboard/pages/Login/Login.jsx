@@ -20,17 +20,17 @@ import { useLocation, useHistory } from 'react-router-dom'
 import PasswordInput from '../../../passwordInput/PasswordInput'
 import {
   login,
-  ForgotPassword,
+  forgotPassword,
   resetPassword,
 } from '../../../../actions/userActions'
 import Message from '../../../message/Message'
 import Loader from '../../../Loader/Loader'
-import layoutStyles from '../../../DashboardLayout/styles'
+//import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from './Styles'
 
 const Login = () => {
   const classes = useStyles()
-  const commons = layoutStyles()
+
   let history = useHistory()
   let location = useLocation()
   const dispatch = useDispatch()
@@ -83,7 +83,7 @@ const Login = () => {
     }
     if (forgotSuccess) {
       const backToLogin = () => {
-        dispatch(resetPassword())
+        dispatch(forgotPassword())
         handleForgotClick()
       }
       setTimeout(backToLogin, 2000)

@@ -200,8 +200,8 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
     }
   })
   
-  // @desc     Get forgot password token
-// @route    PUT /api/users/forgot-password
+  // @desc    Get forgot password token
+// @route    PUT /users/forgot-password
 // @access   Public
 export const forgotPassword = asyncHandler(async (req, res, next) => {
     try {

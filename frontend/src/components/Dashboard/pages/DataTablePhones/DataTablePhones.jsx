@@ -19,11 +19,17 @@ import Remove from '@material-ui/icons/Remove'
 import SaveAlt from '@material-ui/icons/SaveAlt'
 import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
+
+import axios from 'axios'
+import { useSelector } from 'react-redux'
+import { useHistory, useLocation } from 'react-router-dom'
+import { listPhonesUrl } from '../../../../actions/phoneListCleanActions'
 import {
   PHONE_CLEAN_LIST_REQUEST,
   PHONE_CLEAN_LIST_SUCCESS,
   PHONE_CLEAN_LIST_FAIL,
 } from '../../../../constants/phonesListClean'
+
 
 import { forwardRef } from 'react'
 const tableIcons = {
@@ -52,82 +58,104 @@ const tableIcons = {
 
 const DataTablePhones = () => {
   const dispatch = useDispatch()
+  const history = useHistory()
 
-  const [data, setData] = useState([])
+  const [dataTable, setDataTable] = useState([])
 
-  const dataPagination = (query) =>
+  const UserLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = UserLogin
+  
+  const dataPagination = (query) => 
     new Promise((resolve, reject) => {
-      let url = '/phoneslist?'
 
-      console.log('query', query)
-      //searching
-      if (query.search) {
-        url += '&q=' + query.search
-      }
+      if (userInfo === null || userInfo === undefined) {
+        history.push('/')
+        return
+      } else {
 
-      //filtering
-      if (query.filters.length) {
-        const filter = query.filters.map((filter) => {
-          return `&${filter.column.field}${filter.operator}${filter.value}`
-        })
-        url += filter.join('')
-      }
-
-      //sorting
-      if (query.orderBy) {
-        url += '&sort='(query.orderBy.field) + '&order='(query.orderDirection)
-      }
-      url += '&pageNumber=' + (query.page + 1)
-      console.log('URL', url)
-
-      fetch(url)
-        .then((response) => response.json())
-        .then((result) => {
-          resolve({
-            data: createRows(result.data),
-            page: result.page - 1,
-            totalCount: result.totalPages,
-          })
-          setData(result)
-        })
-    })
-
-  useEffect(() => {
-    document.title = 'Data Base List | Ingenious Solution Group'
-
-    const listPhoneClean = () => {
-      try {
         dispatch({
           type: PHONE_CLEAN_LIST_REQUEST,
         })
 
+        const config = {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${userInfo.token}`,
+          },
+        }
+
+        console.log("config", config);
+
+        let url = '/phoneslist?'
+        url += '&pageNumber=' + (query.page + 1)
+
+        //searching
+        if (query.search) {
+          url += '&q=' + query.search
+        }
+
+        //filtering
+        if (query.filters.length) {
+          const filter = query.filters.map((filter) => {
+            return `&${filter.column.field}${filter.operator}${filter.value}`
+          })
+          url += filter.join('')
+        }
+
+        //sorting
+        if (query.orderBy) {
+          url += '&sort='(query.orderBy.field) + '&order='(query.orderDirection)
+        }
+        
+          axios.get(url,config) 
+          //.then((response) => response.json())
+          .catch((error) =>{
+
+            console.log(error.response);
+            dispatch({
+              type: PHONE_CLEAN_LIST_FAIL,
+              payload:
+                error.response && error.response.data.message
+                  ? error.response.data.message
+                  : error.message,
+            })
+          })
+          .then((result) => {
+            resolve({
+              data: createRows(result.data.data),
+              page: result.data.page - 1,
+              totalCount: result.data.totalPages,
+            })
+            setDataTable(result)
+          })
+
         dispatch({
-          type: PHONE_CLEAN_LIST_SUCCESS,
-          payload: data,
-        })
-      } catch (error) {
-        dispatch({
-          type: PHONE_CLEAN_LIST_FAIL,
-          payload:
-            error.response && error.response.data.message
-              ? error.response.data.message
-              : error.message,
+            type: PHONE_CLEAN_LIST_SUCCESS,
+            payload: dataTable,
         })
       }
-    }
-    listPhoneClean()
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [data])
+    })
+
+//------------ UseEffect---------
+    useEffect(() => {
+      document.title = 'Data Base List | Ingenious Solution Group'
+  
+      if (userInfo === null || userInfo === undefined) {
+        history.push('/')
+        return
+      }
+
+      // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [history, userInfo, dispatch])
+
 
   return (
     <div>
-      {data ? (
         <MaterialTable
           style={{ padding: '20px' }}
           title="Ingenious Solution"
           columns={defaultColumns}
           icons={tableIcons}
-          
           options={{
             exportButton: true,
             paging: true,
@@ -136,13 +164,10 @@ const DataTablePhones = () => {
             padding: 'default',
             pageSizeOptions: [5, 10],
             filtering: true,
-        
           }}
           data={dataPagination}
         />
-      ) : (
-        <Loader />
-      )}
+        
     </div>
   )
 }

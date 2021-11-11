@@ -40,8 +40,13 @@ const CleanList = () => {
   const history = useHistory()
   const query = location.search ? new URLSearchParams(location.search) : false
 
+  const UserLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = UserLogin
+
   const listPhone = useSelector((state) => state.listPhoneClean)
   const { loading, error, listPhones, page, pages } = listPhone
+
+  console.log("page current", page);
 
   const [rowsPerPage, setRowsPerPage] = useState(10 || 5)
 
@@ -56,15 +61,21 @@ const CleanList = () => {
 
   useEffect(() => {
     document.title = 'Data Base List | Ingenious Solution Group'
+
+    if (userInfo === null || userInfo === undefined) {
+      history.push('/')
+      return
+    }
     if (pageState === 0) {
-      setPageState(pageState)
+      setPageState(0)
       dispatch(listPhoneData(pageState))
-    } else {
+    } else { 
       dispatch(listPhoneData(pageState))
     }
-  }, [dispatch, history, pageState])
+  }, [dispatch, history, pageState, userInfo])
 
   const handleChangePage = (event, newPage) => {
+   console.log("newPage",newPage);
     setPageState(newPage)
   }
 

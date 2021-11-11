@@ -302,7 +302,7 @@ export const updateUserProfilePicture =
       }
 
       const { data } = await axios.post(
-        '/api/users/profile-picture',
+        '/users/profile-picture',
         formData,
         config
       )
@@ -346,7 +346,7 @@ export const updateUserProfilePictureAsAdmin =
       }
 
       const { data } = await axios.post(
-        `/api/users/profile-picture/${id}`,
+        `/users/profile-picture/${id}`,
         formData,
         config
       )
@@ -382,7 +382,7 @@ export const listUsers = () => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axios.get('/api/users', config)
+    const { data } = await axios.get('/users', config)
 
     dispatch({
       type: USER_LIST_SUCCESS,
@@ -415,7 +415,7 @@ export const listUsersAsAdmin = () => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axios.get('/api/users', config)
+    const { data } = await axios.get('/users', config)
 
     dispatch({
       type: USER_LIST_SUCCESS,
@@ -448,7 +448,7 @@ export const deleteUser = (id) => async (dispatch, getState) => {
       },
     }
 
-    await axios.delete(`/api/users/${id}`, config)
+    await axios.delete(`/users/${id}`, config)
 
     dispatch({
       type: USER_DELETE_SUCCESS,
@@ -538,7 +538,7 @@ export const forgotPassword = (email) => async (dispatch) => {
       type: USER_FORGOT_PASSWORD_REQUEST,
     })
 
-    const { data } = await axios.post(`/api/users/forgot-password`, { email })
+    const { data } = await axios.post(`/users/forgot-password`, { email })
 
     // await sendEmail(FORGOT_PASSWORD_EMAIL_TEMPLATE_ID, {
     //   to_name: data.firstName,

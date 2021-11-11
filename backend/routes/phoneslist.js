@@ -11,9 +11,11 @@ import {
 
 import {ExportCSV} from '../controllers/UploadPhoneList.js'
 
+import { protect } from '../middlewere/authMiddlewere.js'
+
 const route = express.Router()
 
-route.get('/', getPhoneListFrontEnd)
+route.get('/', protect, getPhoneListFrontEnd)
 route.get('/status', getPhoneListByStatus)
 route.get('/filters', getPhoneListFrontEnd1)
 route.get('/export-csv', ExportCSV)

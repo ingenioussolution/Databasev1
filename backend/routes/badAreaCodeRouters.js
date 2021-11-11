@@ -13,3 +13,5 @@ router.get('/', protect, getAreaCode)
 router.post('/', protect, registerBadAreaCode)
 router.put('/', protect, UpdateBadAreaCode)
 router.delete('/', protect, deleteBadAreaCode)
+
+export default router

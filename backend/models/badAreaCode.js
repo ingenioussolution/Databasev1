@@ -2,10 +2,14 @@ import mongoose from 'mongoose'
 
 const BadAreaCodeSchema = mongoose.Schema(
   {
-    state: {
+    nameState: {
       type: String,
       default: null
     },
+    state: {
+        type: String,
+        default: null
+      },
     areaCode: {
       type: String,
       required: true,

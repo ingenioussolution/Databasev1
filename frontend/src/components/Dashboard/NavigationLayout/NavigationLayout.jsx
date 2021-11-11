@@ -46,7 +46,7 @@ const NavigationLayout = () => {
           </ListItem>
         </Link>
 
-        {/*
+        
         <Link to={'/dashboard/list-phones'}>
           <ListItem
             button
@@ -61,7 +61,7 @@ const NavigationLayout = () => {
             <ListItemText>Data Table V1</ListItemText>
           </ListItem>
         </Link>
-        */}
+      
         
         
       </List>

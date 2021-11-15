@@ -11,24 +11,23 @@ import {
   withRouter,
 } from 'react-router-dom'
 
-import {logout} from './actions/userActions'
+import { logout } from './actions/userActions'
 import { useSelector } from 'react-redux'
-
 import NavigatorLayout from './components/DashboardNavigation/DashboardNavigation'
 import Navigation from './components/Dashboard/NavigationLayout/NavigationLayout'
 import DashboardHome from './components/Dashboard/pages/DashboardHome/DashboardHome'
 import DataTablePhones from './components/Dashboard/pages/DataTablePhones/DataTablePhones'
 import Login from './components/Dashboard/pages/Login/Login'
 import CleanList from './components/Dashboard/pages/CleanList/CleanList'
+import ResetPassword from './components/Dashboard/pages/Reset-Password/ResetPassword'
+import ProfileUser from './components/Dashboard/pages/ProfileUser/ProfileUser'
 
 const App = ({ location }) => {
   const classes = StyleApp()
   const [drawerClosed, setDraweClosed] = useState(false)
 
   const UserLogin = useSelector((state) => state.userLogin)
-  const {
-    userInfo,
-  } = UserLogin
+  const { userInfo } = UserLogin
 
   const today = new Date()
 
@@ -36,14 +35,15 @@ const App = ({ location }) => {
     <Router>
       <div className={clsx('dashboard', classes.root)}>
         <CssBaseline />
-        
-          <NavigatorLayout
-            authenticatedUser={userInfo}
-            logoutAction={logout}
-            onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
-            dashboardUrl="/dashboard"
-            drawerContent={<Navigation />}
-          />
+        <NavigatorLayout
+          authenticatedUser={userInfo}
+          logoutAction={logout}
+          onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
+          dashboardUrl="/dashboard"
+          drawerContent={<Navigation />}
+          settings={<ProfileUser/>}
+          profileUrl = "/dashboard/profile"
+        />
 
         <div className={classes.sectionWrapper}>
           <Toolbar />
@@ -56,11 +56,25 @@ const App = ({ location }) => {
               <Route path="/" exact component={Login} />
               <Route path="/dashboard" exact component={DashboardHome} />
               <Route
+                exact
+                path={'/reset-password/:token'}
+                component={ResetPassword}
+              ></Route>
+              <Route
                 path="/dashboard/data-table-phones"
                 exact
                 component={DataTablePhones}
               />
-              <Route path="/dashboard/list-phones" exact component={CleanList} />
+              <Route
+                path="/dashboard/list-phones"
+                exact
+                component={CleanList}
+              />
+              <Route
+                path="/dashboard/profile"
+                exact
+                component={ProfileUser}
+              />
             </Switch>
           </main>
           <Grid item container className={classes.copyright} xs={11} md={12}>

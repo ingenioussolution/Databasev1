@@ -21,7 +21,6 @@ import PasswordInput from '../../../passwordInput/PasswordInput'
 import {
   login,
   forgotPassword,
-  resetPassword,
 } from '../../../../actions/userActions'
 import Message from '../../../message/Message'
 import Loader from '../../../Loader/Loader'
@@ -73,6 +72,11 @@ const Login = () => {
     const { value, name } = event.target
 
     setCredentials({ ...Credentials, [name]: value })
+  }
+
+  const handleForgotPasswordSubmit = (e) => {
+    e.preventDefault()
+    dispatch(forgotPassword(email))
   }
 
   useEffect(() => {
@@ -190,7 +194,7 @@ const Login = () => {
   ) : (
     <Grid>
       <Paper elevation={10} className={classes.formWrapper}>
-        <form className={classes.form}>
+        <form className={classes.form} onSubmit={handleForgotPasswordSubmit}>
           <Grid
             container
             item
@@ -244,7 +248,7 @@ const Login = () => {
                 name="email"
                 required
                 fullWidth
-                //onChange={handleChange}
+                onChange={handleChange}
                 InputProps={{
                   endAdornment: (
                     <InputAdornment position="end">

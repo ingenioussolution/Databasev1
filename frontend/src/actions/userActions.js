@@ -43,12 +43,11 @@ import {
   USER_UPDATE_PROFILE_PICTURE_FAIL,
   
 } from '../constants/userConstants'
-// import {
-//   sendEmail,
-//   FORGOT_PASSWORD_EMAIL_TEMPLATE_ID,
-//   RESET_PASSWORD_EMAIL_TEMPLATE_ID,
-//   CONFIRMATION_REGISTER_FAN,
-// } from '../utils/sendEmail'
+import {
+  sendEmail,
+  FORGOT_PASSWORD_EMAIL_TEMPLATE_ID,
+  RESET_PASSWORD_EMAIL_TEMPLATE_ID,
+} from '../utils/sendEmail'
 
 export const login = (email, password) => async (dispatch) => {
   try {
@@ -244,7 +243,7 @@ export const getUserDetailsAsAdmin = (id) => async (dispatch, getState) => {
   }
 }
 
-export const updateUserProfile = (user) => async (dispatch, getState) => {
+export const updateProfile = (user) => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_UPDATE_PROFILE_REQUEST,
@@ -512,7 +511,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
       },
     }
 
-    const { data } = await axios.put(`/api/users/${user._id}`, user, config)
+    const { data } = await axios.put(`/users/${user._id}`, user, config)
 
     dispatch({
       type: USER_UPDATE_SUCCESS,
@@ -533,19 +532,20 @@ export const updateUser = (user) => async (dispatch, getState) => {
 }
 
 export const forgotPassword = (email) => async (dispatch) => {
+  console.log("email forgot password", email);
   try {
     dispatch({
       type: USER_FORGOT_PASSWORD_REQUEST,
     })
 
-    const { data } = await axios.post(`/users/forgot-password`, { email })
+    const { data } = await axios.post('/users/forgot-password', { email })
 
-    // await sendEmail(FORGOT_PASSWORD_EMAIL_TEMPLATE_ID, {
-    //   to_name: data.firstName,
-    //   to_email: email,
-    //   subject: 'Password reset link',
-    //   reset_password_link: `https://${window.location.hostname}/reset-password/${data.token}`,
-    // })
+    await sendEmail(FORGOT_PASSWORD_EMAIL_TEMPLATE_ID, {
+      to_name: data.firstName,
+      to_email: email,
+      subject: 'Password reset link',
+      reset_password_link: `https://${window.location.hostname}/reset-password/${data.token}`,
+    })
 
     dispatch({
       type: USER_FORGOT_PASSWORD_SUCCESS,
@@ -568,16 +568,16 @@ export const adminForgotPassword = (email) => async (dispatch) => {
       type: ADMIN_USER_FORGOT_PASSWORD_REQUEST,
     })
 
-    const { data } = await axios.post(`/api/users/admin-forgot-password`, {
+    const { data } = await axios.post('/users/admin-forgot-password', {
       email,
     })
 
-    // await sendEmail(FORGOT_PASSWORD_EMAIL_TEMPLATE_ID, {
-    //   to_name: data.firstName,
-    //   to_email: email,
-    //   subject: 'Password reset link',
-    //   reset_password_link: `https://${window.location.hostname}/admin/reset-password/${data.token}`,
-    // })
+    await sendEmail(FORGOT_PASSWORD_EMAIL_TEMPLATE_ID, {
+      to_name: data.firstName,
+      to_email: email,
+      subject: 'Password reset link',
+      reset_password_link: `https://${window.location.hostname}/admin/reset-password/${data.token}`,
+    })
 
     dispatch({
       type: ADMIN_USER_FORGOT_PASSWORD_SUCCESS,
@@ -607,17 +607,17 @@ export const resetPassword =
         type: USER_RESET_PASSWORD_REQUEST,
       })
 
-      const { data } = await axios.post(`/api/users/reset-password`, {
+      const { data } = await axios.post(`/users/reset-password`, {
         token,
         newPassword,
         verifyPassword,
       })
 
-    //   await sendEmail(RESET_PASSWORD_EMAIL_TEMPLATE_ID, {
-    //     to_name: data.firstName,
-    //     to_email: data.email,
-    //     subject: 'Password changed!',
-    //   })
+      await sendEmail(RESET_PASSWORD_EMAIL_TEMPLATE_ID, {
+        to_name: data.firstName,
+        to_email: data.email,
+        subject: 'Password changed!',
+      })
 
       dispatch({
         type: USER_RESET_PASSWORD_SUCCESS,

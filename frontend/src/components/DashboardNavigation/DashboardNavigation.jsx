@@ -14,10 +14,12 @@ import {
 
 import MenuIcon from '@material-ui/icons/Menu'
 import PowerSettingsNewIcon from '@material-ui/icons/PowerSettingsNew'
-import useStyles from './styles.js'
 import { Link } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import { useDispatch } from 'react-redux'
+import SettingsIcon from '@material-ui/icons/Settings';
+import useStyles from './styles.js'
+
 
 const DashBoardNavigation = ({
   onDrawerToogle,
@@ -25,6 +27,8 @@ const DashBoardNavigation = ({
   dashboardUrl,
   authenticatedUser,
   logoutAction,
+  settingsMenu,
+  profileUrl,
 }) => {
   const classes = useStyles()
   const theme = useTheme()
@@ -117,8 +121,23 @@ const DashBoardNavigation = ({
               alignItems="center"
             >
               <Hidden xsDown>
-                <h6> {authenticatedUser ? `Hi, ${authenticatedUser.firstName}` : ''}</h6>
+                <h6> {authenticatedUser ? `Hi, ${authenticatedUser.username}` : ''}</h6>
               </Hidden>
+              <Grid item>
+                {profileUrl && (
+                  <Link to={profileUrl}>
+                    <IconButton
+                      edge='end'
+                      aria-label='settings'
+                      aria-haspopup='true'
+                      color='inherit'
+                    >
+                      <SettingsIcon />
+                    </IconButton>
+                  </Link>
+                )}
+                {settingsMenu}
+              </Grid>
 
               <Grid item>
                 <Tooltip title="Logout" aria-label="logout">

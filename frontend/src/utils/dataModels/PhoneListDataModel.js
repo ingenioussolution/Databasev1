@@ -1,7 +1,4 @@
 import { dollarUS } from '../format'
-import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
-
-
 
 export const phone = {
   field: 'phone',
@@ -10,7 +7,6 @@ export const phone = {
 export const firstName = {
   field: 'firstName',
   title: 'First_Name',
-  
 }
 
 export const lastName = {
@@ -71,7 +67,7 @@ export const state = {
 
 export const revenue = {
   field: 'revenue',
-  title: 'Revenue',  
+  title: 'Revenue',
 }
 
 export const creditScore = {
@@ -240,9 +236,14 @@ export const vertical3 = {
 }
 
 export const updatedAt = {
+  field: 'updatedAt',
+  title: 'Update Date',
+  type: 'date',
+}
+export const createdAt = {
   field: 'createdAt',
-  title: 'Date',
-  type: "date",
+  title: 'Create Date',
+  type: 'date',
 }
 
 export const formatBlackList = (blackListAlliance) => {
@@ -366,7 +367,7 @@ export const defaultColumns = [
   phone,
   carrier,
   firstName,
-  lastName === "" ? null : lastName,
+  lastName === '' ? null : lastName,
   clicker,
   converter,
   hardBounce,

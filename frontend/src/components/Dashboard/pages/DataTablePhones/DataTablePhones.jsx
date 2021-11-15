@@ -2,8 +2,6 @@ import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
 import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
-import { useDispatch } from 'react-redux'
-import Loader from '../../../Loader/Loader'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowUpward from '@material-ui/icons/ArrowUpward'
 import Check from '@material-ui/icons/Check'
@@ -21,7 +19,7 @@ import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
 
 import axios from 'axios'
-import { useSelector } from 'react-redux'
+import { useSelector , useDispatch} from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import {
   PHONE_CLEAN_LIST_REQUEST,

@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import generateToken from '../utils/generateToken.js'
 import User from '../models/userModel.js'
+import { randomBytes } from 'crypto'
 
 // @desc     Auth user & get token
 // @route    POST /users/login
@@ -9,14 +10,13 @@ export const authUser = asyncHandler(async (req, res, next) => {
   try {
     const { email, password } = req.body
     const user = await User.findOne({ email: email })
-    console.log("email exist:" , user);
 
     if (user && (await user.matchPassword(password))) {
-      console.log("auth exist math");
       res.json({
         _id: user._id,
         firstName: user.firstName,
         lastName: user.lastName,
+        username: user.username,
         email: user.email,
         avatar: user.avatar,
         isAdmin: user.isAdmin,
@@ -200,8 +200,8 @@ export const deleteUser = asyncHandler(async (req, res, next) => {
     }
   })
   
-  // @desc    Get forgot password token
-// @route    PUT /users/forgot-password
+// @desc     POST forgot password token
+// @route    POST /users/forgot-password
 // @access   Public
 export const forgotPassword = asyncHandler(async (req, res, next) => {
     try {
@@ -209,8 +209,12 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
         email: req.body.email,
       })
   
+      console.log("user email Body", user);
+
       if (user) {
         let token = randomBytes(20).toString('hex')
+
+        console.log("token", token);
   
         user.resetPasswordToken = token
         user.resetPasswordExpires = Date.now() + 86400000
@@ -227,7 +231,7 @@ export const forgotPassword = asyncHandler(async (req, res, next) => {
   })
   
   // @desc     Get forgot password token
-  // @route    PUT /api/users/admin-forgot-password
+  // @route    PUT /users/admin-forgot-password
   // @access   Public
   export const adminForgotPassword = asyncHandler(async (req, res, next) => {
     try {

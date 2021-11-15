@@ -26,6 +26,12 @@ import {
 
 import { listPhoneCleanReducer } from '../reducers/phoneListCleanReducer'
 
+import {
+  siteSettingsReducer,
+  siteSettingsUpdateReducer,
+  systemUpdateNotifyReducer,
+} from '../reducers/siteSettingsReducer'
+
 const reducer = combineReducers({
   //List Phones reducers
   registerPhone: registerPhoneReducer,
@@ -44,6 +50,10 @@ const reducer = combineReducers({
   // Admin Reducers
   adminUserLogin: adminUserLoginReducer,
   adminUserForgotPassword: adminUserForgotPasswordReducer,
+  // setting Email
+  siteSettingsDetails: siteSettingsReducer,
+  siteSettingsUpdate: siteSettingsUpdateReducer,
+  systemUpdateNotify: systemUpdateNotifyReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

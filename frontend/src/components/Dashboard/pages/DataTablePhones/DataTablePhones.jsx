@@ -22,8 +22,7 @@ import ViewColumn from '@material-ui/icons/ViewColumn'
 
 import axios from 'axios'
 import { useSelector } from 'react-redux'
-import { useHistory, useLocation } from 'react-router-dom'
-import { listPhonesUrl } from '../../../../actions/phoneListCleanActions'
+import { useHistory } from 'react-router-dom'
 import {
   PHONE_CLEAN_LIST_REQUEST,
   PHONE_CLEAN_LIST_SUCCESS,
@@ -84,7 +83,7 @@ const DataTablePhones = () => {
           },
         }
 
-        console.log("config", config);
+        console.log("query", query);
 
         let url = '/phoneslist?'
         url += '&pageNumber=' + (query.page + 1)
@@ -101,6 +100,8 @@ const DataTablePhones = () => {
           })
           url += filter.join('')
         }
+
+        console.log("url: ", url);
 
         //sorting
         if (query.orderBy) {

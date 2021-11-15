@@ -46,8 +46,8 @@ const NavigationLayout = () => {
           </ListItem>
         </Link>
 
-        
-        <Link to={'/dashboard/list-phones'}>
+        {/*
+          <Link to={'/dashboard/list-phones'}>
           <ListItem
             button
             key="dashboard-data-table-phones"
@@ -61,6 +61,8 @@ const NavigationLayout = () => {
             <ListItemText>Data Table V1</ListItemText>
           </ListItem>
         </Link>
+        */}
+      
       
         
         

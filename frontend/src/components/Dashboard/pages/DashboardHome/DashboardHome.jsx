@@ -1,4 +1,4 @@
-import React from 'react'
+import React,{useEffect} from 'react'
 import {
   Card,
   CardContent,
@@ -17,6 +17,8 @@ import {
   FaCheckSquare,
 } from 'react-icons/fa'
 
+import { useSelector } from 'react-redux'
+import { useHistory } from 'react-router-dom'
 import DashboardItem from '../../../DashboardItem/DashboardItem'
 import Message from '../../../DashboardItem/DashboardItem'
 
@@ -25,7 +27,20 @@ import Message from '../../../DashboardItem/DashboardItem'
 const DashboardHome = () => {
   //const classes = useStyles()
 
-  //const COLORS = ['#ff9800', '#0277bd']
+  const history = useHistory()
+  const UserLogin = useSelector((state) => state.userLogin)
+  const { userInfo } = UserLogin
+
+
+  useEffect(() => {
+    document.title = 'Dashboard Home | Ingenious Solution Group'
+
+    if (userInfo === null || userInfo === undefined) {
+      history.push('/')
+      return
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history, userInfo])
 
   return (
     <Grid container justifyContent="space-around" spacing={3}>

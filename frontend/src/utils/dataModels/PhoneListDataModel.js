@@ -1,5 +1,5 @@
 import { dollarUS } from '../format'
-
+import { DateRangePickerComponent } from '@syncfusion/ej2-react-calendars';
 
 
 
@@ -240,9 +240,9 @@ export const vertical3 = {
 }
 
 export const updatedAt = {
-  field: 'updatedAt',
+  field: 'createdAt',
   title: 'Date',
-  type: 'date',
+  type: "date",
 }
 
 export const formatBlackList = (blackListAlliance) => {

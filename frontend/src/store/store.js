@@ -19,6 +19,9 @@ import {
   adminUserForgotPasswordReducer,
   userForgotPasswordReducer,
   userResetPasswordReducer,
+  //--- profile User---
+  userDetailsReducer, 
+  userUpdateProfileReducer,
 } from '../reducers/userReducers'
 
 import { listPhoneCleanReducer } from '../reducers/phoneListCleanReducer'
@@ -36,6 +39,8 @@ const reducer = combineReducers({
   userLogin: userLoginReducer,
   userForgotPassword: userForgotPasswordReducer,
   userResetPassword: userResetPasswordReducer,
+  userUpdateProfile: userUpdateProfileReducer,
+  userDetails: userDetailsReducer,
   // Admin Reducers
   adminUserLogin: adminUserLoginReducer,
   adminUserForgotPassword: adminUserForgotPasswordReducer,

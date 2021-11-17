@@ -157,9 +157,10 @@ const DataTablePhones = () => {
           icons={tableIcons}
           options={{
             exportButton: true,
+            exportAllData: true,
             paging: true,
             pageSize: 10,
-            selection: true,
+            selection: false,
             padding: 'default',
             pageSizeOptions: [5, 10],
             filtering: true,

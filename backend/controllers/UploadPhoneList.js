@@ -3,12 +3,16 @@ import asyncHandler from 'express-async-handler'
 import moment from 'moment'
 import fastcsv from 'fast-csv'
 import fs from 'fs'
+import path from 'path';
+import { fileURLToPath } from 'url';
+import express from 'express';
 
 // @routes GET /phoneslist/export-csv
 // @des GET Export csv
 // @access  Private/User
 
 export const ExportCSV = asyncHandler(async (req, res, next) => {
+ 
   try {
     // FILTERS QUERY
 
@@ -30,9 +34,16 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
 
     let regex = req.query.q
     let search = { $regex: regex, $options: 'i' }
+  
+    const dateTime = moment().format('YYYY-MM-DD')
 
-    const dateTime = moment().format('YYYYMMDDhhmmss')
-    const ws = fs.createWriteStream('data' + dateTime + '.csv')
+    const app = express();
+
+    const __dirname = path.dirname(fileURLToPath(import.meta.url));
+    const filePath = path.join(__dirname,"../../exports", "csv-" + dateTime + ".csv");
+    const ws = fs.createWriteStream(filePath)
+
+    //const ws = fs.createWriteStream('data' + dateTime + '.csv')
 
     if (
       clicker ||
@@ -120,12 +131,16 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           ],
         })
         .on('finish', function () {
-          res.send(
-            "<a href='/public/data'+ dateTime + '.csv' download='data.csv' id='download-link'></a><script>document.getElementById('download-link').click();</script>"
-          )
+          res.download(filePath);
+
+        //  res.json(filePath);
+        //  res.send(
+        //   "<a href='public/data.csv' download='data.csv' id='download-link'></a><script>document.getElementById('download-link').click();</script>"
+        // )
           console.log('Export complete')
         })
         .pipe(ws)
+
     }
     //------------------------------------
     else if (regex) {

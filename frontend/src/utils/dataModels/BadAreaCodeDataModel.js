@@ -1,22 +1,30 @@
+import stateList from '../statesList'
+let arrayNameState = []
+let arrayState = []
+
+stateList.map((nameIndex) => {
+  return arrayNameState.push(nameIndex.nameState) , arrayState.push(nameIndex.state)
+})
+
+console.log("name1: ", arrayNameState);
+
 export const nameState = {
   field: 'nameState',
   title: 'Name State',
+  lookup: {...arrayNameState}
+  
 }
 export const state = {
   field: 'state',
   title: 'State',
+  lookup: {...arrayState}
 }
 export const areaCode = {
   field: 'areaCode',
   title: 'Area Code',
 }
-export const updatedAt = {
-  field: 'updatedAt',
-  title: 'Update Date',
-  type: 'date',
-}
 
-
+console.log(nameState);
 export const createRows = (data) => {
   let rows = []
   if (data) {

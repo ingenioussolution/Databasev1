@@ -18,7 +18,7 @@ export const registerPhoneReducer = (state = {}, action) => {
     case PHONE_REGISTER_REQUEST:
       return { loading: true }
     case PHONE_REGISTER_SUCCESS:
-      return { loading: false, phones: action.payload }
+      return { loading: false, userInfo: action.payload }
     case PHONE_REGISTER_FAIL:
       return { loading: false, error: action.payload }
     case PHONE_REGISTER_RESET:

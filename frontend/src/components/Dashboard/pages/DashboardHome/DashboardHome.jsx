@@ -15,6 +15,7 @@ import {
   FaTimesCircle,
   FaRegClock,
   FaCheckSquare,
+  FaBroadcastTower,
 } from 'react-icons/fa'
 
 import { useSelector } from 'react-redux'
@@ -151,6 +152,68 @@ const DashboardHome = () => {
           </CardContent>
         </Card>
       </Grid>
+      <Grid item xs={12} md={12}>
+      <Card>
+        <CardHeader title={'Carriers'} />
+        <CardContent>
+          <Grid container spacing={3}>
+            <Grid item xs={12} sm={6} md={2}>
+              <DashboardItem
+                title={'Verizon'}
+                icon={<FaBroadcastTower />}
+                detailColor="colorLight"
+                bgColor="green"
+                value={'1000'}
+                to="#"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <DashboardItem
+                title={'T-Mobile'}
+                icon={<FaBroadcastTower />}
+                detailColor="colorLight"
+                bgColor="red"
+                value={'1000'}
+                to="#"
+              />
+            </Grid>
+
+            <Grid item xs={12} sm={6} md={2}>
+              <DashboardItem
+                title={'Sprint'}
+                icon={<FaBroadcastTower />}
+                value={'4000'}
+                detailColor="colorLight"
+                bgColor="orange"
+                to="#"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <DashboardItem
+                title={'AT&T'}
+                icon={<FaBroadcastTower />}
+                value={'4000'}
+                detailColor="colorLight"
+                bgColor="blue"
+                to="#"
+              />
+            </Grid>
+            <Grid item xs={12} sm={6} md={2}>
+              <DashboardItem
+                title={'US Cellular'}
+                icon={<FaBroadcastTower />}
+                value={'4000'}
+                detailColor="colorLight"
+                bgColor="dark"
+                to="#"
+              />
+            </Grid>
+          
+          </Grid>
+        </CardContent>
+      </Card>
+    </Grid>
+    
     </Grid>
   )
 }

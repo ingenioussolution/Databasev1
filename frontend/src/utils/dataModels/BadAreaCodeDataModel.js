@@ -15,11 +15,7 @@ export const updatedAt = {
   title: 'Update Date',
   type: 'date',
 }
-export const createdAt = {
-  field: 'createdAt',
-  title: 'Create Date',
-  type: 'date',
-}
+
 
 export const createRows = (data) => {
   let rows = []
@@ -40,4 +36,4 @@ export const createRows = (data) => {
   return rows
 }
 
-export const defaultColumns = [nameState, state, areaCode, createdAt]
+export const defaultColumns = [nameState, state, areaCode]

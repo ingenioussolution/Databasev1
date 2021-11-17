@@ -7,9 +7,9 @@ import BadAreaCode from '../models/badAreaCode.js'
 
 export const getAreaCode = asyncHandler(async (req, res, next) => {
   try {
-    const badAreaCode = await BadAreaCode.find()
+    const badAreaCode = await BadAreaCode.find({})
 
-    if (user) {
+    if (badAreaCode) {
       res.json(badAreaCode)
     } else {
       res.status(404)
@@ -20,25 +20,36 @@ export const getAreaCode = asyncHandler(async (req, res, next) => {
   }
 })
 
+
 // @desc     Add new Bad Area Code
 // @route    POST /bad-area-code
 // @access   Private/user
 export const registerBadAreaCode = async (req, res, next) => {
-  const newBadArea = new BadAreaCode(req.body)
-  try {
-    const badArea = await newBadArea.save()
-    if (!badArea) {
-      res.status(404)
-      throw new Error('Something went wrong saving the new Bad Area')
-    }
-    res.status(200).json(phone)
-  } catch (err) {
-    next(error)
+
+  const { nameState, state, areaCode } = req.body
+  const badArea = await BadAreaCode.findOne({ areaCode: areaCode })
+
+  if (badArea) {
+    res.status(400)
+    throw new Error('Bad Area Code already exists')
+  }
+
+  const newBadArea = await BadAreaCode.create({
+    nameState,
+    state,
+    areaCode,
+  })
+
+  if (newBadArea) {
+    res.status(201).json(newBadArea)
+  } else {
+    res.status(400)
+    throw new Error('Invalid Bad Area data')
   }
 }
 
 // @desc     Update Bad Area Code
-// @route    PUT /bad-area-code
+// @route    PUT /bad-area-code:id
 // @access   Private/user
 export const UpdateBadAreaCode = asyncHandler(async (req, res, next) => {
   try {

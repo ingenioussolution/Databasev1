@@ -16,6 +16,13 @@ import SaveAlt from '@material-ui/icons/SaveAlt'
 import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
 
+import { useDispatch, useSelector } from 'react-redux'
+import {
+  UpdateBadAreaCode,
+  registerBadAreaCode,
+  deleteBadAreaCode,
+} from '../../actions/badAreaCodeAction'
+
 import { forwardRef } from 'react'
 const tableIcons = {
   Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
@@ -41,28 +48,101 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 }
 
+const Table = ({
+  columns,
+  title,
+  data,
+  filter,
+  selection,
+  paging,
+  editable,
+}) => {
+  const dispatch = useDispatch()
 
-const Table = ({defaultColumns, title, dataPagination}) => {
-    return (
-        <div>
-        <MaterialTable
+  const listBadArea = useSelector((state) => state.listBadArea)
+  const { badArea } = listBadArea
+
+  const updateBadArea = useSelector((state) => state.updateBadArea)
+  const { loading, error, success } = updateBadArea
+
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+
+  const handleRowUpdate = (newData, oldData, resolve) => {
+    console.log(newData)
+    if (
+      newData.nameState !== oldData.nameState ||
+      newData.state !== oldData.state ||
+      newData.areaCode !== oldData.areaCode
+    ) {
+      console.log('data change!!!!!')
+      setTimeout(() => {
+        dispatch(UpdateBadAreaCode(newData))
+
+        resolve()
+      }, 1000)
+    } else {
+      console.log('data no change')
+      resolve()
+    }
+  }
+
+
+  const handleRowDelete = (oldData, resolve) =>{
+    setTimeout(() => {
+
+      dispatch(deleteBadAreaCode(oldData._id))
+
+      resolve()
+    }, 1000)
+  }
+
+  const handleRowAdd = (newData, resolve) =>{
+    setTimeout(() => {
+
+      dispatch(registerBadAreaCode(newData))
+
+      resolve()
+    }, 1000)
+  }
+
+  return (
+    <div>
+      <MaterialTable
         style={{ padding: '20px' }}
         title={title}
-        columns={defaultColumns}
+        columns={columns}
         icons={tableIcons}
+        filtering={filter}
         options={{
           exportButton: true,
-          paging: true,
+          paging: { paging },
           pageSize: 10,
-          selection: true,
+          selection: selection,
           padding: 'default',
-          pageSizeOptions: [5, 10],
-          filtering: true,
+          pageSizeOptions: [5, 10, 20],
         }}
-        data={dataPagination}
+        data={data}
+        editable={
+          editable === 'never'
+            ? 'never'
+            : {
+                onRowUpdate: (newData, oldData) =>
+                  new Promise((resolve) => {
+                    handleRowUpdate(newData, oldData, resolve)
+                  }),
+                onRowAdd: (newData) =>
+                  new Promise((resolve) => {
+                    handleRowAdd(newData, resolve)
+                  }),
+                onRowDelete: (oldData) =>
+                  new Promise((resolve) => {
+                    handleRowDelete(oldData, resolve)
+                  }),
+              }
+        }
       />
-        </div>
-    )
+    </div>
+  )
 }
 
 export default Table

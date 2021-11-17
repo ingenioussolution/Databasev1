@@ -802,8 +802,10 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
-  let requestCount = parseInt(req.query.count) || 10000
+  let requestCount = 50000//parseInt(req.query.count) || 10000
   let count = await ModelTemporal.countDocuments()
+
+  const skipCount = 50000
 
   const total = Math.ceil(count / requestCount)
   console.log('total: ', total)
@@ -813,12 +815,17 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
 
   for (let i = 1; i <= total; i++) {
     console.log('i:', i)
-
+    console.log('total:',total)
     const TemporalData = await ModelTemporal.find()
       .limit(requestCount)
-      .skip(requestCount * (i - 1))
+      .skip(skipCount * (i - 1))
 
-    TemporalData.forEach(async (prev, phoneCount) => {
+
+    if(TemporalData)
+    {
+      console.log("TemporalData", TemporalData.length);  
+
+      await TemporalData.forEach(async (prev, phoneCount) => {
       await prev
       const phoneExists = await PhoneList.findOne({
         phone: TemporalData[phoneCount].phone,
@@ -829,7 +836,7 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
       console.log('Phone Count: ', phoneCount)
 
       if (phoneExists) {
-        console.log('Phone Exists')
+        //console.log('Phone Exists')
 
         phoneExists.firstName =
           phoneExists.firstName === undefined
@@ -1230,14 +1237,14 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
         })
 
         if (DeletePhone) {
-          console.log('Phone Update delete')
+         // console.log('Phone Update delete')
           await DeletePhone.remove()
         }
 
-        //else {
-        //   res.status(404)
-        //   throw new Error('Phone not found')
-        // }
+        else {
+          res.status(404)
+          throw new Error('Phone not found')
+        }
       } else {
         const phoneCreated = await PhoneList.create({
           firstName: TemporalData[phoneCount].firstName,
@@ -1295,27 +1302,31 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
         })
 
         if (phoneCreated) {
-          console.log('Creating new row')
+          //console.log('Creating new row')
 
           const DeletePhoneNew = await ModelTemporal.findOne({
             phone: TemporalData[phoneCount].phone,
           })
           if (DeletePhoneNew) {
             await DeletePhoneNew.remove()
-            console.log('Phone New delete')
-          } //else {
-          //   res.status(404)
-          //   throw new Error('Phone not found')
-          // }
+            //console.log('Phone New delete')
+          } 
+          else {
+            res.status(404)
+            throw new Error('Phone not found')
+          }
         } else {
           res.status(400)
           throw new Error('Invalid Phone data')
         }
       }
-      if (requestCount - 1 === phoneCount) {
-        return console.log('Upload Completed')
+      if (requestCount -1 === phoneCount) {
+         console.log('Upload Completed')
       }
     }) // second For
+    }else{
+      console.log("i++");
+    }
   }
 })
 

@@ -4,7 +4,7 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 
 import clsx from 'clsx'
-import { FaListUl } from 'react-icons/fa'
+import { FaListUl, FaPhoneSlash, } from 'react-icons/fa'
 
 //import useStyles from './styles'
 
@@ -43,6 +43,20 @@ const NavigationLayout = () => {
               <FaListUl />
             </ListItemIcon>
             <ListItemText>Data Table</ListItemText>
+          </ListItem>
+        </Link>
+        <Link to={'/dashboard/bad-area-code'}>
+          <ListItem
+            button
+            key="bad-area"
+            className={clsx({
+              active: pathname === '/dashboard/bad-area-code',
+            })}
+          >
+            <ListItemIcon>
+              <FaPhoneSlash />
+            </ListItemIcon>
+            <ListItemText>Bad Area Code</ListItemText>
           </ListItem>
         </Link>
 

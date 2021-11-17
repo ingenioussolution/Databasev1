@@ -20,7 +20,7 @@ import {
   userForgotPasswordReducer,
   userResetPasswordReducer,
   //--- profile User---
-  userDetailsReducer, 
+  userDetailsReducer,
   userUpdateProfileReducer,
 } from '../reducers/userReducers'
 
@@ -31,6 +31,13 @@ import {
   siteSettingsUpdateReducer,
   systemUpdateNotifyReducer,
 } from '../reducers/siteSettingsReducer'
+
+import {
+  listBadAreaReducer,
+  registerBadAreaReducer,
+  updateBadAreaReducer,
+  deleteBadAreaReducer,
+} from '../reducers/badAreaReducers'
 
 const reducer = combineReducers({
   //List Phones reducers
@@ -54,6 +61,11 @@ const reducer = combineReducers({
   siteSettingsDetails: siteSettingsReducer,
   siteSettingsUpdate: siteSettingsUpdateReducer,
   systemUpdateNotify: systemUpdateNotifyReducer,
+  // Bad Area Code
+  listBadArea: listBadAreaReducer,
+  registerBadArea: registerBadAreaReducer,
+  updateBadArea: updateBadAreaReducer,
+  deleteBadArea: deleteBadAreaReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

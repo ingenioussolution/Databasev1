@@ -40,7 +40,7 @@ const ProfileUser = () => {
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
   const userProfile = useSelector((state) => state.userDetails)
-  const { loading: loadingUSER, error, user } = userProfile
+  const { loading: loadingUser, error, user } = userProfile
   const userUpdateProfile = useSelector((state) => state.userUpdateProfile)
   const {
     loading,
@@ -146,7 +146,7 @@ const ProfileUser = () => {
             <TabPanel value="0" tabIndex="0">
               {loading && <Loader />}
               {errorUpdate && <Message severity="error">{errorUpdate}</Message>}
-              {loadingUSER ? (
+              {loadingUser ? (
                 <Loader />
               ) : error ? (
                 <Message severity="error">{error}</Message>
@@ -261,7 +261,7 @@ const ProfileUser = () => {
             <TabPanel value="1">
             {loading && <Loader />}
               {errorUpdate && <Message severity="error">{errorUpdate}</Message>}
-              {loadingUSER ? (
+              {loadingUser ? (
                 <Loader />
               ) : error ? (
                 <Message severity="error">{error}</Message>

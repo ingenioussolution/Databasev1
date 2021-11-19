@@ -39,6 +39,8 @@ import {
   deleteBadAreaReducer,
 } from '../reducers/badAreaReducers'
 
+import {listExportDataReducer} from '../reducers/exportDataReducers'
+
 const reducer = combineReducers({
   //List Phones reducers
   registerPhone: registerPhoneReducer,
@@ -66,6 +68,9 @@ const reducer = combineReducers({
   registerBadArea: registerBadAreaReducer,
   updateBadArea: updateBadAreaReducer,
   deleteBadArea: deleteBadAreaReducer,
+
+  // Export data
+  listExportData: listExportDataReducer
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

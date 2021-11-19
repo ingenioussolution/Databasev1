@@ -115,7 +115,7 @@ console.log("after update", success);
   return (
     <div>
       <MaterialTable
-        title
+        title = "Bad Area Code"
         style={{ padding: '20px' }}
         columns={columns}
         icons={tableIcons}
@@ -128,7 +128,7 @@ console.log("after update", success);
           selection: selection,
           padding: 'default',
           pageSizeOptions: [5, 10, 20],
-          search: false,
+          search: true,
         }}
         data={data}
         editable={

@@ -1,5 +1,4 @@
 import React, { useState, useRef, useEffect } from 'react'
-import PropTypes from 'prop-types'
 import clsx from 'clsx'
 
 import { Button, Grid, Tooltip, Toolbar } from '@material-ui/core'
@@ -40,6 +39,7 @@ const DataTableToolbar = ({ rows, handleRefresh, columns, title }) => {
   }
 
   const data = prepareData()
+  console.log("data", data);
 
   // return focus to the button when we transitioned from !open -> open
   const prevOpen = useRef(open)

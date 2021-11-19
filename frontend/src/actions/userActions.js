@@ -372,12 +372,12 @@ export const listUsers = () => async (dispatch, getState) => {
     })
 
     const {
-      userLogin: { userInfo },
+      adminUserLogin: { adminUserInfo },
     } = getState()
 
     const config = {
       headers: {
-        Authorization: `Bearer ${userInfo.token}`,
+        Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
 

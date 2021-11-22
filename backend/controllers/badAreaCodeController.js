@@ -20,6 +20,30 @@ export const getAreaCode = asyncHandler(async (req, res, next) => {
   }
 })
 
+// @desc     All Bad Area Code
+// @route    get /list-area-code
+// @access   Public
+
+
+export const listAreaCode = asyncHandler(async (req, res, next) => {
+  try {
+    let arrayBadArea = []
+    const areaCode = await BadAreaCode.find({},{areaCode:1, _id:0})
+    arrayBadArea.push(...areaCode)
+
+    console.log(arrayBadArea);
+
+    if (areaCode) {
+      res.json(areaCode)
+    } else {
+      res.status(404)
+      throw new Error('Bad Area Code not found')
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 
 // @desc     Add new Bad Area Code
 // @route    POST /bad-area-code

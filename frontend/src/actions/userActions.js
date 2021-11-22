@@ -133,20 +133,26 @@ export const adminLogout = () => (dispatch) => {
   dispatch({ type: USER_LIST_RESET })
 }
 
-export const register = (user) => async (dispatch) => {
+export const register = (user) => async (dispatch,getState) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
     })
 
+    const {
+      adminUserLogin: { adminUserInfo },
+    } = getState()
+
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+       'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
-
     user.profilePicture = ''
     const { data } = await axios.post('/users', user, config)
+
+    // Talk with Chris for prices
 
     // await sendEmail(CONFIRMATION_REGISTER_FAN, {
     //   to_name: `${user.firstName} ${user.lastName}`,
@@ -222,6 +228,7 @@ export const getUserDetailsAsAdmin = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
+       'Content-Type': 'application/json',
         Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
@@ -370,16 +377,21 @@ export const listUsers = () => async (dispatch, getState) => {
     dispatch({
       type: USER_LIST_REQUEST,
     })
-
-    const {
-      adminUserLogin: { adminUserInfo },
-    } = getState()
-
     const config = {
       headers: {
-        Authorization: `Bearer ${adminUserInfo.token}`,
+        'Content-Type': 'application/json',
       },
     }
+
+    // const {
+    //   adminUserLogin: { adminUserInfo },
+    // } = getState()
+
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${adminUserInfo.token}`,
+    //   },
+    // }
 
     const { data } = await axios.get('/users', config)
 
@@ -468,16 +480,21 @@ export const deleteUserAsAdmin = (id) => async (dispatch, getState) => {
     dispatch({
       type: USER_DELETE_REQUEST,
     })
-
-    const {
-      adminUserLogin: { adminUserInfo },
-    } = getState()
-
     const config = {
       headers: {
-        Authorization: `Bearer ${adminUserInfo.token}`,
+        'Content-Type': 'application/json',
       },
     }
+
+    // const {
+    //   adminUserLogin: { adminUserInfo },
+    // } = getState()
+
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${adminUserInfo.token}`,
+    //   },
+    // }
 
     await axios.delete(`/api/users/${id}`, config)
 
@@ -500,16 +517,20 @@ export const updateUser = (user) => async (dispatch, getState) => {
     dispatch({
       type: USER_UPDATE_REQUEST,
     })
-
-    const {
-      adminUserLogin: { adminUserInfo },
-    } = getState()
-
     const config = {
       headers: {
-        Authorization: `Bearer ${adminUserInfo.token}`,
+        'Content-Type': 'application/json',
       },
     }
+    // const {
+    //   adminUserLogin: { adminUserInfo },
+    // } = getState()
+
+    // const config = {
+    //   headers: {
+    //     Authorization: `Bearer ${adminUserInfo.token}`,
+    //   },
+    // }
 
     const { data } = await axios.put(`/users/${user._id}`, user, config)
 

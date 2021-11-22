@@ -121,7 +121,7 @@ const DashBoardNavigation = ({
               alignItems="center"
             >
               <Hidden xsDown>
-                <h6> {authenticatedUser ? `Hi, ${authenticatedUser.username}` : ''}</h6>
+                <h6> {authenticatedUser ? `Hi, ${authenticatedUser.name}` : ''}</h6>
               </Hidden>
               <Grid item>
                 {profileUrl && (

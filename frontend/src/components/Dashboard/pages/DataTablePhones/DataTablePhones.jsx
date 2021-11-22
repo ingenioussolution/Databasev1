@@ -28,15 +28,16 @@ import {
 } from '../../../../constants/phonesListClean'
 
 import { CSVLink } from 'react-csv'
-
 import { exportData } from '../../../../actions/exportDataAction'
+import Swal from 'sweetalert2'
+import { listPhoneData } from '../../../../actions/phoneListCleanActions'
 
 import { Button, Grid, Tooltip, Toolbar, Card } from '@material-ui/core'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from './styles'
 import dataStyle from '../../../DataTable/styles'
 import clsx from 'clsx'
-import { FaFileDownload, FaFileExport } from 'react-icons/fa'
+import { FaFileDownload, FaFileExport, FaSyncAlt } from 'react-icons/fa'
 
 import { forwardRef } from 'react'
 import Loader from '../../../Loader/Loader'
@@ -82,6 +83,12 @@ const DataTablePhones = () => {
   const { loading, success, exporting } = listExportData
 
   const [arrayExport, setArrayExport] = useState(false)
+  const [totalProcessPages, setTotalPages] = useState()
+  const [refresh, setRefresh] = useState(false)
+  const initPage = 1
+
+  const listPhone = useSelector((state) => state.listPhoneClean)
+  const { listPhones, page, pages } = listPhone
 
   //------------ UseEffect---------
   useEffect(() => {
@@ -93,7 +100,7 @@ const DataTablePhones = () => {
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history, userInfo])
+  }, [history, userInfo, refresh])
 
   const dataPagination = (query) =>
     new Promise((resolve, reject) => {
@@ -136,6 +143,9 @@ const DataTablePhones = () => {
           url += '&sort='(query.orderBy.field) + '&order='(query.orderDirection)
         }
 
+        console.log('URL with filters: ', url)
+        console.log('Query: ', query)
+
         axios
           .get(url, config)
           .catch((error) => {
@@ -157,6 +167,7 @@ const DataTablePhones = () => {
             setDataTable(result)
             console.log('urlExport', urlExport)
             setQueryExport(urlExport)
+            setTotalPages(result.data.totalPages)
           })
 
         dispatch({
@@ -169,9 +180,20 @@ const DataTablePhones = () => {
   // verify onclick Export Button
   useEffect(() => {
     if (exportCSV) {
-      ExportData(queryExport)
+      if (totalProcessPages > 49900) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Exceeded limit of rows to export',
+          text: 'No more than 500,000',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setExportCSV(false)
+          }
+        })
+      } else {
+        ExportData(queryExport)
+      }
     }
-
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportCSV])
 
@@ -196,8 +218,7 @@ const DataTablePhones = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportCSV, success])
 
-  console.log("exporting", exporting);
-
+  //console.log('exporting', exporting)
   return (
     <div>
       <Grid container item xs={12}>
@@ -214,6 +235,18 @@ const DataTablePhones = () => {
                 className={classes.actionsContainer}
               >
                 <Grid item xs={12} sm={3} md={2}>
+                  <Tooltip title="Refresh" aria-label="export">
+                    <Button
+                      className={commons.secondaryBtn}
+                      endIcon={<FaSyncAlt />}
+                      //onClick={() => handleRefresh()}
+                      disabled
+                    >
+                      Filters Refresh
+                    </Button>
+                  </Tooltip>
+                </Grid>
+                <Grid item xs={12} sm={3} md={2}>
                   <Tooltip title="Export" aria-label="export">
                     <Button
                       variant="outlined"
@@ -227,47 +260,22 @@ const DataTablePhones = () => {
                   </Tooltip>
                 </Grid>
                 <Grid item xs={12} sm={3} md={2}>
-                  <Tooltip title="Export" aria-label="export">
-                  {!loading ?
-                  
-                    <CSVLink data={exporting} separator={','}>
-                      <Button
-                        variant="outlined"
-                        className={commons.successBtn}
-                        endIcon={<FaFileDownload />}
-                        //disabled={arrayExport ? true : false}
-                      >
-                        Download Csv
-                      </Button>
-                    </CSVLink>
-                :
-                    <Loader/>
-                  }
+                  <Tooltip title="Download Last Export" aria-label="export">
+                    {!loading ? (
+                      <CSVLink data={exporting} separator={','} filename={"my-file.csv"}>
+                        <Button
+                          variant="outlined"
+                          className={commons.successBtn}
+                          endIcon={<FaFileDownload />}
+                        >
+                          Download Csv
+                        </Button>
+                      </CSVLink>
+                    ) : (
+                      <Loader />
+                    )}
                   </Tooltip>
                 </Grid>
-               
-                {/*
-                <Grid item xs={12} sm={3} md={2}>
-                  <Tooltip title="Export" aria-label="export">
-                  {!loading ?
-                  
-                    <CSVLink data={exporting} separator={','}>
-                      <Button
-                        variant="outlined"
-                        className={commons.successBtn}
-                        endIcon={<FaFileDownload />}
-                        disabled={arrayExport ? true : false}
-                      >
-                        Download Csv
-                      </Button>
-                    </CSVLink>
-                :
-                    <Loader/>
-                  }
-                  </Tooltip>
-                </Grid>
-                */}
-                
               </Grid>
             </Grid>
           </Toolbar>

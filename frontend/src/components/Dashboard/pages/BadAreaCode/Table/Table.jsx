@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import MaterialTable from 'material-table'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowUpward from '@material-ui/icons/ArrowUpward'
@@ -50,51 +50,38 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 }
 
-const Table = ({
-  columns,
-  data,
-  filter,
-  selection,
-  paging,
-  editable,
-}) => {
-
+const Table = ({ columns, data, filter, selection, paging, editable }) => {
   const dispatch = useDispatch()
 
   const listBadArea = useSelector((state) => state.listBadArea)
   const { badArea } = listBadArea
-  console.log("badArea", badArea);
 
   const updateBadArea = useSelector((state) => state.updateBadArea)
   const { loading, error, success } = updateBadArea
 
-console.log("after update", success);
+  useEffect(() => {
+    dispatch(getAreaCode())
+  }, [badArea])
 
   const handleRowUpdate = (newData, oldData, resolve) => {
-    console.log(newData)
     if (
       newData.nameState !== oldData.nameState ||
       newData.state !== oldData.state ||
       newData.areaCode !== oldData.areaCode
     ) {
-      console.log('data change!!!!!')
       setTimeout(() => {
         dispatch(UpdateBadAreaCode(newData))
         dispatch(getAreaCode())
-        
+
         resolve()
       }, 1000)
-      
     } else {
-      console.log('data no change')
       resolve()
     }
   }
 
-
-  const handleRowDelete = (oldData, resolve) =>{
+  const handleRowDelete = (oldData, resolve) => {
     setTimeout(() => {
-
       dispatch(deleteBadAreaCode(oldData._id))
       dispatch(getAreaCode())
 
@@ -102,9 +89,8 @@ console.log("after update", success);
     }, 1000)
   }
 
-  const handleRowAdd = (newData, resolve) =>{
+  const handleRowAdd = (newData, resolve) => {
     setTimeout(() => {
-
       dispatch(registerBadAreaCode(newData))
       dispatch(getAreaCode())
 
@@ -115,7 +101,7 @@ console.log("after update", success);
   return (
     <div>
       <MaterialTable
-        title = "Bad Area Code"
+        title="Bad Area Code"
         style={{ padding: '20px' }}
         columns={columns}
         icons={tableIcons}
@@ -149,8 +135,6 @@ console.log("after update", success);
                   }),
               }
         }
-
-        
       />
     </div>
   )

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect,useState } from 'react'
 import MaterialTable from 'material-table'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowUpward from '@material-ui/icons/ArrowUpward'
@@ -16,14 +16,18 @@ import SaveAlt from '@material-ui/icons/SaveAlt'
 import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
 
-import PropTypes from 'prop-types'
 import { useDispatch, useSelector } from 'react-redux'
 import {
-  getAreaCode,
-  UpdateBadAreaCode,
-  registerBadAreaCode,
-  deleteBadAreaCode,
-} from '../../../../../actions/badAreaCodeAction'
+  listUsers,
+  updateUser,
+  register,
+  deleteUserAsAdmin,
+} from '../../../../actions/userActions'
+
+// import {
+//   USER_DELETE_RESET,
+//   USER_UPDATE_RESET,
+// } from '../../../../constants/userConstants.js'
 
 import { forwardRef } from 'react'
 const tableIcons = {
@@ -50,19 +54,32 @@ const tableIcons = {
   ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
 }
 
-const Table = ({ columns, data, filter, selection, paging, editable }) => {
+const UserTable = ({ columns, data, filter, selection, paging, editable }) => {
   const dispatch = useDispatch()
 
-  const listBadArea = useSelector((state) => state.listBadArea)
-  const { badArea } = listBadArea
+  const [errorMsg, setErrorMsg] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
 
-  const updateBadArea = useSelector((state) => state.updateBadArea)
-  const { loading, error, success } = updateBadArea
+  const userList = useSelector((state) => state.userList)
+  const { error: errorFetching, loading: fetching, users } = userList
 
-  useEffect(() => {
-    dispatch(getAreaCode())
-  }, [badArea])
+  const userUpdate = useSelector((state) => state.userUpdate)
+  const { error:errorUpdate, success: successUpdate } = userUpdate
+  const userDelete = useSelector((state) => state.userDelete)
+  const {
+    success: successDelete,
+    error: errorDelete,
+  } = userDelete
+  // const userRegister = useSelector((state) => state.userRegister)
+  // const {
+  //   loading: loadingAdd,
+  //   success: successAdd,
+  //   error: errorAdd,
+  // } = userRegister
 
+  
+
+  // Updated User
   const handleRowUpdate = (newData, oldData, resolve) => {
     if (
       newData.nameState !== oldData.nameState ||
@@ -70,8 +87,7 @@ const Table = ({ columns, data, filter, selection, paging, editable }) => {
       newData.areaCode !== oldData.areaCode
     ) {
       setTimeout(() => {
-        dispatch(UpdateBadAreaCode(newData))
-        dispatch(getAreaCode())
+        dispatch(updateUser(newData))
 
         resolve()
       }, 1000)
@@ -80,28 +96,47 @@ const Table = ({ columns, data, filter, selection, paging, editable }) => {
     }
   }
 
+ // Delete User
   const handleRowDelete = (oldData, resolve) => {
     setTimeout(() => {
-      dispatch(deleteBadAreaCode(oldData._id))
-      dispatch(getAreaCode())
-
+      dispatch(deleteUserAsAdmin(oldData._id))
       resolve()
     }, 1000)
   }
-
+ // Add new user
   const handleRowAdd = (newData, resolve) => {
     setTimeout(() => {
-      dispatch(registerBadAreaCode(newData))
-      dispatch(getAreaCode())
-
+      dispatch(register(newData))
       resolve()
     }, 1000)
   }
+
+
+  useEffect(() => {
+     if (errorFetching && errorUpdate && errorDelete) {
+       dispatch(listUsers())
+     }
+
+    // if (successDelete) {
+    //   setSuccessMsg('Deleted!, The user has been deleted.')
+    //   dispatch({ type: USER_DELETE_RESET })
+    // }
+
+    // if (successUpdate) {
+    //   dispatch({ type: USER_UPDATE_RESET })
+    //   setSuccessMsg('Updated!, The User has been updated.')
+    // }
+
+    // if (errorFetching) setErrorMsg(errorFetching)
+    // if (errorDelete) setErrorMsg(errorDelete)
+    // if (errorUpdate) setErrorMsg(errorUpdate)
+     // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [dispatch])
 
   return (
     <div>
       <MaterialTable
-        title="Bad Area Code"
+        title="Users"
         style={{ padding: '20px' }}
         columns={columns}
         icons={tableIcons}
@@ -139,8 +174,5 @@ const Table = ({ columns, data, filter, selection, paging, editable }) => {
     </div>
   )
 }
-Table.propTypes = {
-  data: PropTypes.any.isRequired,
-}
 
-export default Table
+export default UserTable

@@ -14,7 +14,6 @@ import express from 'express'
 export const ExportCSV = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
-
     const hardBounce = req.query.hardBounce
     const clicker = req.query.clicker
     const phone = req.query.phone
@@ -28,30 +27,17 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
     const createdAt_start = req.query.start
     const createdAt_end = req.query.end
     let arrayFilters = []
-
     let arrayExport = []
 
     let regex = req.query.q
     let search = { $regex: regex, $options: 'i' }
 
-    const dateTime = moment().format('YYYY-MM-DD')
-
-    const app = express()
-
-
+    //const dateTime = moment().format('YYYY-MM-DD')
+    //const app = express()
     const __dirname = path.dirname(fileURLToPath(import.meta.url))
-    const filePath = path.join(
-      __dirname,
-      '../../exports',
-      'csv-' + dateTime + '.csv'
-    )
-
-    app.use("/public", express.static(__dirname + "/public"));
-
-
+    const filePath = path.join(__dirname, '../../exports', 'csv-data.csv')
     // create route for csv file
     const ws = fs.createWriteStream(filePath)
-    //const ws = fs.createWriteStream("data.csv");
 
     if (
       clicker ||
@@ -98,10 +84,10 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       }
       console.log('arrayFilters', arrayFilters)
 
-      let requestCount = 1000
+      let requestCount = 10000
       let count = await PhoneList.countDocuments({ $and: arrayFilters })
 
-      const skipSize = 1000
+      const skipSize = 10000
 
       const total = Math.ceil(count / requestCount)
       console.log('total: ', total)
@@ -131,15 +117,21 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
             'phone',
             'carrier',
             'firstName',
+            'email',
             'clicker',
             'revenue',
             'converter',
+            'status',
+            'risky',
+            'lineType',
+            'createdAt',
             'updatedAt',
           ],
         })
         .pipe(ws)
-        .on("finish", function() {
-      //  .on('finish', function (err) {
+        .on('finish', function () {
+          res.download(filePath)
+          //.on('finish', function (err) {
           // if (err) {
           //   return res.json(err).status(500)
           // } else {
@@ -153,61 +145,30 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           //     })
           //   }, 10000)
           // }
-         // res.json(filePath);
-          
-          res.download(filePath); 
-          
         })
-       // .pipe(ws)
-        console.log("Write to CSV successfully!");
+      console.log('Write to CSV successfully!')
     }
     //------------------------------------
     else if (regex) {
       const data = await PhoneList.find({ carrier: search })
       fastcsv
         .write(data, { headers: true })
+        .pipe(ws)
         .on('finish', function (err) {
-          if (err) {
-            return res.json(err).status(500)
-          } else {
-            setTimeout(function () {
-              fs.unlink(filePath, function (err) {
-                // delete this file after 30 seconds
-                if (err) {
-                  console.error(err)
-                }
-                console.log('File has been Deleted')
-              })
-            }, 10000)
-            res.download(filePath)
-          }
+          res.download(filePath)
           console.log('Export complete')
         })
-        .pipe(ws)
     } else {
       console.log('no filters')
       const data = await PhoneList.find({})
 
       fastcsv
         .write(data, { headers: true })
+        .pipe(ws)
         .on('finish', function (err) {
-          if (err) {
-            return res.json(err).status(500)
-          } else {
-            setTimeout(function () {
-              fs.unlink(filePath, function (err) {
-                // delete this file after 30 seconds
-                if (err) {
-                  console.error(err)
-                }
-                console.log('File has been Deleted')
-              })
-            }, 100000)
-            res.download(filePath)
-          }
+          res.download(filePath)
           console.log('Export complete')
         })
-        .pipe(ws)
     }
   } catch (error) {
     next(error)

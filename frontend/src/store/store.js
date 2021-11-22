@@ -15,11 +15,15 @@ import {
 
 import {
   adminUserLoginReducer,
-  userLoginReducer,
   adminUserForgotPasswordReducer,
   userForgotPasswordReducer,
   userResetPasswordReducer,
+  userListReducer,
+  userUpdateReducer,
+  userDeleteReducer,
+  userRegisterReducer,
   //--- profile User---
+  userLoginReducer,
   userDetailsReducer,
   userUpdateProfileReducer,
 } from '../reducers/userReducers'
@@ -56,9 +60,13 @@ const reducer = combineReducers({
   userResetPassword: userResetPasswordReducer,
   userUpdateProfile: userUpdateProfileReducer,
   userDetails: userDetailsReducer,
+  userUpdate: userUpdateReducer,
   // Admin Reducers
+  userList: userListReducer,
   adminUserLogin: adminUserLoginReducer,
   adminUserForgotPassword: adminUserForgotPasswordReducer,
+  userDelete: userDeleteReducer,
+  userRegister: userRegisterReducer,
   // setting Email
   siteSettingsDetails: siteSettingsReducer,
   siteSettingsUpdate: siteSettingsUpdateReducer,

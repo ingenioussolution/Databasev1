@@ -3,10 +3,8 @@ let arrayNameState = []
 let arrayState = []
 
 stateList.map((nameIndex) => {
-  return arrayNameState.push(nameIndex.nameState) , arrayState.push(nameIndex.state)
+  return arrayNameState.push(nameIndex.nameState), arrayState.push(nameIndex.state)
 })
-
-console.log("name1: ", arrayNameState);
 
 export const nameState = {
   field: 'nameState',
@@ -24,7 +22,6 @@ export const areaCode = {
   title: 'Area Code',
 }
 
-console.log(nameState);
 export const createRows = (data) => {
   let rows = []
   if (data) {

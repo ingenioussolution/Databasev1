@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import TableData from './Table/Table'
 import { getAreaCode } from '../../../../actions/badAreaCodeAction'
 import { useDispatch, useSelector } from 'react-redux'
@@ -9,7 +9,7 @@ import {
 } from '../../../../utils/dataModels/BadAreaCodeDataModel'
 import Loader from '../../../Loader/Loader'
 import Message from '../../../message/Message'
-import { Grid, Button, Card } from '@material-ui/core'
+import { Grid, Card } from '@material-ui/core'
 import Swal from 'sweetalert2'
 
 import dataStyle from '../../../DataTable/styles'
@@ -20,7 +20,6 @@ const BadAreaCode = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const [pageState, setPageState] = useState(1 || 0)
   // login status
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
@@ -41,10 +40,6 @@ const BadAreaCode = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, history, userInfo])
 
-  const handleChangePage = (event, newPage) => {
-    setPageState(newPage)
-  }
-
   const handleRefresh = () => {
     dispatch(getAreaCode())
     history.push('/dashboard/bad-area-code')
@@ -55,7 +50,7 @@ const BadAreaCode = () => {
     <div>
       <Grid container item xs={12}>
         <Card className={classesTable.mainWrapper}>
-          <DataTableToolbar rows={badArea} handleRefresh={() => handleRefresh()} columns={defaultColumns} title={'Bad Area Code'}>
+          <DataTableToolbar r handleRefresh={() => handleRefresh()} >
           </DataTableToolbar>
 
           <Grid item xs={12}>

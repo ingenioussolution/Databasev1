@@ -1,3 +1,4 @@
+
 import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import moment from 'moment'
@@ -26,6 +27,10 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
     let firstName = { $regex: `${firstNameFilter}`, $options: 'i' }
     const createdAt_start = req.query.start
     const createdAt_end = req.query.end
+    const areaCode = req.query.areaCode
+
+    console.log("start", createdAt_start);
+
     let arrayFilters = []
     let arrayExport = []
 
@@ -48,7 +53,9 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       suppressed ||
       firstNameFilter ||
       carrierFilter ||
-      (createdAt_start && createdAt_end)
+      areaCode ||
+      (createdAt_start || createdAt_end)
+      
     ) {
       if (clicker) {
         arrayFilters.push({ clicker: clicker })
@@ -76,12 +83,17 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       }
       if (createdAt_start || createdAt_end) {
         arrayFilters.push({
-          updatedAt: {
+          createdAt: {
             $gte: new Date(createdAt_start),
             $lt: new Date(createdAt_end),
           },
         })
       }
+      if(areaCode){
+        arrayFilters.push({
+          phone: { "$nin":[ /^1808/, /^1203/,/^1475/,/^1860/,/^1959/,/^1276/, /^1434/, /^1540/, /^1571/, /^1703/, /^1757/, /^1804/,/^1215/, /^1223/, /^1267/, /^1272/, /^1412/, /^1484/, /^16570/, /^1610/, /^1717/, /^1724/, /^1814/, /^1878/,/^1802/,/^1202/,/^1304/, /^1681/,/^1801/, /^1385/, /^1435/,/^1204/, /^1226/,/^1236/,/^1249/,/^1250/,/^1289/,/^1306/,/^1343/,/^1365/,/^1367/,/^1403/,/^1416/,/^1418/,/^1431/,/^1437/,/^1438/,/^1450/,/^1506/,/^1514/,/^1519/,/^1548/,/^1579/,/^1581/,/^1587/,/^1604/,/^1613/,/^1639/,/^1647/,/^1705/,/^1709/,/^1778/,/^1780/,/^1782/,/^1807/,/^1819/,/^1825/,/^1867/,/^1873/,/^1902/,/^1905/,/^1684/,/^1671/,/^1670/,/^1787/,/^1340/,/^1931/]}
+      })
+    }
       console.log('arrayFilters', arrayFilters)
 
       let requestCount = 10000
@@ -117,6 +129,7 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
             'phone',
             'carrier',
             'firstName',
+            'lastName',
             'email',
             'clicker',
             'revenue',
@@ -126,6 +139,38 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
             'lineType',
             'createdAt',
             'updatedAt',
+            'list',
+            'source',
+            'name',
+            'ip',
+            'site',
+            'status',
+            'zipCode',
+            'state',
+            'monthlyIncome',
+            'incomeSource',
+            'creditScore',
+            'subId',
+            'vertical',
+            'countryCode',
+            'platform',
+            'message',
+            'recentAbuse',
+            'fraudScore',
+            'validMobile',
+            'blackListAlliance',
+            'prepaid',
+            'city',
+            'listID',
+            'birthDate',
+            'gender',
+            'senderID',
+            'sendAt',
+            'validity',
+            'subject',
+            'vertical2',
+            'vertical3',
+
           ],
         })
         .pipe(ws)

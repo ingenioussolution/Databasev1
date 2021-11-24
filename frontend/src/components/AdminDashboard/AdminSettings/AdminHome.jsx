@@ -6,6 +6,7 @@ import {
   Grid,
   Snackbar,
 } from '@material-ui/core'
+import Swal from 'sweetalert2'
 
 import {
   FaUserFriends,
@@ -37,6 +38,7 @@ const AdminHome = () => {
     document.title = 'Dashboard Home | Ingenious Solution Group'
 
     if (adminUserInfo === null || adminUserInfo === undefined) {
+      Swal.fire('Attention', 'Please login', 'warning')
       history.push('/admin')
       return
     }

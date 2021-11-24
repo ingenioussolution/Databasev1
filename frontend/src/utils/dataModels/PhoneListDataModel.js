@@ -239,11 +239,13 @@ export const updatedAt = {
   field: 'updatedAt',
   title: 'Update Date',
   type: 'date',
+  filtering: false,
 }
 export const createdAt = {
   field: 'createdAt',
   title: 'Create Date',
   type: 'date',
+  filtering: false,
 }
 
 export const formatBlackList = (blackListAlliance) => {

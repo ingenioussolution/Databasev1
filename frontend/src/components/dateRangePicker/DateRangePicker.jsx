@@ -20,7 +20,7 @@ import { FaEraser } from 'react-icons/fa'
 
 import { dateFormat } from '../../utils/format'
 
-import layoutStyles from '../dashboardLayout/styles'
+import layoutStyles from '../../components/DashboardLayout/styles'
 import useStyles from './styles'
 import moment from 'moment'
 
@@ -35,7 +35,7 @@ const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
   const [anchorEl, setAnchorEl] = useState(null)
   const [open, setOpen] = useState(false)
 
-  const handeOnChange = ({ name, value }) => {
+  const handleOnChange = ({ name, value }) => {
     setRange({
       ...range,
       [name]: value,
@@ -135,6 +135,7 @@ const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
   return (
     <>
       <TextField
+        className={classes.dataRange}
         margin='normal'
         label='Date Between'
         value={`${range?.start ? dateFormat(range.start) + ' -to-' : ''} ${
@@ -182,6 +183,7 @@ const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
                     <Grid container justifyContent='center'>
                       <KeyboardDatePicker
                         disableToolbar
+                        inputVariant ='standard'
                         variant='static'
                         margin='normal'
                         format='yyyy-MM-dd'
@@ -189,7 +191,7 @@ const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
                         label='Date start'
                         value={range.start}
                         onChange={(date) =>
-                          handeOnChange({ name: 'start', value: date })
+                          handleOnChange({ name: 'start', value: date })
                         }
                         KeyboardButtonProps={{
                           'aria-label': 'change date',
@@ -197,6 +199,7 @@ const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
                       />
                       <KeyboardDatePicker
                         disableToolbar
+                        inputVariant ='standard'
                         variant='static'
                         margin='normal'
                         name='end'
@@ -205,7 +208,7 @@ const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
                         label='Date end'
                         value={range.end}
                         onChange={(date) =>
-                          handeOnChange({ name: 'end', value: date })
+                          handleOnChange({ name: 'end', value: date })
                         }
                         KeyboardButtonProps={{
                           'aria-label': 'change date',

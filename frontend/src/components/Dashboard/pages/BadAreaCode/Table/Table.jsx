@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React from 'react'
 import MaterialTable from 'material-table'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowUpward from '@material-ui/icons/ArrowUpward'
@@ -17,7 +17,7 @@ import Search from '@material-ui/icons/Search'
 import ViewColumn from '@material-ui/icons/ViewColumn'
 
 import PropTypes from 'prop-types'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import {
   getAreaCode,
   UpdateBadAreaCode,
@@ -52,16 +52,6 @@ const tableIcons = {
 
 const Table = ({ columns, data, filter, selection, paging, editable }) => {
   const dispatch = useDispatch()
-
-  const listBadArea = useSelector((state) => state.listBadArea)
-  const { badArea } = listBadArea
-
-  const updateBadArea = useSelector((state) => state.updateBadArea)
-  const { loading, error, success } = updateBadArea
-
-  useEffect(() => {
-    dispatch(getAreaCode())
-  }, [badArea])
 
   const handleRowUpdate = (newData, oldData, resolve) => {
     if (

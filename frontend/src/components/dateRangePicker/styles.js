@@ -3,6 +3,7 @@ import { makeStyles } from '@material-ui/core/styles'
 export default makeStyles((theme) => ({
   picker: {
     zIndex: 9999,
+    top: '10px !important',
   },
   backdrop: {
     zIndex: 9000,
@@ -23,4 +24,9 @@ export default makeStyles((theme) => ({
       padding: `${theme.spacing(8)}`,
     },
   },
+
+  dataRange:{
+    height: '2.1876em !important',
+  }
+  ,
 }))

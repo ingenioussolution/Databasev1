@@ -2,7 +2,6 @@ import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import CircularProgress from '@material-ui/core/CircularProgress'
 
-import './Styles.css'
 const useStyles = makeStyles((theme) => ({
   root: {
     display: 'flex',
@@ -19,11 +18,7 @@ const Loader = () => {
     <div className={classes.root}>
       <CircularProgress color="secondary" />
     </div>
-    // <div className="ball">
-    //   <div></div>
-    //   <div></div>
-    //   <div></div>
-    // </div>
+  
   )
 }
 

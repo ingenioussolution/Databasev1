@@ -149,6 +149,11 @@ const PhoneListSchema = mongoose.Schema(
     subject: { type: String },
     vertical2: { type: String },
     vertical3: { type: String },
+    
+    burstOptOut:{
+      type: Boolean,
+      default:false,
+    },
   },
   {
     timestamps: true,

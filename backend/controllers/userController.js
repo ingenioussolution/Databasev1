@@ -42,7 +42,8 @@ export const authAdminUser = asyncHandler(async (req, res, next) => {
     if (user && (await user.matchPassword(password))) {
       res.json({
         _id: user._id,
-        name: user.firstName,
+        username: user.username,
+        firstName: user.firstName,
         email: user.email,
         isAdmin: user.isAdmin,
         status: user.status,

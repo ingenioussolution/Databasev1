@@ -22,7 +22,7 @@ import { useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import DashboardItem from '../../../DashboardItem/DashboardItem'
 import Message from '../../../DashboardItem/DashboardItem'
-
+import Swal from 'sweetalert2'
 //import useStyles from './styles'
 
 const DashboardHome = () => {
@@ -37,6 +37,7 @@ const DashboardHome = () => {
     document.title = 'Dashboard Home | Ingenious Solution Group'
 
     if (userInfo === null || userInfo === undefined) {
+      Swal.fire('Attention', 'Please login', 'warning')
       history.push('/')
       return
     }

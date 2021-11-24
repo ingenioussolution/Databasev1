@@ -22,13 +22,14 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
     const firstNameFilter = req.query.firstName
     let firstName = { $regex: `${firstNameFilter}`, $options: 'i' }
-    const createdAt = req.query.createdAt
+
+    const createdAt_start = req.query.start
+    const createdAt_end = req.query.end
     const areaCode = req.query.areaCode
     let arrayFilters = []
 
     let regex = req.query.q
     let search = { $regex: regex, $options: 'i' }
-
     const pageSize = 10
     const page = parseInt(req.query.pageNumber) || 1
 
@@ -41,15 +42,21 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       suppressed ||
       firstNameFilter ||
       carrierFilter ||
-      createdAt ||
-      areaCode
+      areaCode ||
+      (createdAt_start || createdAt_end )
     ) {
       if (clicker) {
         arrayFilters.push({ clicker: clicker })
       }
-      if (hardBounce) {
+
+      if (hardBounce === 'false') {
+        console.log('hard bounce FALSE', hardBounce)
+        arrayFilters.push({ hardBounce: { $ne: true } })
+      } else if(hardBounce === 'true'){
+        console.log("hard bounce TRUE");
         arrayFilters.push({ hardBounce: hardBounce })
       }
+
       if (revenue) {
         arrayFilters.push({ revenue: revenue })
       }
@@ -60,7 +67,11 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
         arrayFilters.push({ converter: converter })
       }
       if (suppressed) {
-        arrayFilters.push({ suppressed: suppressed })
+        if (suppressed === 'false') {
+          arrayFilters.push({ suppressed: { $ne: true } })
+        } else if(suppressed === 'true'){
+          arrayFilters.push({ suppressed: suppressed })
+        }
       }
       if (carrierFilter) {
         arrayFilters.push({ carrier: carrier })
@@ -69,18 +80,99 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
         arrayFilters.push({ firstName: firstName })
       }
 
-      if (createdAt) {
+      if (createdAt_start || createdAt_end) {
         arrayFilters.push({
           createdAt: {
-            $gte: new Date(createdAt),
+            $gte: new Date(createdAt_start),
+            $lt: new Date(createdAt_end),
           },
         })
       }
-      if(areaCode){
-      arrayFilters.push({
-        phone: { "$nin":[ /^1808/, /^1203/,/^1475/,/^1860/,/^1959/,/^1276/, /^1434/, /^1540/, /^1571/, /^1703/, /^1757/, /^1804/,/^1215/, /^1223/, /^1267/, /^1272/, /^1412/, /^1484/, /^16570/, /^1610/, /^1717/, /^1724/, /^1814/, /^1878/,/^1802/,/^1202/,/^1304/, /^1681/,/^1801/, /^1385/, /^1435/,/^1204/, /^1226/,/^1236/,/^1249/,/^1250/,/^1289/,/^1306/,/^1343/,/^1365/,/^1367/,/^1403/,/^1416/,/^1418/,/^1431/,/^1437/,/^1438/,/^1450/,/^1506/,/^1514/,/^1519/,/^1548/,/^1579/,/^1581/,/^1587/,/^1604/,/^1613/,/^1639/,/^1647/,/^1705/,/^1709/,/^1778/,/^1780/,/^1782/,/^1807/,/^1819/,/^1825/,/^1867/,/^1873/,/^1902/,/^1905/,/^1684/,/^1671/,/^1670/,/^1787/,/^1340/,/^1931/]}
-      })
-    }
+      if (areaCode) {
+        arrayFilters.push({
+          phone: {
+            $nin: [
+              /^1808/,
+              /^1203/,
+              /^1475/,
+              /^1860/,
+              /^1959/,
+              /^1276/,
+              /^1434/,
+              /^1540/,
+              /^1571/,
+              /^1703/,
+              /^1757/,
+              /^1804/,
+              /^1215/,
+              /^1223/,
+              /^1267/,
+              /^1272/,
+              /^1412/,
+              /^1484/,
+              /^16570/,
+              /^1610/,
+              /^1717/,
+              /^1724/,
+              /^1814/,
+              /^1878/,
+              /^1802/,
+              /^1202/,
+              /^1304/,
+              /^1681/,
+              /^1801/,
+              /^1385/,
+              /^1435/,
+              /^1204/,
+              /^1226/,
+              /^1236/,
+              /^1249/,
+              /^1250/,
+              /^1289/,
+              /^1306/,
+              /^1343/,
+              /^1365/,
+              /^1367/,
+              /^1403/,
+              /^1416/,
+              /^1418/,
+              /^1431/,
+              /^1437/,
+              /^1438/,
+              /^1450/,
+              /^1506/,
+              /^1514/,
+              /^1519/,
+              /^1548/,
+              /^1579/,
+              /^1581/,
+              /^1587/,
+              /^1604/,
+              /^1613/,
+              /^1639/,
+              /^1647/,
+              /^1705/,
+              /^1709/,
+              /^1778/,
+              /^1780/,
+              /^1782/,
+              /^1807/,
+              /^1819/,
+              /^1825/,
+              /^1867/,
+              /^1873/,
+              /^1902/,
+              /^1905/,
+              /^1684/,
+              /^1671/,
+              /^1670/,
+              /^1787/,
+              /^1340/,
+              /^1931/,
+            ],
+          },
+        })
+      }
 
       console.log('Array:', ...arrayFilters)
       if (arrayFilters) {

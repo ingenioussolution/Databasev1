@@ -10,9 +10,12 @@ export default makeStyles((theme) => ({
     fontWeight: 'bold',
   },
   actionsContainer: {
+    [theme.breakpoints.down('lg')]: {
+      justifyContent: 'space-around !important',
+    },
     [theme.breakpoints.down('xs')]: {
       marginTop: theme.spacing(5),
-      justifyContent: 'flex-start !important',
+      justifyContent: 'space-around !important',
     },
     '& button': {
       width: '100%',
@@ -52,5 +55,12 @@ export default makeStyles((theme) => ({
     '& button': {
       minHeight: '38px',
     },
+  },
+
+  paperCheck:{
+    justifyItems: 'center',
+    justifyContent: 'center',
+    display: 'flex',
+    boxShadow: '0px !important'
   },
 }))

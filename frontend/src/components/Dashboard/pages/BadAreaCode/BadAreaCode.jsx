@@ -47,11 +47,13 @@ const BadAreaCode = () => {
 
   // editable value ['always' 'never' 'onUpdate' 'onAdd']
   return (
-    <div>
+    
       <Grid container item xs={12}>
         <Card className={classesTable.mainWrapper}>
-          <DataTableToolbar r handleRefresh={() => handleRefresh()} >
-          </DataTableToolbar>
+          <DataTableToolbar
+            
+            handleRefresh={() => handleRefresh()}
+          ></DataTableToolbar>
 
           <Grid item xs={12}>
             {loading ? (
@@ -71,7 +73,7 @@ const BadAreaCode = () => {
           </Grid>
         </Card>
       </Grid>
-    </div>
+   
   )
 }
 

@@ -3,19 +3,20 @@ let arrayNameState = []
 let arrayState = []
 
 stateList.map((nameIndex) => {
-  return arrayNameState.push(nameIndex.nameState), arrayState.push(nameIndex.state)
+  return (
+    arrayNameState.push(nameIndex.nameState), arrayState.push(nameIndex.state)
+  )
 })
 
 export const nameState = {
   field: 'nameState',
   title: 'Name State',
-  lookup: {...arrayNameState}
-  
+  lookup: { ...arrayNameState },
 }
 export const state = {
   field: 'state',
   title: 'State',
-  lookup: {...arrayState}
+  lookup: { ...arrayState },
 }
 export const areaCode = {
   field: 'areaCode',

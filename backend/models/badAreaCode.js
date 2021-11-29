@@ -13,6 +13,7 @@ const BadAreaCodeSchema = mongoose.Schema(
     areaCode: {
       type: String,
       required: true,
+      trim: true,
       unique: true,
     },
   },

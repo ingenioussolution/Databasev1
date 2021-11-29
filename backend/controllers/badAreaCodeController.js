@@ -1,6 +1,7 @@
 import asyncHandler from 'express-async-handler'
 import BadAreaCode from '../models/badAreaCode.js'
 
+
 // @desc     All Bad Area Code
 // @route    get /bad-area-code
 // @access   Public
@@ -28,13 +29,16 @@ export const getAreaCode = asyncHandler(async (req, res, next) => {
 export const listAreaCode = asyncHandler(async (req, res, next) => {
   try {
     let arrayBadArea = []
-    const areaCode = await BadAreaCode.find({},{areaCode:1, _id:0})
-    arrayBadArea.push(...areaCode)
+    const areaBadCode = await BadAreaCode.find({},{areaCode:1, _id:0})
+
+    areaBadCode.map(obj => {
+      arrayBadArea.push('/^'+obj.areaCode+'/')
+    })
 
     console.log(arrayBadArea);
 
-    if (areaCode) {
-      res.json(areaCode)
+    if (areaBadCode) {
+      res.json(arrayBadArea)
     } else {
       res.status(404)
       throw new Error('Bad Area Code not found')

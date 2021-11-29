@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect} from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import {
@@ -7,7 +7,7 @@ import {
 } from '../../../utils/dataModels/UserDataModel'
 import Loader from '../../Loader/Loader'
 import Message from '../../message/Message'
-import { Grid, Button, Card } from '@material-ui/core'
+import { Grid, Card } from '@material-ui/core'
 import Swal from 'sweetalert2'
 import { listUsers } from '../../../actions/userActions'
 import dataStyle from '../../DataTable/styles'

@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import MaterialTable, { MTableToolbar } from 'material-table'
+import MaterialTable from 'material-table'
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
 import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
 import AddBox from '@material-ui/icons/AddBox'
@@ -41,18 +41,12 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  Paper,
 } from '@material-ui/core'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from './styles'
 import dataStyle from '../../../DataTable/styles'
 import clsx from 'clsx'
-import {
-  FaFileDownload,
-  FaFileExport,
-  FaSyncAlt,
-  FaSearch,
-} from 'react-icons/fa'
+import { FaFileDownload, FaFileExport, FaSearch } from 'react-icons/fa'
 
 import { forwardRef } from 'react'
 import Loader from '../../../Loader/Loader'
@@ -103,12 +97,26 @@ const DataTablePhones = () => {
   const { loading, success, exporting } = listExportData
 
   const [arrayExport, setArrayExport] = useState(false)
+  const [download, setDownload] = useState(true)
   const [totalProcessPages, setTotalPages] = useState()
 
   const [filterState, setFilterState] = useState({
     startDate: '',
     endDate: '',
   })
+
+  //------------ UseEffect---------
+  useEffect(() => {
+    document.title = 'Data Base List | Ingenious Solution Group'
+
+    if (userInfo === null || userInfo === undefined) {
+      Swal.fire('Attention', 'Please login', 'warning')
+      history.push('/')
+      return
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [history, userInfo, dispatch])
 
   const dataPagination = (query) =>
     new Promise((resolve, reject) => {
@@ -165,8 +173,6 @@ const DataTablePhones = () => {
           urlExport += '&start='
         }
 
-        // urlExport += '&start=' + moment(filterState.startDate).format('YYYY-MM-DD')
-        // urlExport += '&end=' + moment(filterState.endDate).format('YYYY-MM-DD')
         if (filterState.endDate !== '') {
           url += '&end=' + moment(filterState.endDate).format('YYYY-MM-DD')
           urlExport +=
@@ -176,9 +182,8 @@ const DataTablePhones = () => {
           urlExport += '&end='
         }
 
-        console.log('URL with filters: ', url)
-
-        console.log('Query: ', query)
+        // console.log('URL with filters: ', url)
+        // console.log('Query: ', query)
 
         axios
           .get(url, config)
@@ -199,7 +204,7 @@ const DataTablePhones = () => {
               totalCount: result.data.totalPages,
             })
             setDataTable(result)
-            console.log('urlExport', urlExport)
+            //console.log('urlExport', urlExport)
             setQueryExport(urlExport)
             setTotalPages(result.data.totalPages)
           })
@@ -211,22 +216,10 @@ const DataTablePhones = () => {
       }
     })
 
-  //------------ UseEffect---------
-  useEffect(() => {
-    document.title = 'Data Base List | Ingenious Solution Group'
-
-    if (userInfo === null || userInfo === undefined) {
-      Swal.fire('Attention', 'Please login', 'warning')
-      history.push('/')
-      return
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history, userInfo, areaCode])
-
   // verify onclick Export Button
   useEffect(() => {
     if (exportCSV) {
+      setArrayExport(true)
       if (totalProcessPages > 49900) {
         Swal.fire({
           icon: 'info',
@@ -235,10 +228,10 @@ const DataTablePhones = () => {
         }).then((result) => {
           if (result.isConfirmed) {
             setExportCSV(false)
+            setArrayExport(false)
           }
         })
       } else {
-        setArrayExport(true)
         ExportData(queryExport)
       }
     }
@@ -247,8 +240,8 @@ const DataTablePhones = () => {
 
   // function export data
   const ExportData = (queryExport) => {
-    console.log('Export in progress....')
-    console.log('URL query', queryExport)
+    // console.log('Export in progress....')
+    // console.log('URL query', queryExport)
 
     dispatch(exportData(queryExport))
   }
@@ -257,20 +250,27 @@ const DataTablePhones = () => {
   useEffect(() => {
     if (exportCSV && success) {
       setExportCSV(false)
-      setArrayExport(false)
+
+      if (exporting) {
+        Swal.fire({
+          icon: 'info',
+          title: 'Download Ready!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            setDownload(false)
+          }
+        })
+      }
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportCSV, success])
 
   useEffect(() => {
-    if (exporting) {
-      Swal.fire({
-        icon: 'info',
-        title: 'Download File',
-      })
+    if (!download) {
+      setArrayExport(false)
     }
-  }, [loading])
+  }, [download])
 
   const handleChangeAreaCode = (event) => {
     setAreaCode(event.target.checked)
@@ -325,7 +325,7 @@ const DataTablePhones = () => {
                 </Grid>
 
                 <Grid item xs={12} sm={3} md={2} className={classes.badArea}>
-                  <Grid justifyContent="center" className={classes.paperCheck}>
+                  <Grid className={classes.paperCheck}>
                     <FormControl component="fieldset">
                       <FormControlLabel
                         control={
@@ -381,6 +381,7 @@ const DataTablePhones = () => {
                           variant="outlined"
                           className={commons.successBtn}
                           endIcon={<FaFileDownload />}
+                          disabled={download}
                         >
                           Download
                         </Button>
@@ -393,6 +394,7 @@ const DataTablePhones = () => {
               </Grid>
             </Grid>
           </Toolbar>
+
           <MaterialTable
             style={{ padding: '20px' }}
             title=""

@@ -1,4 +1,4 @@
-import React, { useEffect,useState } from 'react'
+import React, { useEffect } from 'react'
 import MaterialTable from 'material-table'
 import AddBox from '@material-ui/icons/AddBox'
 import ArrowUpward from '@material-ui/icons/ArrowUpward'
@@ -57,8 +57,8 @@ const tableIcons = {
 const UserTable = ({ columns, data, filter, selection, paging, editable }) => {
   const dispatch = useDispatch()
 
-  const [errorMsg, setErrorMsg] = useState('')
-  const [successMsg, setSuccessMsg] = useState('')
+  // const [errorMsg, setErrorMsg] = useState('')
+  // const [successMsg, setSuccessMsg] = useState('')
 
   const userList = useSelector((state) => state.userList)
   const { error: errorFetching, loading: fetching, users } = userList
@@ -67,7 +67,7 @@ const UserTable = ({ columns, data, filter, selection, paging, editable }) => {
   const { error:errorUpdate, success: successUpdate } = userUpdate
   const userDelete = useSelector((state) => state.userDelete)
   const {
-    success: successDelete,
+    //success: successDelete,
     error: errorDelete,
   } = userDelete
   // const userRegister = useSelector((state) => state.userRegister)

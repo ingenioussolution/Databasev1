@@ -1,9 +1,9 @@
 import express from 'express'
 import dotenv from 'dotenv'
+import path from 'path'
 import cors from 'cors'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewere/errorMiddlewere.js'
-
 
 //Routes
 import phoneslistRoutes from './routes/phoneslist.js'
@@ -13,7 +13,7 @@ import ModelTemporal from './routes/TemporalDataRouters.js'
 import userRoutes from './routes/userRoutes.js'
 import badAreaCodeRoutes from './routes/badAreaCodeRouters.js'
 import settingsRoutes from './routes/siteSettingsRoutes.js'
-
+import uploadRoutes from './routes/uploadCsvRoutes.js'
 
 dotenv.config()
 connectDB()
@@ -33,7 +33,10 @@ app.use('/carrier', carrierRoutes)
 app.use('/data-temporal', ModelTemporal)
 app.use('/bad-area-code', badAreaCodeRoutes)
 app.use('/settings', settingsRoutes)
+app.use('/upload-csv', uploadRoutes)
 
+// const __dirname = path.resolve()
+// app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
 app.get('/', (req, res) => {
   res.send('Hello from node')

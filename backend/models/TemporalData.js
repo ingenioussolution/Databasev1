@@ -14,20 +14,24 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     clicker: {
       type: Boolean,
+      default:false,
     },
     revenue: {
       type: String,
     },
     converter: {
       type: Boolean,
+      default:false,
     },
     hardBounce: {
       type: Boolean,
+      default:false,
     },
     suppressed: {
       type: Boolean,
+      default:false,
     },
-    list: { type: String },
+    list: { type: String,trim: true, },
     source: { type: String },
     email: {
       type: String,
@@ -49,7 +53,9 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ['sold', 'reject', 'notQaulifed'],
+      enum: ['sold', 'reject', 'notqaulifed'],
+      lowercase: true,
+      trim: true,
     },
     zipCode: {
       type: String,
@@ -69,6 +75,8 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     creditScore: {
       type: String,
       enum: ['no', 'poor', 'bad', 'fair', 'good', 'excellent'],
+      lowercase: true,
+      trim: true,
     },
     subId: { type: String },
     vertical: { type: String },
@@ -98,7 +106,9 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     lineType: {
       type: String,
-      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi',null],
+      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi','pager','lookup','wireless_prepaid',null],
+      lowercase: true,
+      trim: true,
     },
     prepaid: {
       type: Boolean,
@@ -117,7 +127,8 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ['M', 'F'],
+      enum: ['M','F'],
+      trim: true,
     },
 
     senderID: {
@@ -128,10 +139,15 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     validity: {
       type: Boolean,
+      default:false,
     },
     subject: { type: String },
     vertical2: { type: String },
     vertical3: { type: String },
+    burstOptOut:{
+      type: Boolean,
+      default:false,
+    },
   },
   {
     timestamps: true,

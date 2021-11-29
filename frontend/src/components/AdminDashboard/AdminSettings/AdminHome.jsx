@@ -16,7 +16,6 @@ import {
   FaTimesCircle,
   FaRegClock,
   FaCheckSquare,
-  FaBroadcastTower,
 } from 'react-icons/fa'
 
 import { useSelector } from 'react-redux'

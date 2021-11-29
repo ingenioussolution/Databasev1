@@ -44,7 +44,7 @@ const CleanList = () => {
   const { userInfo } = UserLogin
 
   const listPhone = useSelector((state) => state.listPhoneClean)
-  const { loading, error, listPhones, page, pages } = listPhone
+  const { loading, listPhones, page, pages } = listPhone
 
   console.log("page current", page);
 

@@ -83,6 +83,44 @@ export const listPhoneData = (page) => async (dispatch, getState) => {
   }
 }
 
+// Material table Action
+
+export const listTableData = (query) => async (dispatch, getState) => {
+  try {
+    dispatch({
+      type: PHONE_CLEAN_LIST_REQUEST,
+    })
+
+    const {
+      userLogin: { userInfo },
+    } = getState()
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+        Authorization: `Bearer ${userInfo.token}`,
+      },
+    }
+
+    const { data } = await axios.get(`/phoneslist?${query}`, config)
+
+    dispatch({
+      type: PHONE_CLEAN_LIST_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: PHONE_CLEAN_LIST_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+
+// Delete
 export const deletePhoneListClean = (id) => async (dispatch, getState) => {
   try {
     dispatch({
@@ -115,6 +153,7 @@ export const deletePhoneListClean = (id) => async (dispatch, getState) => {
   }
 }
 
+// Updated
 export const updateListPhoneClean =
   (phoneList) => async (dispatch, getState) => {
     try {

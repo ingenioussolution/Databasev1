@@ -2,6 +2,9 @@
 import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import ModelTemporal from '../models/TemporalData.js'
+import BadAreaCode from '../models/badAreaCode.js'
+import {listAreaCode} from '../controllers/badAreaCodeController.js'
+
 import axios from 'axios'
 
 // @routes GET /phoneslist/
@@ -33,6 +36,15 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const pageSize = 10
     const page = parseInt(req.query.pageNumber) || 1
 
+    let arrayBadArea = []
+    const areaBadCode = await BadAreaCode.find({},{areaCode:1, _id:0})
+
+    areaBadCode.map(obj => {
+        arrayBadArea.push(new RegExp('^'+obj.areaCode))
+    })
+
+    console.log(arrayBadArea);
+
     if (
       clicker ||
       hardBounce ||
@@ -56,7 +68,6 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
         console.log("hard bounce TRUE");
         arrayFilters.push({ hardBounce: hardBounce })
       }
-
       if (revenue) {
         arrayFilters.push({ revenue: revenue })
       }
@@ -79,7 +90,6 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       if (firstNameFilter) {
         arrayFilters.push({ firstName: firstName })
       }
-
       if (createdAt_start || createdAt_end) {
         arrayFilters.push({
           createdAt: {
@@ -91,85 +101,86 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       if (areaCode) {
         arrayFilters.push({
           phone: {
-            $nin: [
-              /^1808/,
-              /^1203/,
-              /^1475/,
-              /^1860/,
-              /^1959/,
-              /^1276/,
-              /^1434/,
-              /^1540/,
-              /^1571/,
-              /^1703/,
-              /^1757/,
-              /^1804/,
-              /^1215/,
-              /^1223/,
-              /^1267/,
-              /^1272/,
-              /^1412/,
-              /^1484/,
-              /^16570/,
-              /^1610/,
-              /^1717/,
-              /^1724/,
-              /^1814/,
-              /^1878/,
-              /^1802/,
-              /^1202/,
-              /^1304/,
-              /^1681/,
-              /^1801/,
-              /^1385/,
-              /^1435/,
-              /^1204/,
-              /^1226/,
-              /^1236/,
-              /^1249/,
-              /^1250/,
-              /^1289/,
-              /^1306/,
-              /^1343/,
-              /^1365/,
-              /^1367/,
-              /^1403/,
-              /^1416/,
-              /^1418/,
-              /^1431/,
-              /^1437/,
-              /^1438/,
-              /^1450/,
-              /^1506/,
-              /^1514/,
-              /^1519/,
-              /^1548/,
-              /^1579/,
-              /^1581/,
-              /^1587/,
-              /^1604/,
-              /^1613/,
-              /^1639/,
-              /^1647/,
-              /^1705/,
-              /^1709/,
-              /^1778/,
-              /^1780/,
-              /^1782/,
-              /^1807/,
-              /^1819/,
-              /^1825/,
-              /^1867/,
-              /^1873/,
-              /^1902/,
-              /^1905/,
-              /^1684/,
-              /^1671/,
-              /^1670/,
-              /^1787/,
-              /^1340/,
-              /^1931/,
-            ],
+            $nin: arrayBadArea,
+            // [
+            //   /^1808/,
+            //   /^1203/,
+            //   /^1475/,
+            //   /^1860/,
+            //   /^1959/,
+            //   /^1276/,
+            //   /^1434/,
+            //   /^1540/,
+            //   /^1571/,
+            //   /^1703/,
+            //   /^1757/,
+            //   /^1804/,
+            //   /^1215/,
+            //   /^1223/,
+            //   /^1267/,
+            //   /^1272/,
+            //   /^1412/,
+            //   /^1484/,
+            //   /^16570/,
+            //   /^1610/,
+            //   /^1717/,
+            //   /^1724/,
+            //   /^1814/,
+            //   /^1878/,
+            //   /^1802/,
+            //   /^1202/,
+            //   /^1304/,
+            //   /^1681/,
+            //   /^1801/,
+            //   /^1385/,
+            //   /^1435/,
+            //   /^1204/,
+            //   /^1226/,
+            //   /^1236/,
+            //   /^1249/,
+            //   /^1250/,
+            //   /^1289/,
+            //   /^1306/,
+            //   /^1343/,
+            //   /^1365/,
+            //   /^1367/,
+            //   /^1403/,
+            //   /^1416/,
+            //   /^1418/,
+            //   /^1431/,
+            //   /^1437/,
+            //   /^1438/,
+            //   /^1450/,
+            //   /^1506/,
+            //   /^1514/,
+            //   /^1519/,
+            //   /^1548/,
+            //   /^1579/,
+            //   /^1581/,
+            //   /^1587/,
+            //   /^1604/,
+            //   /^1613/,
+            //   /^1639/,
+            //   /^1647/,
+            //   /^1705/,
+            //   /^1709/,
+            //   /^1778/,
+            //   /^1780/,
+            //   /^1782/,
+            //   /^1807/,
+            //   /^1819/,
+            //   /^1825/,
+            //   /^1867/,
+            //   /^1873/,
+            //   /^1902/,
+            //   /^1905/,
+            //   /^1684/,
+            //   /^1671/,
+            //   /^1670/,
+            //   /^1787/,
+            //   /^1340/,
+            //   /^1931/,
+            // ],
           },
         })
       }

@@ -41,7 +41,6 @@ import {
   USER_UPDATE_PROFILE_PICTURE_REQUEST,
   USER_UPDATE_PROFILE_PICTURE_SUCCESS,
   USER_UPDATE_PROFILE_PICTURE_FAIL,
-  
 } from '../constants/userConstants'
 import {
   sendEmail,
@@ -119,7 +118,7 @@ export const loginAdmin = (email, password) => async (dispatch) => {
   }
 }
 
-export const logout = () => (dispatch) => {  
+export const logout = () => (dispatch) => {
   localStorage.removeItem('userInfo')
   dispatch({ type: USER_LOGOUT })
   dispatch({ type: USER_DETAILS_RESET })
@@ -133,7 +132,7 @@ export const adminLogout = () => (dispatch) => {
   dispatch({ type: USER_LIST_RESET })
 }
 
-export const register = (user) => async (dispatch,getState) => {
+export const register = (user) => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_REGISTER_REQUEST,
@@ -145,7 +144,7 @@ export const register = (user) => async (dispatch,getState) => {
 
     const config = {
       headers: {
-       'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
@@ -156,9 +155,9 @@ export const register = (user) => async (dispatch,getState) => {
 
     // await sendEmail(CONFIRMATION_REGISTER_FAN, {
     //   to_name: `${user.firstName} ${user.lastName}`,
-    //   to_email: user.email,  
-    //   title: 'Confirmation Fan',      
-    // })    
+    //   to_email: user.email,
+    //   title: 'Confirmation Fan',
+    // })
 
     dispatch({
       type: USER_REGISTER_SUCCESS,
@@ -228,7 +227,7 @@ export const getUserDetailsAsAdmin = (id) => async (dispatch, getState) => {
 
     const config = {
       headers: {
-       'Content-Type': 'application/json',
+        'Content-Type': 'application/json',
         Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
@@ -553,7 +552,7 @@ export const updateUser = (user) => async (dispatch, getState) => {
 }
 
 export const forgotPassword = (email) => async (dispatch) => {
-  console.log("email forgot password", email);
+  console.log('email forgot password', email)
   try {
     dispatch({
       type: USER_FORGOT_PASSWORD_REQUEST,

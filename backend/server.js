@@ -35,12 +35,20 @@ app.use('/bad-area-code', badAreaCodeRoutes)
 app.use('/settings', settingsRoutes)
 app.use('/upload-csv', uploadRoutes)
 
-// const __dirname = path.resolve()
-// app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
+const __dirname = path.resolve()
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, '/frontend/build')))
+
+  app.get('*', (req, res) =>
+    res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
+  )
+} else {
 app.get('/', (req, res) => {
   res.send('Hello from node')
 })
+}
 
 app.use(notFound)
 

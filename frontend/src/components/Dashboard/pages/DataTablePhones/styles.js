@@ -63,4 +63,8 @@ export default makeStyles((theme) => ({
     display: 'flex',
     boxShadow: '0px !important'
   },
+
+  upload:{
+    margin: "30px",
+  },
 }))

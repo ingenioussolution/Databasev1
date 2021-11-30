@@ -301,13 +301,3 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
 })
 
 
-// Upload CSV file using Express Rest APIs
-export const UploadCSV = asyncHandler(async (req, res, next) => {
-  try {
-    
-    
-  } catch (error) {
-    // next(error)
-  }
-    
-})

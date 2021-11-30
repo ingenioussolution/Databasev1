@@ -4,7 +4,7 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 
 import clsx from 'clsx'
-import { FaListUl, FaPhoneSlash, } from 'react-icons/fa'
+import { FaListUl, FaPhoneSlash,FaCloudUploadAlt } from 'react-icons/fa'
 
 //import useStyles from './styles'
 
@@ -59,6 +59,20 @@ const NavigationLayout = () => {
             <ListItemText>Bad Area Code</ListItemText>
           </ListItem>
         </Link>
+        <Link to={'/dashboard/upload-new-data'}>
+        <ListItem
+          button
+          key="upload-csv"
+          className={clsx({
+            active: pathname === '/dashboard/upload-new-data',
+          })}
+        >
+          <ListItemIcon>
+            <FaCloudUploadAlt />
+          </ListItemIcon>
+          <ListItemText>Upload New Data</ListItemText>
+        </ListItem>
+      </Link>
 
         {/*
           <Link to={'/dashboard/list-phones'}>

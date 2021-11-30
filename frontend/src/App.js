@@ -26,6 +26,7 @@ import AdminDashboard from './components/AdminDashboard/AdminCRUD/AdminDashboard
 import AdminNavigation from './components/AdminDashboard/AdminNavigation/AdminNavigation'
 import AdminLogin from './components/AdminDashboard/AdminLogin/AdminLogin'
 import AdminHome from './components/AdminDashboard/AdminSettings/AdminHome'
+import UploadCsv from './components/Dashboard/pages/UploadData/UploadData'
 
 const App = ({ location }) => {
   const classes = StyleApp()
@@ -93,6 +94,11 @@ const App = ({ location }) => {
                 path="/dashboard/bad-area-code"
                 exact
                 component={BadAreaCode}
+              />
+              <Route
+                path="/dashboard/upload-new-data"
+                exact
+                component={UploadCsv}
               />
               <Route path="/admin/admin-dashboard" exact component={AdminHome} />
               <Route path="/admin/list-users" exact component={AdminDashboard} />

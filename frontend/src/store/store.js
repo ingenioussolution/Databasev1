@@ -44,6 +44,7 @@ import {
 } from '../reducers/badAreaReducers'
 
 import {listExportDataReducer} from '../reducers/exportDataReducers'
+import {uploadCsvDataReducer} from '../reducers/uploadCsvReducers'
 
 const reducer = combineReducers({
   //List Phones reducers
@@ -78,7 +79,10 @@ const reducer = combineReducers({
   deleteBadArea: deleteBadAreaReducer,
 
   // Export data
-  listExportData: listExportDataReducer
+  listExportData: listExportDataReducer,
+
+  // Upload data
+  uploadCsvData: uploadCsvDataReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

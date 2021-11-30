@@ -1,16 +1,12 @@
 import express from 'express'
 import multer from 'multer'
 import path from 'path'
-import fs from 'fs'
-import csv from 'csv-parser'
 import csvtojson from 'csvtojson'
-import fastcsv from 'fast-csv'
-import { fileURLToPath } from 'url'
 import TemporalData from '../models/TemporalData.js'
 
-//app.use(express.static(path.join(__dirname, 'public')));
-
 const router = express.Router()
+import { protect } from '../middlewere/authMiddlewere.js'
+
 
 // Multer Upload Storage
 // `${file.fieldname}-${Date.now()}${path.extname(file.originalname)}`
@@ -19,10 +15,7 @@ const storage = multer.diskStorage({
     cb(null, 'upload/')
   },
   filename(req, file, cb) {
-    cb(
-      null,
-      `${file.fieldname}${path.extname(file.originalname)}`
-    )
+    cb(null, `${file.fieldname}${path.extname(file.originalname)}`)
   },
 })
 
@@ -39,57 +32,14 @@ const upload = multer({
   fileFilter: csvFilter,
 })
 
-// Upload CSV file using Express Rest APIs
-// router.post('/', upload.single('file'), (req, res) => {
-//   try {
-//     if (req.file == undefined) {
-//       return res.status(400).send({
-//         message: 'Please upload a CSV file!',
-//       })
-//     }
-
-// Import CSV File to MongoDB database
-//     let csvData = []
-//     const __dirname = path.dirname(fileURLToPath(import.meta.url))
-//     let filePath = path.join(__dirname, `../../${req.file.path}`)
-//     //.pipe(csv())
-//     fs.createReadStream(filePath)
-//       .pipe(fastcsv.parse({ headers: true }))
-//       .on('data', (row) => {
-//         csvData.push(row)
-//       })
-//       .on('end', () => {
-//         console.log('data', csvData)
-//         TemporalData.insertMany(csvData, (err, result) => {
-//           if (err) console.log(err)
-//           if (result) {
-//             res.status(200).send({
-//               message:
-//                 'Upload/import the CSV data into database successfully: ' +
-//                 req.file.originalname,
-//             })
-//             client.close()
-//           }
-//         })
-//       })
-//       .catch((err) => {
-//         res.status(500).send({
-//           message: 'Fail to import data into database!',
-//           error: err.message,
-//         })
-//       })
-//   } catch (error) {
-//     console.log('catch error-', error)
-//     res.status(500).send({
-//       message: 'Could not upload the file: ' + req.file.originalname,
-//     })
-//   }
-// })
-
 let temp
-router.post('/', upload.single('file'), async (req, res) => {
+let csvData = []
+let allUpload = []
+// Import csv file
+router.post('/', protect, upload.single('file'), async (req, res) => {
+  console.log(req.body.progress);
   try {
-    if (req.file == undefined) {
+    if (req.file === undefined) {
       return res.status(400).send({
         message: 'Please upload a CSV file!',
       })
@@ -97,58 +47,94 @@ router.post('/', upload.single('file'), async (req, res) => {
     csvtojson({ ignoreEmpty: true })
       .fromFile(req.file.path)
       .then((jsonObj) => {
-        // console.log('jsonObj: ', jsonObj.length)
-        for (let x = 0; x < jsonObj.length; x++) {
-          temp = Boolean(jsonObj[x].clicker)
-          jsonObj[x].clicker = temp
-          temp = Boolean(jsonObj[x].converter)
-          jsonObj[x].converter = temp
-          temp = Boolean(jsonObj[x].hardBounce)
-          jsonObj[x].hardBounce = temp
-          temp = Boolean(jsonObj[x].suppressed)
-          jsonObj[x].suppressed = temp
-          temp = Boolean(jsonObj[x].recentAbuse)
-          jsonObj[x].recentAbuse = temp
-          temp = Boolean(jsonObj[x].validMobile)
-          jsonObj[x].validMobile = temp
-          temp = Boolean(jsonObj[x].blackListAlliance)
-          jsonObj[x].blackListAlliance = temp
-          temp = Boolean(jsonObj[x].prepaid)
-          jsonObj[x].prepaid = temp
-          temp = Boolean(jsonObj[x].validity)
-          jsonObj[x].validity = temp
-          temp = Boolean(jsonObj[x].risky)
-          jsonObj[x].risky = temp
-          temp = Boolean(jsonObj[x].burstOptOut)
-          jsonObj[x].burstOptOut = temp
-          temp = parseFloat(jsonObj[x].monthlyIncome)
-          jsonObj[x].monthlyIncome = temp
-          temp = parseFloat(jsonObj[x].fraudScore)
-          jsonObj[x].fraudScore = temp
-        }
+        if (jsonObj) {
+          console.log('jsonObj: ', jsonObj.length)
+          const csvCount = jsonObj.length
+          for (let x = 0; x < jsonObj.length; x++) {
+            if (jsonObj[x].clicker) {
+              temp = Boolean(jsonObj[x].clicker)
+              jsonObj[x].clicker = temp
+            }
+            if (jsonObj[x].converter) {
+              temp = Boolean(jsonObj[x].converter)
+              jsonObj[x].converter = temp
+            }
+            if (jsonObj[x].hardBounce) {
+              temp = Boolean(jsonObj[x].hardBounce)
+              jsonObj[x].hardBounce = temp
+            }
+            if (jsonObj[x].suppressed) {
+              temp = Boolean(jsonObj[x].suppressed)
+              jsonObj[x].suppressed = temp
+            }
+            if (jsonObj[x].recentAbuse) {
+              temp = Boolean(jsonObj[x].recentAbuse)
+              jsonObj[x].recentAbuse = temp
+            }
+            if (jsonObj[x].validMobile) {
+              temp = Boolean(jsonObj[x].validMobile)
+              jsonObj[x].validMobile = temp
+            }
+            if (jsonObj[x].blackListAlliance) {
+              temp = Boolean(jsonObj[x].blackListAlliance)
+              jsonObj[x].blackListAlliance = temp
+            }
+            if (jsonObj[x].prepaid) {
+              temp = Boolean(jsonObj[x].prepaid)
+              jsonObj[x].prepaid = temp
+            }
 
-        jsonObj.map(async (data) => {
-          const uniquePhone = await TemporalData.findOne({ phone: data.phone })
-          if (uniquePhone) {
-            console.log('phone exist', data.phone)
-          } else {
-            console.log('phone NO exist', data.phone)
-            TemporalData.insertMany(data, (err, result) => {
-              if (err) console.log(err)
-              if (result) {
-                res.status(200).send({
-                  message:
-                    'Upload/import the CSV data into database successfully: ' +
-                    req.file.originalname,
-                })
-              }
-            })
+            if (jsonObj[x].validity) {
+              temp = Boolean(jsonObj[x].validity)
+              jsonObj[x].validity = temp
+            }
+            if (jsonObj[x].risky) {
+              temp = Boolean(jsonObj[x].risky)
+              jsonObj[x].risky = temp
+            }
+            if (jsonObj[x].burstOptOut) {
+              temp = Boolean(jsonObj[x].burstOptOut)
+              jsonObj[x].burstOptOut = temp
+            }
           }
-        })
+          jsonObj?.map(async (data) => {
+            const uniquePhone = await TemporalData.findOne({
+              phone: data.phone,
+            })
+            csvData.push(data)
+            console.log('count csv', csvData.length)
+            if (uniquePhone) {
+              console.log('phone exist', data.phone)
+            } if(!uniquePhone) {
+              console.log('phone NO exist', data.phone)
+              await allUpload.push(data)
+              await TemporalData.insertMany(data, (err) => {
+                
+                if (err) {
+                  return console.log(err)
+                }
+              })
+            }
+
+            let rowsAll = csvData.length
+            const totalUpload = allUpload.length
+            if (csvCount === rowsAll) {
+              console.log('allUpload: ', allUpload.length)
+              csvData = []
+              allUpload = []
+              return res.json({
+                message:
+                  'Upload/import the CSV data into database successfully',
+                 totalUpload: totalUpload,
+                 totalRows: csvCount
+              })
+            }
+          })
+        }
       })
   } catch (error) {
     console.log('catch error-', error)
-    res.status(500).send({
+    return res.status(500).send({
       message: 'Could not upload the file: ' + req.file.originalname,
     })
   }

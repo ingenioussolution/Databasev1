@@ -6,6 +6,7 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
       type: String,
       required: true,
       unique: true,
+      trim: true,
       min: 9,
       max: 11,
     },
@@ -14,24 +15,20 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     clicker: {
       type: Boolean,
-      default:false,
     },
     revenue: {
       type: String,
     },
     converter: {
       type: Boolean,
-      default:false,
     },
     hardBounce: {
       type: Boolean,
-      default:false,
     },
     suppressed: {
       type: Boolean,
-      default:false,
     },
-    list: { type: String,trim: true, },
+    list: { type: String, trim: true },
     source: { type: String },
     email: {
       type: String,
@@ -66,7 +63,6 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
 
     monthlyIncome: {
       type: Number,
-      default: 0.0,
     },
     incomeSource: {
       type: String,
@@ -92,11 +88,9 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     recentAbuse: {
       type: Boolean,
-      default: false,
     },
     fraudScore: {
       type: Number,
-      default: 0.0,
     },
     validMobile: {
       type: Boolean,
@@ -106,7 +100,18 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     lineType: {
       type: String,
-      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi','pager','lookup','wireless_prepaid',null],
+      enum: [
+        'wireless',
+        'landline',
+        'voip',
+        'mobile',
+        'mobile_prepaid',
+        'wifi',
+        'pager',
+        'lookup',
+        'wireless_prepaid',
+        null,
+      ],
       lowercase: true,
       trim: true,
     },
@@ -127,7 +132,7 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     gender: {
       type: String,
-      enum: ['M','F'],
+      enum: ['M', 'F'],
       trim: true,
     },
 
@@ -139,14 +144,12 @@ const ModelTemporalCleanDataSchema = mongoose.Schema(
     },
     validity: {
       type: Boolean,
-      default:false,
     },
     subject: { type: String },
     vertical2: { type: String },
     vertical3: { type: String },
-    burstOptOut:{
+    burstOptOut: {
       type: Boolean,
-      default:false,
     },
   },
   {

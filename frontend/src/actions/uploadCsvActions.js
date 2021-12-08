@@ -23,7 +23,7 @@ export const uploadData = (file,options) => async (dispatch, getState) => {
          Authorization: `Bearer ${userInfo.token}`,
         },
       }
-  
+
       const { data } = await axios.post('/upload-csv', file, config)
      
       console.log("data", data);

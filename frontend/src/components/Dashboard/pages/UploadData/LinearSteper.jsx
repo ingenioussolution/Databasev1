@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { uploadData } from '../../../../actions/uploadCsvActions.js'
 import {
   Typography,
@@ -116,7 +116,7 @@ const LinearStepper = ({ loader, loading, success }) => {
                 acceptedFiles={['.csv']}
                 cancelButtonText={'cancel'}
                 submitButtonText={'submit'}
-                maxFileSize={50000000}
+                maxFileSize={5000000000}
                 filesLimit={1}
                 open={openCsv}
                 onClose={() => setOpenCsv(false)}

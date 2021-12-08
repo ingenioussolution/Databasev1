@@ -1,23 +1,9 @@
 import React, { useState, useEffect } from 'react'
 import MaterialTable from 'material-table'
+import TableIcons from '../../../tableIcons.js'
+import PatchedPagination from '../../../PaginationError'
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
 import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
-import AddBox from '@material-ui/icons/AddBox'
-import ArrowUpward from '@material-ui/icons/ArrowUpward'
-import Check from '@material-ui/icons/Check'
-import ChevronLeft from '@material-ui/icons/ChevronLeft'
-import ChevronRight from '@material-ui/icons/ChevronRight'
-import Clear from '@material-ui/icons/Clear'
-import DeleteOutline from '@material-ui/icons/DeleteOutline'
-import Edit from '@material-ui/icons/Edit'
-import FilterList from '@material-ui/icons/FilterList'
-import FirstPage from '@material-ui/icons/FirstPage'
-import LastPage from '@material-ui/icons/LastPage'
-import Remove from '@material-ui/icons/Remove'
-import SaveAlt from '@material-ui/icons/SaveAlt'
-import Search from '@material-ui/icons/Search'
-import ViewColumn from '@material-ui/icons/ViewColumn'
-
 import axios from 'axios'
 import { useSelector, useDispatch } from 'react-redux'
 import { useHistory } from 'react-router-dom'
@@ -26,12 +12,10 @@ import {
   PHONE_CLEAN_LIST_SUCCESS,
   PHONE_CLEAN_LIST_FAIL,
 } from '../../../../constants/phonesListClean'
-
 import { CSVLink } from 'react-csv'
 import { exportData } from '../../../../actions/exportDataAction'
 import Swal from 'sweetalert2'
 import moment from 'moment'
-
 import {
   Button,
   Grid,
@@ -48,33 +32,8 @@ import dataStyle from '../../../DataTable/styles'
 import clsx from 'clsx'
 import { FaFileDownload, FaFileExport, FaSearch } from 'react-icons/fa'
 
-import { forwardRef } from 'react'
 import Loader from '../../../Loader/Loader'
 import DateRangePicker from '../../../dateRangePicker/DateRangePicker'
-
-const tableIcons = {
-  Add: forwardRef((props, ref) => <AddBox {...props} ref={ref} />),
-  Check: forwardRef((props, ref) => <Check {...props} ref={ref} />),
-  Clear: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Delete: forwardRef((props, ref) => <DeleteOutline {...props} ref={ref} />),
-  DetailPanel: forwardRef((props, ref) => (
-    <ChevronRight {...props} ref={ref} />
-  )),
-  Edit: forwardRef((props, ref) => <Edit {...props} ref={ref} />),
-  Export: forwardRef((props, ref) => <SaveAlt {...props} ref={ref} />),
-  Filter: forwardRef((props, ref) => <FilterList {...props} ref={ref} />),
-  FirstPage: forwardRef((props, ref) => <FirstPage {...props} ref={ref} />),
-  LastPage: forwardRef((props, ref) => <LastPage {...props} ref={ref} />),
-  NextPage: forwardRef((props, ref) => <ChevronRight {...props} ref={ref} />),
-  PreviousPage: forwardRef((props, ref) => (
-    <ChevronLeft {...props} ref={ref} />
-  )),
-  ResetSearch: forwardRef((props, ref) => <Clear {...props} ref={ref} />),
-  Search: forwardRef((props, ref) => <Search {...props} ref={ref} />),
-  SortArrow: forwardRef((props, ref) => <ArrowUpward {...props} ref={ref} />),
-  ThirdStateCheck: forwardRef((props, ref) => <Remove {...props} ref={ref} />),
-  ViewColumn: forwardRef((props, ref) => <ViewColumn {...props} ref={ref} />),
-}
 
 const DataTablePhones = () => {
   const tableRef = React.createRef()
@@ -240,9 +199,6 @@ const DataTablePhones = () => {
 
   // function export data
   const ExportData = (queryExport) => {
-    // console.log('Export in progress....')
-    // console.log('URL query', queryExport)
-
     dispatch(exportData(queryExport))
   }
 
@@ -399,7 +355,7 @@ const DataTablePhones = () => {
             style={{ padding: '20px' }}
             title=""
             columns={defaultColumns}
-            icons={tableIcons}
+            icons={TableIcons}
             options={{
               exportButton: false,
               exportAllData: false,
@@ -413,6 +369,10 @@ const DataTablePhones = () => {
             }}
             data={dataPagination}
             tableRef={tableRef}
+            components={{
+              Pagination: PatchedPagination,
+            }}
+
             // actions={[
             //   {
             //     icon: tableIcons.Search,

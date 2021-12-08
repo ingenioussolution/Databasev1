@@ -11,8 +11,17 @@
   "scripts": {
     "start": "node backend/server",
     "server": "nodemon backend/server",
+    "server:dev": "NODE_ENV=development nodemon backend/server",
     "client": "npm start --prefix frontend",
-    "dev": "concurrently \"npm run server\" \"npm run client\""
+    "dev": "concurrently \"NODE_ENV=development npm run server\" \" NODE_ENV=development npm run client\"",
+    "prod": "concurrently \"NODE_ENV=production npm run server\" \"NODE_ENV=production npm run client\"",
+    "dev:debug": "concurrently \"npm run server\" \"NODE_OPTIONS='--inspect'  npm run client\"",
+    "data:import": "NODE_ENV=development node backend/seeder",
+    "data:destroy": "NODE_ENV=development node backend/seeder -d",
+    "data-prod:import": "NODE_ENV=production node backend/seeder-prod",
+    "data-prod:destroy": "NODE_ENV=production node backend/seeder-prod -d",
+    "data-prod:pwd": "NODE_ENV=production node backend/seeder-prod -pw",
+    "heroku-postbuild": "NPM_CONFIG_PRODUCTION=false npm install --prefix frontend && npm run build --prefix frontend"
   },
   "author": "camps",
   "license": "ISC",

@@ -47,33 +47,29 @@ const BadAreaCode = () => {
 
   // editable value ['always' 'never' 'onUpdate' 'onAdd']
   return (
-    
-      <Grid container item xs={12}>
-        <Card className={classesTable.mainWrapper}>
-          <DataTableToolbar
-            
-            handleRefresh={() => handleRefresh()}
-          ></DataTableToolbar>
+    <Grid container item xs={12}>
+      <Card className={classesTable.mainWrapper}>
+        <DataTableToolbar
+          handleRefresh={() => handleRefresh()}
+        ></DataTableToolbar>
 
-          <Grid item xs={12}>
-            {loading ? (
-              <Loader />
-            ) : error ? (
-              <Message severity="error">{error}</Message>
-            ) : (
-              <TableData
-                columns={defaultColumns}
-                data={createRows(badArea)}
-                filter={false}
-                selection={false}
-                paging={true}
-                editable={'always'}
-              />
-            )}
-          </Grid>
-        </Card>
-      </Grid>
-   
+        <Grid item xs={12}>
+          {loading ? (
+            <Loader />
+          ) : error ? (
+            <Message severity="error">{error}</Message>
+          ) : (
+            <TableData
+              columns={defaultColumns}
+              data={createRows(badArea)}
+              filter={false}
+              selection={false}
+              editable={'always'}
+            />
+          )}
+        </Grid>
+      </Card>
+    </Grid>
   )
 }
 

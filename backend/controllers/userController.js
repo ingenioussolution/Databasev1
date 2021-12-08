@@ -31,6 +31,23 @@ export const authUser = asyncHandler(async (req, res, next) => {
   }
 })
 
+// @desc     Get user by ID
+// @route    GET /api/users/:id
+// @access   Private/Admin
+export const getUserById = asyncHandler(async (req, res, next) => {
+  try {
+    const user = await User.findById(req.params.id).select('-password')
+    if (user) {
+      res.json(user)
+    } else {
+      res.status(404)
+      throw new Error('User not found')
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 // @desc     Auth admin user & get token
 // @route    POST /users/admin-login
 // @access   Public
@@ -179,6 +196,7 @@ export const getUsers = asyncHandler(async (req, res, next) => {
     next(error)
   }
 })
+
 
 // @desc     Delete user
 // @route    Delete /users/:id
@@ -341,6 +359,8 @@ export const updateUser = asyncHandler(async (req, res, next) => {
       user.email = req.body.email || user.email
       user.username = req.body.username || user.username
       user.status = req.body.status || user.status
+      user.isAdmin =
+        user.isAdmin === req.body.isAdmin ? user.isAdmin : req.body.isAdmin
       user.password = req.body.password || user.password
 
       const updatedUser = await user.save()
@@ -348,6 +368,10 @@ export const updateUser = asyncHandler(async (req, res, next) => {
       res.json({
         _id: updatedUser._id,
         firstName: updatedUser.firstName,
+        lastName: updatedUser.lastName,
+        username: updatedUser.username,
+        status: updatedUser.status,
+        isAdmin: updatedUser.isAdmin,
         email: updatedUser.email,
       })
     } else {

@@ -2,8 +2,11 @@ import express from 'express'
 import dotenv from 'dotenv'
 import path from 'path'
 import cors from 'cors'
+import fs from 'fs'
+import { fileURLToPath } from 'url'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewere/errorMiddlewere.js'
+
 
 //Routes
 import phoneslistRoutes from './routes/phoneslist.js'
@@ -16,6 +19,19 @@ import settingsRoutes from './routes/siteSettingsRoutes.js'
 import uploadRoutes from './routes/uploadCsvRoutes.js'
 
 dotenv.config()
+
+const __filename = fileURLToPath(import.meta.url)
+const dirname = path.dirname(__filename)
+
+const envFile = path.join(dirname, `../.env.${process.env.NODE_ENV}`)
+const exists = fs.existsSync(envFile)
+
+if (process.env.NODE_ENV && exists) {
+  dotenv.config({
+    path: envFile,
+  })
+} else dotenv.config()
+
 connectDB()
 const app = express()
 
@@ -38,16 +54,16 @@ app.use('/upload-csv', uploadRoutes)
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
 
-if (process.env.NODE_ENV === 'production') {
+if (process.env.SITE_LIVE === 'true') {
   app.use(express.static(path.join(__dirname, '/frontend/build')))
 
   app.get('*', (req, res) =>
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
   )
 } else {
-app.get('/', (req, res) => {
-  res.send('Hello from node')
-})
+  app.get('/', (req, res) => {
+    res.send('API is running...')
+  })
 }
 
 app.use(notFound)

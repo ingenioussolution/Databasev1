@@ -4,12 +4,11 @@ import { useDispatch, useSelector } from 'react-redux'
 import { useHistory } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import clsx from 'clsx'
-import Loader from '../../../Loader/Loader'
 //import { DropzoneDialog } from 'material-ui-dropzone'
 //import { FaUpload } from 'react-icons/fa'
+import HorizontalLoader from '../../../horizontalLoader/HorizontalLoader'
 import LinearStepper from './LinearSteper'
 import {
-  Button,
   Grid,
   Toolbar,
   Card,
@@ -20,23 +19,23 @@ import {
 } from '@material-ui/core'
 import MaterialTable from 'material-table'
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
-import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
+//import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
 import tableIcons from "../../../tableIcons"
 import dataStyle from '../../../DataTable/styles'
-import layoutStyles from '../../../DashboardLayout/styles'
+//import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from '../DataTablePhones/styles'
 
 const UploadData = () => {
   const classes = useStyles()
-  const commons = layoutStyles()
+ // const commons = layoutStyles()
   const classesTable = dataStyle()
-  const dispatch = useDispatch()
+ // const dispatch = useDispatch()
   const history = useHistory()
 
   const tableRef = React.createRef()
 
-  const [uploadingCsv, setUploadingCsv] = useState(false)
-  const [openCsv, setOpenCsv] = useState(false)
+  // const [uploadingCsv, setUploadingCsv] = useState(false)
+  // const [openCsv, setOpenCsv] = useState(false)
 
   // login status
   const UserLogin = useSelector((state) => state.userLogin)
@@ -95,7 +94,7 @@ const UploadData = () => {
                 <CssBaseline />
                 <Container component={Box} p={4}>
                   <Paper component={Box} p={3}>
-                    <LinearStepper loader={<Loader/>} loading = {loading} success = {success}/>
+                    <LinearStepper loader={<HorizontalLoader/>} loading = {loading} success = {success}/>
                   </Paper>
                 </Container>
 

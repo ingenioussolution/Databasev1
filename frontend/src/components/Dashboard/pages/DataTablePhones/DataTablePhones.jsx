@@ -107,7 +107,14 @@ const DataTablePhones = () => {
         //filtering
         if (query.filters.length) {
           const filter = query.filters.map((filter) => {
-            return `&${filter.column.field}${filter.operator}${filter.value}`
+            //return `&${filter.column.field}${filter.operator}${filter.value}`
+            let filterType = `${filter.column.field}`
+            let valueFilter= `${filter.value}`
+           
+              let encoded = encodeURIComponent(valueFilter)
+              console.log('encoded filter', encoded)
+              return '&'+filterType+`${filter.operator}`+encoded
+           
           })
           url += filter.join('')
           urlExport += filter.join('')
@@ -141,8 +148,8 @@ const DataTablePhones = () => {
           urlExport += '&end='
         }
 
-        // console.log('URL with filters: ', url)
-        // console.log('Query: ', query)
+        console.log('URL with filters: ', url)
+        console.log('Query: ', query)
 
         axios
           .get(url, config)

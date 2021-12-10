@@ -1,6 +1,8 @@
-import React, { useState } from 'react'
-import { useDispatch } from 'react-redux'
+import React, { useState, useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux'
 import { uploadData } from '../../../../actions/uploadCsvActions.js'
+import { ImportData } from '../../../../actions/phoneListCleanActions'
+import PropTypes from 'prop-types'
 import {
   Typography,
   TextField,
@@ -10,6 +12,7 @@ import {
   StepLabel,
   Grid,
   LinearProgress,
+  Box,
 } from '@material-ui/core'
 import { DropzoneDialog } from 'material-ui-dropzone'
 import {
@@ -26,21 +29,23 @@ const useStyles = makeStyles((theme) => ({
   button: {
     marginRight: theme.spacing(1),
   },
-  formStep:{
-
-    width: "75%",
-    display: "flex",
-    flexDirection: "column",
-    alignItems: "center",
+  formStep: {
+    width: '75%',
+    display: 'flex',
+    flexDirection: 'column',
+    alignItems: 'center',
   },
 
   importData: {
-      margin: "25px",
-      display: "flex",
-      alignItems: "center",
+    margin: '25px',
+    display: 'flex',
+    alignItems: 'center',
   },
-  h3:{
-      marginBottom:"10px",
+  h3: {
+    marginBottom: '10px',
+  },
+  linear:{
+    color:'blue',
   },
 }))
 
@@ -50,10 +55,17 @@ const LinearStepper = ({ loader, loading, success }) => {
 
   const [uploadingCsv, setUploadingCsv] = useState(false)
   const [openCsv, setOpenCsv] = useState(false)
-  const [percentage, setPercentage] = useState(0)
+  const [uploadPercentage, setUploadPercentage] = useState(0)
+  const [progress, setProgress] = React.useState(0)
+
+  const importReducer = useSelector((state) => state.importData)
+  const {
+    loading: loadingImport,
+    success: successImport,
+    error: errorImport,
+  } = importReducer
 
   const uploadCsvHandle = async (file) => {
-    //console.log('file', file)
     let formData = new FormData()
     formData.append('file', file)
     setUploadingCsv(true)
@@ -61,11 +73,13 @@ const LinearStepper = ({ loader, loading, success }) => {
     const options = {
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent
+
+        console.log('total', loaded, total, progressEvent)
         let percent = Math.floor((loaded * 100) / total)
         console.log(`${loaded}kb of ${total}kb | ${percent}%`)
 
-        if (percent < 100) {
-          setPercentage({ percentage: percent })
+        if (percent <= 100) {
+          setUploadPercentage(percent)
         }
       },
     }
@@ -80,6 +94,20 @@ const LinearStepper = ({ loader, loading, success }) => {
     }
   }
 
+  useEffect(() => {
+    if (!loading) {
+      setUploadPercentage(0)
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [uploadPercentage, loading])
+
+  console.log('uploadPercentage: ', uploadPercentage)
+
+  const ImportDataCSV = () => {
+    // setOpenCsv(true)
+    dispatch(ImportData())
+  }
+
   const getSteps = () => {
     return ['Upload CSV', 'Import Data', 'Info Import']
   }
@@ -88,7 +116,7 @@ const LinearStepper = ({ loader, loading, success }) => {
     switch (step) {
       case 0:
         return (
-          <>
+          <Grid container justifyContent={'center'}>
             <Grid item xs={12} sm={5} md={3} className={classes1.upload}>
               {!loading ? (
                 <Button
@@ -101,15 +129,15 @@ const LinearStepper = ({ loader, loading, success }) => {
                   upload file
                 </Button>
               ) : (
-                loader
-              )}
-              {percentage > 0 && (
-                <LinearProgress
-                  value={percentage}
-                  variant="determinate"
-                  valueBuffer={`${percentage}%`}
+                <LinearProgress style={{backgroundColor:'#e3f2fd'}}
+                  value={uploadPercentage}
+    
+                  //variant="determinate"
+                  valueBuffer={`${uploadPercentage}%`}
+
                 />
               )}
+
             </Grid>
             <Grid item xs={12} sm={12}>
               <DropzoneDialog
@@ -130,14 +158,19 @@ const LinearStepper = ({ loader, loading, success }) => {
               />
               {uploadingCsv && loader}
             </Grid>
-          </>
+          </Grid>
         )
 
       case 1:
         return (
-          <>
-          <Grid container xs={12} sm={12} justifyContent="center" className={classes.importData}>
-          <Grid item xs={12} sm={5} md={3}>
+          <Grid
+            container
+            xs={12}
+            sm={12}
+            justifyContent="center"
+            className={classes.importData}
+          >
+            {/*<Grid item xs={12} sm={5} md={3}>
             <TextField
               id="email"
               label="Enter Limit"
@@ -148,61 +181,71 @@ const LinearStepper = ({ loader, loading, success }) => {
               margin="dense"
               name="emailAddress"
             />
-            </Grid>
+        </Grid>*/}
             <Grid item xs={12} sm={5} md={3}>
-            <Button
-              variant="outlined"
-              className={commons.secondaryBtn}
-              endIcon={<FaFileImport />}
-              onClick={() => setOpenCsv(true)}
-              style={{ width: '100%' }}
-            >
-              Import data
-            </Button>
+              <Button
+                variant="outlined"
+                className={commons.secondaryBtn}
+                endIcon={<FaFileImport />}
+                onClick={() => ImportDataCSV()}
+                style={{ width: '100%' }}
+              >
+                Import data
+              </Button>
             </Grid>
-            </Grid>
-           
-          </>
+          </Grid>
         )
       case 2:
         return (
           <>
-          <Grid container xs={12} sm={12} justifyContent="space-around" className={classes.importData}>
-          <Grid container xs={12} sm={12} justifyContent="space-around" className={classes.h3}>
-          <h3>Report</h3>
-          </Grid>
-          
-            <TextField
-              id="address1"
-              label="Total update phones"
-              variant="outlined"
-              placeholder="Enter Your Address 1"
-              disabled = {true}
-              margin="dense"
-              name="address1"
-            />
-            <TextField
-              id="address2"
-              label="total new phones"
-              variant="outlined"
-              placeholder="Enter Your Address 2"
-              disabled = {true}
-              margin="dense"
-              name="address2"
-            />
-            <TextField
-              id="country"
-              label="Total"
-              variant="outlined"
-              placeholder="Enter Your Country Name"
-              disabled = {true}
-              margin="dense"
-              name="country"
-            />
+            <Grid
+              container
+              xs={12}
+              sm={12}
+              justifyContent="space-around"
+              className={classes.importData}
+            >
+              <Grid
+                container
+                xs={12}
+                sm={12}
+                justifyContent="space-around"
+                className={classes.h3}
+              >
+                <h3>Report</h3>
+              </Grid>
+
+              <TextField
+                id="address1"
+                label="Total update phones"
+                variant="outlined"
+                placeholder="Enter Your Address 1"
+                disabled={true}
+                margin="dense"
+                name="address1"
+              />
+              <TextField
+                id="address2"
+                label="total new phones"
+                variant="outlined"
+                placeholder="Enter Your Address 2"
+                disabled={true}
+                margin="dense"
+                name="address2"
+              />
+              <TextField
+                id="country"
+                label="Total"
+                variant="outlined"
+                placeholder="Enter Your Country Name"
+                disabled={true}
+                margin="dense"
+                name="country"
+              />
             </Grid>
           </>
         )
-      
+
       default:
         return 'unknown step'
     }
@@ -269,7 +312,7 @@ const LinearStepper = ({ loader, loading, success }) => {
             justifyContent="center"
             className={classes1.actionsContainer}
           >
-           {getStepContent(activeStep)}
+            {getStepContent(activeStep)}
 
             <Grid container xs={12} sm={12} justifyContent="space-around">
               <Grid item xs={12} sm={3} md={2}>

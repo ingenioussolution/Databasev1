@@ -12,6 +12,9 @@ import {
   PHONE_CLEAN_LIST_REQUEST,
   PHONE_CLEAN_LIST_SUCCESS,
   PHONE_CLEAN_LIST_FAIL,
+  PHONE_IMPORT_REQUEST,
+  PHONE_IMPORT_SUCCESS,
+  PHONE_IMPORT_FAIL,
 } from '../constants/phonesListClean'
 
 export const phoneListRegister = (phoneClean) => async (dispatch, getState) => {
@@ -179,6 +182,50 @@ export const updateListPhoneClean =
     } catch (error) {
       dispatch({
         type: PHONE_CLEAN_UPDATE_FAIL,
+        payload:
+          error.response && error.response.data.message
+            ? error.response.data.message
+            : error.message,
+      })
+    }
+  }
+
+  // import data
+
+  export const ImportData = (count) => async (dispatch, getState) => {
+    try {
+      dispatch({
+        type: PHONE_IMPORT_REQUEST,
+      })
+      console.log("enter action");
+      // const {
+      //   userLogin: { userInfo },
+      // } = getState()
+
+      // const config = {
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //     Authorization: `Bearer ${userInfo.token}`,
+      //   },
+      // }
+  
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      }
+  
+      const { data } = await axios.post('/phoneslist/register-data', config)
+
+
+      console.log("data", data);
+      dispatch({
+        type: PHONE_IMPORT_SUCCESS,
+        payload: data,
+      })
+    } catch (error) {
+      dispatch({
+        type: PHONE_IMPORT_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message

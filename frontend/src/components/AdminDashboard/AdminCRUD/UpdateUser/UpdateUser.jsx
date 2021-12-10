@@ -7,8 +7,9 @@ import {
   getUserDetailsAsAdmin,
 } from '../../../../actions/userActions'
 import Loader from '../../../Loader/Loader'
-//import Message from '../../../message/Message'
+import Message from '../../../message/Message'
 import { mdUp } from '../../../../utils/breakpoints'
+import { isValidEmail } from '../../../../utils/validation.js'
 import {
   Grid,
   Card,
@@ -38,7 +39,7 @@ const UpdateUserAdmin = ({ match, width }) => {
   const isNew = !(id && id !== -1)
 
   const [errorMsg, setErrorMsg] = useState(false)
- 
+
   const userRegister = useSelector((state) => state.userRegister)
   const {
     error: errorRegister,
@@ -46,8 +47,6 @@ const UpdateUserAdmin = ({ match, width }) => {
     success,
     adminUserInfo,
   } = userRegister
-
-
 
   const updateUsers = useSelector((state) => state.userUpdate)
   const {
@@ -58,7 +57,6 @@ const UpdateUserAdmin = ({ match, width }) => {
 
   const userDetails = useSelector((state) => state.userDetails)
   const { loading: fetchingUser, error: errorFetchingUser, user } = userDetails
-
 
   const userDataInitialState = {
     _id: '',
@@ -83,9 +81,30 @@ const UpdateUserAdmin = ({ match, width }) => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [dispatch, location])
 
+  const validationSchema = {
+    email: {
+      valid: userData.email ? isValidEmail(userData.email) : true,
+      errorMsg: 'Email format incorrect',
+      validate: (v) => (v ? isValidEmail(v) : true),
+    },
+  }
+
+  const [validation, setValidation] = useState(validationSchema)
+
   const handleOnChange = (evt) => {
     const { name, value } = evt.target
     setUserData({ ...userData, [name]: value || '' })
+
+    const validate = validation[name]?.validate
+    if (typeof validate === 'function') {
+      setValidation({
+        ...validation,
+        [name]: {
+          ...validation[name],
+          valid: validate(value),
+        },
+      })
+    }
   }
   const handleOnChangeStatus = (evt) => {
     const { name, checked } = evt.target
@@ -101,19 +120,32 @@ const UpdateUserAdmin = ({ match, width }) => {
     history.goBack()
   }
 
+  const resetActions = () => {
+    setErrorMsg(false)
+  }
+
+  const handleAlertClose = () => {
+    resetActions()
+  }
+  const isFormValid = () => {
+    return validation.email.valid
+  }
+
   const handleSubmit = (evt) => {
     evt.preventDefault()
     console.log('userData', userData)
 
-    if (isNew) {
+    if (isNew && isFormValid()) {
       if (userData.password === userData.confirmPassword) {
         dispatch(register(userData))
       } else {
         console.log('Ups! Passwords do not match')
       }
-    } else {
+    } else if (isFormValid()) {
       dispatch(updateUser(userData))
-    }
+    }else {
+        setErrorMsg('Please check the data entered.')
+      }
   }
 
   useEffect(() => {
@@ -121,7 +153,7 @@ const UpdateUserAdmin = ({ match, width }) => {
     if (errorUpdating) setErrorMsg(errorUpdating)
     if (errorRegister) setErrorMsg(errorRegister)
 
-    console.log("success", success);
+    console.log('success', success)
     if (userUpdated || success) {
       //user updated and register
       history.push('/admin/list-users')
@@ -139,10 +171,26 @@ const UpdateUserAdmin = ({ match, width }) => {
       })
       setTimeout(() => {}, 500)
     }
-  }, [user, userUpdated,success, errorFetchingUser, errorUpdating, errorRegister])
+  }, [
+    user,
+    userUpdated,
+    success,
+    errorFetchingUser,
+    errorUpdating,
+    errorRegister,
+  ])
 
   return (
-    <div>
+    
+    <Grid container>
+      <Snackbar
+        open={errorMsg && errorMsg !== ''}
+        autoHideDuration={5000}
+        onClose={handleAlertClose}
+        anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+      >
+        <Message severity='error'>{errorMsg}</Message>
+      </Snackbar>
       {fetchingUser ? (
         <Grid container justifyContent="center" spacing={10}>
           <Grid item>
@@ -385,7 +433,8 @@ const UpdateUserAdmin = ({ match, width }) => {
           </Grid>
         </CardContent>
       )}
-    </div>
+      </Grid>
+   
   )
 }
 

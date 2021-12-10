@@ -102,7 +102,7 @@ export const UpdateBadAreaCode = asyncHandler(async (req, res, next) => {
     next(error)
   }
 })
-
+ 
 // @desc     Delete Bad Area Code
 // @route    DELETE /api/bad-area-code
 // @access   Private/user

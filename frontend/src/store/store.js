@@ -28,7 +28,7 @@ import {
   userUpdateProfileReducer,
 } from '../reducers/userReducers'
 
-import { listPhoneCleanReducer } from '../reducers/phoneListCleanReducer'
+import { listPhoneCleanReducer, importDataReducer } from '../reducers/phoneListCleanReducer'
 
 import {
   siteSettingsReducer,
@@ -55,6 +55,8 @@ const reducer = combineReducers({
   deletePhoneCarrier: deletePhoneCarrierReducer,
   phoneCarrierList: phoneCarrierListReducer,
   listPhoneClean: listPhoneCleanReducer,
+  //Import Data
+  importData: importDataReducer,
   //User reducers
   userLogin: userLoginReducer,
   userForgotPassword: userForgotPasswordReducer,

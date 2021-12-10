@@ -43,8 +43,6 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
 
-    //console.log(arrayBadArea);
-
     if (
       clicker ||
       hardBounce ||
@@ -829,23 +827,26 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
   }
 })
 
-// @routes POST /register-data-temporal
+// @routes POST /register-data
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 
+
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
-  let requestCount = 100000 //parseInt(req.query.count) || 100000
+  
+  let requestCount = 100000//parseInt(req.query.count) || 100000
   let count = await ModelTemporal.countDocuments()
   const skipCount = 100000
-
   const total = Math.ceil(count / requestCount)
+  let newPhone = []
+  let updatePhone = []
 
   console.log('count: ', count)
-  console.log('requestCount: ', requestCount)
+  //console.log('requestCount: ', requestCount)
 
   for (let i = 1; i <= total; i++) {
     console.log('i:', i)
-    console.log('total:', total)
+    //console.log('total:', total)
 
     const TemporalData = await ModelTemporal.find({})
       .limit(requestCount)
@@ -861,6 +862,8 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
         })
         if (phoneExists) {
           console.log('Phone Exists')
+          // Count total update phones
+          updatePhone.push(phoneExists)
 
           phoneExists.firstName =
             phoneExists.firstName === undefined
@@ -1268,6 +1271,9 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
             throw new Error('Phone not found')
           }
         } else {
+          // count total New Phones
+          newPhone.push(TemporalData[phoneCount])
+
           console.log('New Phone row')
           const phoneCreated = await PhoneList.create({
             firstName: TemporalData[phoneCount].firstName,
@@ -1343,16 +1349,14 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
           }
         }
       }) // end For
-    } //else {
-    //   count = await ModelTemporal.countDocuments()
-    //   if (count) {
-    //     AddPhoneList()
-    //   } else {
-    //     return
-    //   }
-    // }
+    } 
   }
-  return res.json({ message: 'Import Successfully !!!!' })
+  res.status(201).json({ 
+    message: 'Import Successfully !!!!',
+    news: newPhone.length,
+    update: updatePhone.length,
+    total: count,
+ })
 })
 
 // @routes PUT /phoneslist:phone

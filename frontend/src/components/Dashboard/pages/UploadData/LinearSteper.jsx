@@ -21,6 +21,7 @@ import {
   FaArrowAltCircleLeft,
   FaFileImport,
 } from 'react-icons/fa'
+import Swal from 'sweetalert2'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles1 from '../DataTablePhones/styles'
 import { makeStyles } from '@material-ui/core/styles'
@@ -44,12 +45,12 @@ const useStyles = makeStyles((theme) => ({
   h3: {
     marginBottom: '10px',
   },
-  linear:{
-    color:'blue',
+  linear: {
+    color: 'blue',
   },
 }))
 
-const LinearStepper = ({ loader, loading, success }) => {
+const LinearStepper = ({ loader, loading, success, count }) => {
   const classes1 = useStyles1()
   const dispatch = useDispatch()
 
@@ -105,7 +106,28 @@ const LinearStepper = ({ loader, loading, success }) => {
 
   const ImportDataCSV = () => {
     // setOpenCsv(true)
-    dispatch(ImportData())
+    if(count){
+      Swal.fire({
+        title: 'You want Import Data',
+        text: 'Please Continue',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Yes!',
+      }).then((result) => {
+        if (result.isConfirmed) {
+          dispatch(ImportData())
+        }
+      })
+    }else{
+      Swal.fire({
+        icon: 'error',
+        title: 'Oops... There is no Data to Import',
+        text: 'Please, Go back and Upload Data to continue',
+      })
+    }
+    
   }
 
   const getSteps = () => {
@@ -129,15 +151,13 @@ const LinearStepper = ({ loader, loading, success }) => {
                   upload file
                 </Button>
               ) : (
-                <LinearProgress style={{backgroundColor:'#e3f2fd'}}
+                <LinearProgress
+                  style={{ backgroundColor: '#e3f2fd' }}
                   value={uploadPercentage}
-    
                   //variant="determinate"
                   valueBuffer={`${uploadPercentage}%`}
-
                 />
               )}
-
             </Grid>
             <Grid item xs={12} sm={12}>
               <DropzoneDialog
@@ -183,15 +203,19 @@ const LinearStepper = ({ loader, loading, success }) => {
             />
         </Grid>*/}
             <Grid item xs={12} sm={5} md={3}>
-              <Button
-                variant="outlined"
-                className={commons.secondaryBtn}
-                endIcon={<FaFileImport />}
-                onClick={() => ImportDataCSV()}
-                style={{ width: '100%' }}
-              >
-                Import data
-              </Button>
+              {!loadingImport ? (
+                <Button
+                  variant="outlined"
+                  className={commons.secondaryBtn}
+                  endIcon={<FaFileImport />}
+                  onClick={() => ImportDataCSV()}
+                  style={{ width: '100%' }}
+                >
+                  Import data
+                </Button>
+              ) : (
+                loader
+              )}
             </Grid>
           </Grid>
         )

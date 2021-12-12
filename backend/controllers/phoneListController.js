@@ -3,7 +3,7 @@ import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import ModelTemporal from '../models/TemporalData.js'
 import BadAreaCode from '../models/badAreaCode.js'
-import { listAreaCode } from '../controllers/badAreaCodeController.js'
+//import { listAreaCode } from '../controllers/badAreaCodeController.js'
 
 import axios from 'axios'
 
@@ -218,7 +218,7 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
   try {
     const listPhones = await PhoneList.find()
 
-    listPhones.reduce(async (prev, phoneNumber) => {
+    await listPhones.reduce(async (prev, phoneNumber) => {
       await prev
       const { data } = await axios.get(
         `https://api.blacklistalliance.com/standard/api/v1/Lookup/key/b128a57d1da0fdaea16f8ab95883a5f2/response/json/phone/${phoneNumber.phone}`
@@ -842,12 +842,10 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
   let updatePhone = []
 
   console.log('count: ', count)
-  //console.log('requestCount: ', requestCount)
 
   for (let i = 1; i <= total; i++) {
-    console.log('i:', i)
-    //console.log('total:', total)
-
+    console.log('i:', i, total)
+  
     const TemporalData = await ModelTemporal.find({})
       .limit(requestCount)
       .skip(skipCount * (i - 1))

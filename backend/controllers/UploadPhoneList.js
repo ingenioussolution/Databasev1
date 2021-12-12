@@ -104,7 +104,7 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       let requestCount = 10000
       let count = await PhoneList.countDocuments({ $and: arrayFilters })
 
-      const skipSize = 10000
+      const skipSize = 10000 
 
       const total = Math.ceil(count / requestCount)
       console.log('total: ', total)

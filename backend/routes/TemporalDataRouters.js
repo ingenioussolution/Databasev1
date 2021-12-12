@@ -1,5 +1,6 @@
 import express from 'express'
 import {
+  getModelTemporalList,
   getTemporal,
   registerModelTemporal,
   updateModelTemporal,
@@ -8,6 +9,7 @@ import {
 const route = express.Router()
 
 route.get('/', getTemporal)
+route.get('/get-temp', getModelTemporalList)
 route.post('/', registerModelTemporal)
 route.put('/:phone', updateModelTemporal)
 

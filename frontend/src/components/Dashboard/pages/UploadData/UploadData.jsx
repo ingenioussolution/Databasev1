@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 //import { uploadData } from '../../../../actions/uploadCsvActions.js'
+import { listPhoneTemporalData } from '../../../../actions/tempTableActions.js'
 import { useHistory } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import clsx from 'clsx'
@@ -16,20 +17,22 @@ import {
   Container,
   Paper,
   Box,
+  Button,
 } from '@material-ui/core'
 import MaterialTable from 'material-table'
+import { TablePagination } from '@material-ui/core'
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
-//import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
-import tableIcons from "../../../tableIcons"
+import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
+import tableIcons from '../../../tableIcons'
 import dataStyle from '../../../DataTable/styles'
-//import layoutStyles from '../../../DashboardLayout/styles'
+import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from '../DataTablePhones/styles'
 
 const UploadData = () => {
   const classes = useStyles()
- // const commons = layoutStyles()
+  const commons = layoutStyles()
   const classesTable = dataStyle()
- // const dispatch = useDispatch()
+  const dispatch = useDispatch()
   const history = useHistory()
 
   const tableRef = React.createRef()
@@ -44,6 +47,10 @@ const UploadData = () => {
   const uploadCsvData = useSelector((state) => state.uploadCsvData)
   const { loading, success } = uploadCsvData
 
+  const listTemporalData = useSelector((state) => state.listPhoneTemp)
+  const { tempListPhones, page, count } = listTemporalData
+  const [pageState, setPageState] = useState(page || 0)
+ 
   useEffect(() => {
     document.title = 'Upload New Data | Ingenious Solution Group'
 
@@ -55,19 +62,41 @@ const UploadData = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history, userInfo])
 
-//   const uploadCsvHandle = async (file) => {
-//     let formData = new FormData()
-//     formData.append('file', file)
-//     setUploadingCsv(true)
+  useEffect(() => {
+    dispatch(listPhoneTemporalData(pageState))
+  }, [dispatch])
 
-//     try {
-//       dispatch(uploadData(formData))
-//       setUploadingCsv(false)
-//     } catch (error) {
-//       console.error(error)
-//       setUploadingCsv(false)
-//     }
-//   }
+  // const PaginationTemp = () => {
+  //   return (
+  //     <TablePagination
+  //       //rowsPerPageOptions={[10]}
+  //       rowsPerPage={10}
+  //       component="div"
+  //       count={pages || 0}
+  //       page={pageState}
+  //       onPageChange={handleChangePage}
+  //     />
+  //   )
+  // }
+
+  // const handleChangePage = (event, newPage) => {
+  //   console.log('newPage', newPage)
+  //   setPageState(newPage)
+  // }
+
+  //   const uploadCsvHandle = async (file) => {
+  //     let formData = new FormData()
+  //     formData.append('file', file)
+  //     setUploadingCsv(true)
+
+  //     try {
+  //       dispatch(uploadData(formData))
+  //       setUploadingCsv(false)
+  //     } catch (error) {
+  //       console.error(error)
+  //       setUploadingCsv(false)
+  //     }
+  //   }
 
   return (
     <div>
@@ -94,9 +123,24 @@ const UploadData = () => {
                 <CssBaseline />
                 <Container component={Box} p={4}>
                   <Paper component={Box} p={3}>
-                    <LinearStepper loader={<HorizontalLoader/>} loading = {loading} success = {success}/>
+                    <LinearStepper
+                      loader={<HorizontalLoader />}
+                      loading={loading}
+                      success={success}
+                      count={count}
+                    />
                   </Paper>
                 </Container>
+                <Grid item xs={12} sm={3} md={2}>
+                  <Button variant="outlined" 
+                  className={commons.secondaryBtn}
+                  onClick={()=>dispatch(listPhoneTemporalData(pageState))}>
+                    Refresh Data
+                  </Button>
+                </Grid>
+                <Grid item xs={12} sm={3} md={2}>
+                <h6>Total Temporal Table: {count === undefined ? 0 : count}</h6>
+                </Grid>
 
                 {/*<Grid item xs={12} sm={3} md={2}>
                   {!loading ? (
@@ -135,11 +179,12 @@ const UploadData = () => {
               </Grid>
             </Grid>
           </Toolbar>
-          <MaterialTable
+         {/* <MaterialTable
             style={{ padding: '20px' }}
-            title=""
+            title="Upload Temporal Data"
             columns={defaultColumns}
             icons={tableIcons}
+           // data={tempListPhones}
             options={{
               exportButton: false,
               exportAllData: false,
@@ -150,9 +195,9 @@ const UploadData = () => {
               pageSizeOptions: [5, 10],
               search: false,
             }}
-            
             tableRef={tableRef}
-            />
+           // components={{ Pagination: PaginationTemp }}
+          />*/}
         </Card>
       </Grid>
     </div>

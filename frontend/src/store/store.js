@@ -30,6 +30,7 @@ import {
 
 import { listPhoneCleanReducer, importDataReducer } from '../reducers/phoneListCleanReducer'
 
+import {listPhoneTempReducer} from '../reducers/tempTableReducers'
 import {
   siteSettingsReducer,
   siteSettingsUpdateReducer,
@@ -85,6 +86,9 @@ const reducer = combineReducers({
 
   // Upload data
   uploadCsvData: uploadCsvDataReducer,
+
+  // Temporal table Data
+  listPhoneTemp: listPhoneTempReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

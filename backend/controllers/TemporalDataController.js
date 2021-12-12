@@ -2,49 +2,58 @@
 import ModelTemporal from '../models/TemporalData.js'
 import asyncHandler from 'express-async-handler'
 
-
 // @routes GET /data-temporal
 // @des GET All Model Temporal List
 // @access  Private/User
-// export const getModelTemporalList = asyncHandler(async (req, res, next) => {
-//   try {
-//     const listPhones = await ModelTemporal.find()
-//     if (!listPhones) throw Error('Not items')
-//     res.status(200).json(listPhones)
-//   } catch (error) {
-//     next(error)
-//   }
-// })
 
+export const getModelTemporalList = asyncHandler(async (req, res, next) => {
+  try {
+    const pageSize = 10
+    const page = parseInt(req.query.pageNumber) || 1
+
+    const listTemp = await ModelTemporal.countDocuments({})
+    console.log("pageSize",pageSize, Math.ceil(listTemp / pageSize));
+    const data = await ModelTemporal.find({})
+      .limit(pageSize)
+      .skip(pageSize * (page - 1))
+
+    if (!listTemp) throw Error('Not items')
+ 
+    res
+      .status(200)
+      .json({ data, page, totalPages: Math.ceil(listTemp / pageSize), listTemp })
+  } catch (error) {
+    next(error)
+  }
+})
 
 export const getTemporal = asyncHandler(async (req, res, next) => {
   let temporal = []
   try {
     const listPhones = await ModelTemporal.find()
-    console.log("listPhones",listPhones);
+    console.log('listPhones', listPhones)
     listPhones.reduce(async (prev, phoneNumber) => {
       await prev
       const { data } = await axios.get(
         `https://api.blacklistalliance.com/standard/api/v1/Lookup/key/b128a57d1da0fdaea16f8ab95883a5f2/response/json/phone/${phoneNumber.phone}`
       )
       if (data.wireless === 1 && data.results === 0) {
-        temporal.push = ( {
+        temporal.push = {
           phone: phoneNumber.phone,
           name: phoneNumber.name,
           wireless: data.wireless,
           status: data.status,
           results: data.results,
-        }) 
+        }
       }
-     
+
       return Promise.resolve()
     }, Promise.resolve())
 
-    console.log("temporal",temporal);
+    console.log('temporal', temporal)
 
     if (!listPhones) throw Error('Not items')
     res.status(200).json(listPhones)
-
   } catch (error) {
     next(error)
   }
@@ -70,7 +79,9 @@ export const getModelTemporalByPhone = asyncHandler(async (req, res, next) => {
 // @routes GET /data-temporal by carriers
 // @des GET List Phones By Carriers
 // @access  Private/User
-export const getModelTemporalByCarriers = asyncHandler(async (req, res, next) => {})
+export const getModelTemporalByCarriers = asyncHandler(
+  async (req, res, next) => {}
+)
 
 // @routes GET /data-temporal by status
 // @des GET List Phones By status
@@ -95,7 +106,9 @@ export const getModelTemporalByStatus = asyncHandler(async (req, res, next) => {
 export const getModelTemporalByCreditScore = asyncHandler(
   async (req, res, next) => {
     try {
-      const creditScore = await ModelTemporal.find({ status: req.body.creditScore })
+      const creditScore = await ModelTemporal.find({
+        status: req.body.creditScore,
+      })
       if (creditScore) {
         res.json(creditScore)
       } else {
@@ -179,7 +192,6 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     vertical3,
   } = req.body
 
-
   const phoneExists = await ModelTemporal.findOne({ phone: phone })
 
   if (phoneExists) {
@@ -226,7 +238,6 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
     phoneExists.subject = subject || phoneExists.subject
     phoneExists.vertical2 = vertical2 || phoneExists.vertical2
     phoneExists.vertical3 = vertical3 || phoneExists.vertical3
-
 
     const updatedPhonesList = await phoneExists.save()
     res.status(200).json({
@@ -328,7 +339,7 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
         name: phoneCreated.name,
         email: phoneCreated.email,
         state: phoneCreated.state,
-        phone: phoneCreated.phone, 
+        phone: phoneCreated.phone,
         source: phoneCreated.source,
         ip: phoneCreated.ip,
         site: phoneCreated.site,
@@ -365,7 +376,6 @@ export const registerModelTemporal = asyncHandler(async (req, res) => {
         subject: phoneCreated.subject,
         vertical2: phoneCreated.vertical2,
         vertical3: phoneCreated.vertical3,
-
       })
     } else {
       res.status(400)

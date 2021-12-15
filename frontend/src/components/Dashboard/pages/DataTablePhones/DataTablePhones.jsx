@@ -109,12 +109,11 @@ const DataTablePhones = () => {
           const filter = query.filters.map((filter) => {
             //return `&${filter.column.field}${filter.operator}${filter.value}`
             let filterType = `${filter.column.field}`
-            let valueFilter= `${filter.value}`
-           
-              let encoded = encodeURIComponent(valueFilter)
-              console.log('encoded filter', encoded)
-              return '&'+filterType+`${filter.operator}`+encoded
-           
+            let valueFilter = `${filter.value}`
+
+            let encoded = encodeURIComponent(valueFilter)
+            console.log('encoded filter', encoded)
+            return '&' + filterType + `${filter.operator}` + encoded
           })
           url += filter.join('')
           urlExport += filter.join('')

@@ -47,6 +47,20 @@ import {
 import {listExportDataReducer} from '../reducers/exportDataReducers'
 import {uploadCsvDataReducer} from '../reducers/uploadCsvReducers'
 
+import {
+  CountClickerReducer,
+  CountConverterReducer,
+  CountCCCReducer,
+  CountBadStatesReducer,
+  CountHardBounceReducer,
+  CountSupressedReducer,
+  CountVerizonReducer,
+  CountAttReducer,
+  CountSprintReducer,
+  CountTMobileReducer,
+  CountUsCellularReducer,
+} from '../reducers/homeFilterReducers'
+
 const reducer = combineReducers({
   //List Phones reducers
   registerPhone: registerPhoneReducer,
@@ -89,6 +103,19 @@ const reducer = combineReducers({
 
   // Temporal table Data
   listPhoneTemp: listPhoneTempReducer,
+
+  // filter home
+  CountClicker: CountClickerReducer,
+  CountConverter: CountConverterReducer,
+  CountCCC: CountCCCReducer,
+  CountBadStates: CountBadStatesReducer,
+  CountHardBounce: CountHardBounceReducer,
+  CountSupressed: CountSupressedReducer,
+  CountVerizon: CountVerizonReducer,
+  CountAtt: CountAttReducer,
+  CountSprint: CountSprintReducer,
+  CountTMobile: CountTMobileReducer,
+  CountUsCellular: CountUsCellularReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

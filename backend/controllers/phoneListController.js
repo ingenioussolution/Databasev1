@@ -21,6 +21,8 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const revenue = req.query.revenue
     const converter = req.query.converter
     const suppressed = req.query.suppressed
+    let sourceFilter = req.query.source
+    let source = { $regex: `${sourceFilter}`, $options: 'i' }
     let carrierFilter = req.query.carrier
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
     const firstNameFilter = req.query.firstName
@@ -54,7 +56,8 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       carrierFilter ||
       areaCode ||
       createdAt_start ||
-      createdAt_end
+      createdAt_end ||
+      sourceFilter
     ) {
       if (clicker) {
         arrayFilters.push({ clicker: clicker })
@@ -85,6 +88,9 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       }
       if (carrierFilter) {
         arrayFilters.push({ carrier: carrier })
+      }
+      if (sourceFilter) {
+        arrayFilters.push({ source: source })
       }
       if (firstNameFilter) {
         arrayFilters.push({ firstName: firstName })
@@ -830,8 +836,6 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
 // @routes POST /register-data
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
-
-
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
   
   let requestCount = 100000//parseInt(req.query.count) || 100000
@@ -845,7 +849,7 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
 
   for (let i = 1; i <= total; i++) {
     console.log('i:', i, total)
-  
+    
     const TemporalData = await ModelTemporal.find({})
       .limit(requestCount)
       .skip(skipCount * (i - 1))
@@ -1356,6 +1360,7 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
     total: count,
  })
 })
+
 
 // @routes PUT /phoneslist:phone
 // @des Update an Phones List

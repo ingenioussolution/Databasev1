@@ -30,6 +30,11 @@ export const blackListAlliance = {
   field: 'blackListAlliance',
   title: 'Black List',
   align: 'center',
+  render: (row) => (
+    <div className={row.blackListAlliance ? 'text-success' : 'text-error'}>
+      {row.blackListAlliance ? 'True' : 'False'}
+    </div>
+  ),
   filtering: false,
 }
 
@@ -79,24 +84,48 @@ export const creditScore = {
 export const clicker = {
   field: 'clicker',
   title: 'Clicker',
+  align: 'center',
+  render: (row) => (
+    <div className={row.clicker ? 'text-success' : 'text-error'}>
+      {row.clicker ? 'True' : 'False'}
+    </div>
+  ),
   lookup: { true: 'true', false: 'false' },
 }
 
 export const converter = {
   field: 'converter',
   title: 'Converter',
+  align: 'center',
+  render: (row) => (
+    <div className={row.converter ? 'text-success' : 'text-error'}>
+      {row.converter ? 'True' : 'False'}
+    </div>
+  ),
   lookup: { true: 'true', false: 'false' },
 }
 
 export const hardBounce = {
   field: 'hardBounce',
-  title: 'hardBounce',
+  title: 'Hard Bounce',
+  align: 'center',
+  render: (row) => (
+    <div className={row.hardBounce ? 'text-success' : 'text-error'}>
+      {row.hardBounce ? 'True' : 'False'}
+    </div>
+  ),
   lookup: { true: 'true', false: 'false' },
 }
 
 export const suppressed = {
   field: 'suppressed',
   title: 'Suppressed',
+  align: 'center',
+  render: (row) => (
+    <div className={row.suppressed ? 'text-success' : 'text-error'}>
+      {row.suppressed ? 'True' : 'False'}
+    </div>
+  ),
   lookup: { true: 'true', false: 'false' },
 }
 
@@ -109,7 +138,7 @@ export const list = {
 export const source = {
   field: 'source',
   title: 'Source',
-  filtering: false,
+  //filtering: false,
 }
 
 export const ip = {
@@ -153,6 +182,12 @@ export const message = {
 export const recentAbuse = {
   field: 'recentAbuse',
   title: 'Recent Abuse',
+  align: 'center',
+  render: (row) => (
+    <div className={row.recentAbuse ? 'text-success' : 'text-error'}>
+      {row.recentAbuse ? 'True' : 'False'}
+    </div>
+  ),
   filtering: false,
 }
 export const fraudScore = {
@@ -163,6 +198,12 @@ export const fraudScore = {
 export const validMobile = {
   field: 'validMobile',
   title: 'Valid Mobile',
+  align: 'center',
+  render: (row) => (
+    <div className={row.validMobile ? 'text-success' : 'text-error'}>
+      {row.validMobile ? 'True' : 'False'}
+    </div>
+  ),
   filtering: false,
 }
 export const lineType = {
@@ -173,11 +214,23 @@ export const lineType = {
 export const prepaid = {
   field: 'prepaid',
   title: 'Prepaid',
+  align: 'center',
+  render: (row) => (
+    <div className={row.prepaid ? 'text-success' : 'text-error'}>
+      {row.prepaid ? 'True' : 'False'}
+    </div>
+  ),
   filtering: false,
 }
 export const risky = {
   field: 'risky',
   title: 'Risky',
+  align: 'center',
+  render: (row) => (
+    <div className={row.risky ? 'text-success' : 'text-error'}>
+      {row.risky ? 'True' : 'False'}
+    </div>
+  ),
   filtering: false,
 }
 export const city = {
@@ -213,7 +266,13 @@ export const sendAt = {
 
 export const validity = {
   field: 'validity',
-  title: 'validity',
+  title: 'Validity',
+  align: 'center',
+  render: (row) => (
+    <div className={row.validity ? 'text-success' : 'text-error'}>
+      {row.validity ? 'True' : 'False'}
+    </div>
+  ),
   filtering: false,
 }
 

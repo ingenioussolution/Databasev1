@@ -3,6 +3,7 @@ import multer from 'multer'
 import path from 'path'
 import csvtojson from 'csvtojson'
 import TemporalData from '../models/TemporalData.js'
+   
 
 const router = express.Router()
 import { protect } from '../middlewere/authMiddlewere.js'
@@ -16,7 +17,7 @@ const storage = multer.diskStorage({
   filename(req, file, cb) {
     cb(null, `${file.fieldname}${path.extname(file.originalname)}`)
   },
-})
+}) 
 
 // Filter for CSV file
 const csvFilter = (req, file, cb) => {
@@ -31,13 +32,12 @@ const upload = multer({
   fileFilter: csvFilter,
 })
 
+
 let temp
 let csvData = []
 let NewArray = []
-let csvCount = []
-let totalInsert = []
 let insertData = []
-   
+
 const size = 10000
 // Import csv file
 router.post('/', protect, upload.single('file'), async (req, res) => {
@@ -46,8 +46,11 @@ router.post('/', protect, upload.single('file'), async (req, res) => {
       return res.status(400).send({
         message: 'Please upload a CSV file!',
       })
+      
     }
-    csvtojson({ ignoreEmpty: true })
+  
+
+    csvtojson({ ignoreEmpty: true, maxRowLength: 65535 })
       .fromFile(req.file.path)
       .then((jsonObj) => {
         if (jsonObj) {
@@ -164,13 +167,12 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
         message: 'Please upload a CSV file!',
       })
     }
-    csvtojson({ ignoreEmpty: true })
+    csvtojson({ ignoreEmpty: true, maxRowLength: 65535, fork:false })
       .fromFile(req.file.path)
       .then((jsonObj) => {
-        if (jsonObj) {
+        if (jsonObj) {  
           console.log('jsonObj: ', jsonObj.length)
 
-          let total = 0
           let duplicate = 0
 
           const chunk = (arr, size) =>
@@ -228,7 +230,7 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
                 z.burstOptOut = temp
               }
             })
-            
+
             NewArray[x].map(async (data) => {
               const uniquePhone = await TemporalData.findOne({
                 phone: data.phone,
@@ -237,16 +239,16 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
               if (!uniquePhone) {
                 try {
                   //
-                  TemporalData.insertMany(data,(err) => {
-                    if(err) console.log("duplicate", data.phone);
+                  TemporalData.insertMany(data, (err) => {
+                    if (err) console.log('duplicate', data.phone)
                   })
-                 
-                  console.log('Upload/import successfully')
 
-                } catch (e) {  
-                }
-               // process.exit()  
-              }else{ console.log("duplicate", duplicate++);}   
+                  console.log('Upload/import successfully')
+                } catch (e) {}
+                // process.exit()
+              } else {
+                console.log('duplicate', duplicate++)
+              }
               let rowsAll = csvData.length
               let count = await TemporalData.countDocuments()
               if (rowsAll === jsonObj.length) {
@@ -256,11 +258,11 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
                 return res.json({
                   message:
                     'Upload/import the CSV data into database successfully',
-                    total: count,
-                    duplicate: duplicate,
+                  total: count,
+                  duplicate: duplicate,
                 })
               }
-            })  
+            })
           }
         }
       })
@@ -269,7 +271,7 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
     return res.status(500).send({
       message: 'Could not upload the file: ' + req.file.originalname,
     })
-  } 
+  }
 })
 //----------------
 router.post('/test', upload.single('file'), async (req, res) => {
@@ -334,7 +336,7 @@ router.post('/test', upload.single('file'), async (req, res) => {
               jsonObj[x].burstOptOut = temp
             }
           }
-        //
+          //
           jsonObj?.map(async (data) => {
             const uniquePhone = await TemporalData.findOne({
               phone: data.phone,
@@ -345,7 +347,7 @@ router.post('/test', upload.single('file'), async (req, res) => {
               console.log('phone exist', data.phone)
             }
             if (!uniquePhone) {
-              console.log('phone NO exist', data.phone)  
+              console.log('phone NO exist', data.phone)
               //await allUpload.push(data)
 
               await TemporalData.insertMany(data, (err) => {

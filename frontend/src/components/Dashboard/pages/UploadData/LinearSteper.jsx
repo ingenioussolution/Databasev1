@@ -331,7 +331,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
         setActiveStep(0)
      
       ) : (
-        <>. 
+        <>
           <Grid
             item
             xs={12}

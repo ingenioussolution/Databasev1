@@ -64,7 +64,7 @@ const UploadData = () => {
 
   useEffect(() => {
     dispatch(listPhoneTemporalData(pageState))
-  }, [dispatch])
+  }, [dispatch, userInfo])
 
   // const PaginationTemp = () => {
   //   return (

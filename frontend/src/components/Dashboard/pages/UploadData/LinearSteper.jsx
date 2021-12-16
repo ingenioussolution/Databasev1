@@ -147,6 +147,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                   endIcon={<FaUpload />}
                   onClick={() => setOpenCsv(true)}
                   style={{ width: '100%' }}
+                  disabled = {count ? true : false}
                 >
                   upload file
                 </Button>
@@ -235,11 +236,15 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                 sm={12}
                 justifyContent="space-around"
                 className={classes.h3}
+                
               >
-                <h3>Report</h3>
+                <h3>Report In Progress no complete yet</h3>
+                
               </Grid>
 
+              {/* 
               <TextField
+                
                 id="address1"
                 label="Total update phones"
                 variant="outlined"
@@ -266,6 +271,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                 margin="dense"
                 name="country"
               />
+              */}
             </Grid>
           </>
         )
@@ -322,9 +328,8 @@ const LinearStepper = ({ loader, loading, success, count }) => {
       </Stepper>
 
       {activeStep === steps.length ? (
-        <Typography variant="h3" align="center">
-          Thank You
-        </Typography>
+        setActiveStep(0)
+     
       ) : (
         <>
           <Grid

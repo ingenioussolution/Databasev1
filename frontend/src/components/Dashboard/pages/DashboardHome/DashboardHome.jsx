@@ -12,10 +12,12 @@ import {
   FaTruck,
   FaEnvelope,
   FaExclamationTriangle,
-  FaTimesCircle,
+  FaLock,
   FaRegClock,
   FaCheckSquare,
   FaBroadcastTower,
+  FaPhoneSlash,
+  
 } from 'react-icons/fa'
 import {
   getCountClicker,
@@ -120,19 +122,21 @@ const DashboardHome = () => {
       history.push('/')
       return
     }
-    dispatch(getCountClicker())
-    dispatch(getCountConverter())
-    dispatch(getCountCCC())
-    dispatch(getCountBadState())
-    dispatch(getCountHardBounce())
-    dispatch(getCountSuppressed())
-    dispatch(getCountAtt())
-    dispatch(getCountSprint())
-    dispatch(getCountTMobile())
-    dispatch(getCountUsCellular())
-    dispatch(getCountVerizon())
+   // dispatch(getCountClicker())
+    // dispatch(getCountConverter())
+    // dispatch(getCountCCC())
+    // dispatch(getCountBadState())
+    // dispatch(getCountHardBounce())
+    // dispatch(getCountSuppressed())
+    // dispatch(getCountAtt())
+    // dispatch(getCountSprint())
+    // dispatch(getCountTMobile())
+    // dispatch(getCountUsCellular())
+    // dispatch(getCountVerizon())
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history, userInfo,dispatch])
+  }, [history, userInfo])
+
+  console.log("values: ", badState);
 
   return (
     <Grid container justifyContent="space-around" spacing={3}>
@@ -152,11 +156,13 @@ const DashboardHome = () => {
                {!loadingBadState ? (
                   <DashboardItem
                   title={'Bad State'}
-                  icon={<FaUserFriends />}
+                  icon={<FaLock />}
                   detailColor="colorLight"
                   bgColor="green"
                   value={Intl.NumberFormat().format(badState)}
+                  action = {()=>dispatch(getCountBadState())}
                   to="#"
+                  tooltip = {"Please click here, search value"}
                 />) : (<Loader/>)
               }
               </Grid>
@@ -168,7 +174,9 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="red"
                   value={Intl.NumberFormat().format(ccc)}
+                  action = {()=>dispatch(getCountCCC())}
                   to="#"
+                  tooltip = {"Please click here, search value"}
                 />) : (<Loader/>)
               }
               </Grid>
@@ -181,7 +189,9 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="green"
                   value={Intl.NumberFormat().format(suppressed)}
+                  action = {()=>dispatch(getCountSuppressed())}
                   to="#"
+                  tooltip = {"Please click here, search value"}
                 />) : (<Loader/>)
               }
               </Grid>
@@ -207,13 +217,16 @@ const DashboardHome = () => {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={4}>
               { !loadingClicker ? (
+              
                 <DashboardItem
                   title={'Clicker'}
                   icon={<FaEnvelope />}
                   value={Intl.NumberFormat().format(clicker)}
                   detailColor="colorLight"
                   bgColor="blue"
+                  action = {()=> dispatch(getCountClicker())}
                   to="#"
+                  tooltip = {"Please click here, search value"}
                 /> ): (<Loader/>)}
               </Grid>
 
@@ -221,10 +234,12 @@ const DashboardHome = () => {
                 {!loadingHardBounce ? (
                   <DashboardItem
                   title={'Hard Bounce'}
-                  icon={<FaExclamationTriangle />}
+                  icon={<FaPhoneSlash />}
                   detailColor="colorLight"
                   bgColor="red"
                   value={Intl.NumberFormat().format(hardBounce)}
+                  action = {()=>dispatch(getCountHardBounce())}
+                  tooltip = {"Please click here, search value"}
                   to="#"
                 />) : (<Loader/>)
               }
@@ -238,7 +253,9 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="orange"
                   value={Intl.NumberFormat().format(converter)}
+                  action = {()=>dispatch(getCountConverter())}
                   to="#"
+                  tooltip = {"Please click here, for search value"}
                 />) : (<Loader/>)
               }
               </Grid>
@@ -271,6 +288,8 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="green"
                   value={Intl.NumberFormat().format(verizon)}
+                  tooltip = {"Please click here, for search value"}
+                  action = {()=>dispatch(getCountVerizon())}
                   to="#"
                 />) : (<Loader/>)}
               </Grid>
@@ -282,6 +301,8 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="red"
                   value={Intl.NumberFormat().format(tMobile)}
+                  tooltip = {"Please click here, for search value"}
+                  action = {()=>dispatch(getCountTMobile)}
                   to="#"
                 />) : (<Loader/>)}
               </Grid>
@@ -292,6 +313,8 @@ const DashboardHome = () => {
                   title={'Sprint'}
                   icon={<FaBroadcastTower />}
                   value={Intl.NumberFormat().format(sprint)}
+                  tooltip = {"Please click here, for search value"}
+                  action = {()=>getCountSprint()}
                   detailColor="colorLight"
                   bgColor="orange"
                   to="#"
@@ -304,6 +327,8 @@ const DashboardHome = () => {
                   title={'AT&T'}
                   icon={<FaBroadcastTower />}
                   value={Intl.NumberFormat().format(att)}
+                  action = {()=>dispatch(getCountAtt())}
+                  tooltip = {"Please click here, for search value"}
                   detailColor="colorLight"
                   bgColor="blue"
                   to="#"
@@ -315,6 +340,8 @@ const DashboardHome = () => {
                   title={'US Cellular'}
                   icon={<FaBroadcastTower />}
                   value={Intl.NumberFormat().format(usCellular)}
+                  action = {()=>dispatch(getCountUsCellular())}
+                  tooltip = {"Please click here, for search value"}
                   detailColor="colorLight"
                   bgColor="dark"
                   to="#"

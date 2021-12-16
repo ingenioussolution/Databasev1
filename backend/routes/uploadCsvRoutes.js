@@ -3,7 +3,6 @@ import multer from 'multer'
 import path from 'path'
 import csvtojson from 'csvtojson'
 import TemporalData from '../models/TemporalData.js'
-   
 
 const router = express.Router()
 import { protect } from '../middlewere/authMiddlewere.js'
@@ -17,7 +16,7 @@ const storage = multer.diskStorage({
   filename(req, file, cb) {
     cb(null, `${file.fieldname}${path.extname(file.originalname)}`)
   },
-}) 
+})
 
 // Filter for CSV file
 const csvFilter = (req, file, cb) => {
@@ -32,7 +31,6 @@ const upload = multer({
   fileFilter: csvFilter,
 })
 
-
 let temp
 let csvData = []
 let NewArray = []
@@ -46,9 +44,7 @@ router.post('/', protect, upload.single('file'), async (req, res) => {
       return res.status(400).send({
         message: 'Please upload a CSV file!',
       })
-      
     }
-  
 
     csvtojson({ ignoreEmpty: true, maxRowLength: 65535 })
       .fromFile(req.file.path)
@@ -167,10 +163,10 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
         message: 'Please upload a CSV file!',
       })
     }
-    csvtojson({ ignoreEmpty: true, maxRowLength: 65535, fork:false })
+    csvtojson({ ignoreEmpty: true, maxRowLength: 65535, fork: false })
       .fromFile(req.file.path)
       .then((jsonObj) => {
-        if (jsonObj) {  
+        if (jsonObj) {
           console.log('jsonObj: ', jsonObj.length)
 
           let duplicate = 0
@@ -238,14 +234,12 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
               csvData.push(data)
               if (!uniquePhone) {
                 try {
-                  //
                   TemporalData.insertMany(data, (err) => {
                     if (err) console.log('duplicate', data.phone)
                   })
 
                   console.log('Upload/import successfully')
                 } catch (e) {}
-                // process.exit()
               } else {
                 console.log('duplicate', duplicate++)
               }
@@ -282,94 +276,91 @@ router.post('/test', upload.single('file'), async (req, res) => {
       })
     }
 
-    csvtojson({ ignoreEmpty: true })
+    csvtojson({ ignoreEmpty: true, maxRowLength: 65535, fork: false })
       .fromFile(req.file.path)
       .then((jsonObj) => {
         if (jsonObj) {
           console.log('jsonObj: ', jsonObj.length)
-          const csvCount = jsonObj.length
 
-          for (let x = 0; x < jsonObj.length; x++) {
-            if (jsonObj[x].clicker) {
-              temp = Boolean(jsonObj[x].clicker)
-              jsonObj[x].clicker = temp
-            }
-            if (jsonObj[x].converter) {
-              temp = Boolean(jsonObj[x].converter)
-              jsonObj[x].converter = temp
-            }
-            if (jsonObj[x].hardBounce) {
-              temp = Boolean(jsonObj[x].hardBounce)
-              jsonObj[x].hardBounce = temp
-            }
-            if (jsonObj[x].suppressed) {
-              temp = Boolean(jsonObj[x].suppressed)
-              jsonObj[x].suppressed = temp
-            }
-            if (jsonObj[x].recentAbuse) {
-              temp = Boolean(jsonObj[x].recentAbuse)
-              jsonObj[x].recentAbuse = temp
-            }
-            if (jsonObj[x].validMobile) {
-              temp = Boolean(jsonObj[x].validMobile)
-              jsonObj[x].validMobile = temp
-            }
-            if (jsonObj[x].blackListAlliance) {
-              temp = Boolean(jsonObj[x].blackListAlliance)
-              jsonObj[x].blackListAlliance = temp
-            }
-            if (jsonObj[x].prepaid) {
-              temp = Boolean(jsonObj[x].prepaid)
-              jsonObj[x].prepaid = temp
-            }
+          let duplicate = 0
 
-            if (jsonObj[x].validity) {
-              temp = Boolean(jsonObj[x].validity)
-              jsonObj[x].validity = temp
-            }
-            if (jsonObj[x].risky) {
-              temp = Boolean(jsonObj[x].risky)
-              jsonObj[x].risky = temp
-            }
-            if (jsonObj[x].burstOptOut) {
-              temp = Boolean(jsonObj[x].burstOptOut)
-              jsonObj[x].burstOptOut = temp
-            }
+          const chunk = (arr, size) =>
+            Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
+              NewArray.push(arr.slice(i * size, i * size + size))
+            )
+          console.log('chunk', chunk(jsonObj, size))
+          console.log('NewArray', NewArray.length)
+
+          for (let x = 0; x < NewArray.length; x++) {
+            NewArray[x].reduce(async (prev, data) => {
+              await prev
+              if (data.clicker) {
+                temp = Boolean(data.clicker)
+                data.clicker = temp
+              }
+              if (data.converter) {
+                temp = Boolean(data.converter)
+                data.converter = temp
+              }
+              if (data.hardBounce) {
+                temp = Boolean(data.hardBounce)
+                data.hardBounce = temp
+              }
+              if (data.suppressed) {
+                temp = Boolean(data.suppressed)
+                data.suppressed = temp
+              }
+              if (data.recentAbuse) {
+                temp = Boolean(data.recentAbuse)
+                data.recentAbuse = temp
+              }
+              if (data.validMobile) {
+                temp = Boolean(data.validMobile)
+                data.validMobile = temp
+              }
+              if (data.blackListAlliance) {
+                temp = Boolean(data.blackListAlliance)
+                data.blackListAlliance = temp
+              }
+              if (data.prepaid) {
+                temp = Boolean(data.prepaid)
+                data.prepaid = temp
+              }
+
+              if (data.validity) {
+                temp = Boolean(data.validity)
+                data.validity = temp
+              }
+              if (data.risky) {
+                temp = Boolean(data.risky)
+                data.risky = temp
+              }
+              if (data.burstOptOut) {
+                temp = Boolean(data.burstOptOut)
+                data.burstOptOut = temp
+              }
+
+              csvData.push(data)
+              console.log(csvData.length)
+              TemporalData.insertMany(data, (err) => {
+                if (err) console.log('duplicate', data.phone, duplicate++)
+              })
+              let count = await TemporalData.countDocuments()
+              if (csvData.length === jsonObj.length) {
+                csvData = []
+                NewArray = []
+                console.log('complete!!!')
+                return res.json({
+                  message:
+                    'Upload/import the CSV data into database successfully',
+                   total: count,
+                  duplicate: duplicate,
+                })
+              }
+
+              return Promise.resolve()
+            }, Promise.resolve())
           }
-          //
-          jsonObj?.map(async (data) => {
-            const uniquePhone = await TemporalData.findOne({
-              phone: data.phone,
-            })
-            csvData.push(data)
-            console.log('count csv', csvData.length)
-            if (uniquePhone) {
-              console.log('phone exist', data.phone)
-            }
-            if (!uniquePhone) {
-              console.log('phone NO exist', data.phone)
-              //await allUpload.push(data)
-
-              await TemporalData.insertMany(data, (err) => {
-                if (err) {
-                  return console.log(err)
-                }
-              })
-            }
-            let rowsAll = csvData.length
-            // const totalUpload = allUpload.length
-            if (csvCount === rowsAll) {
-              // console.log('allUpload: ', allUpload.length)
-              csvData = []
-              //allUpload = []
-              return res.json({
-                message:
-                  'Upload/import the CSV data into database successfully',
-                //totalUpload: totalUpload,
-                totalRows: csvCount,
-              })
-            }
-          })
         }
       })
   } catch (error) {

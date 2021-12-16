@@ -210,19 +210,19 @@ export const updateListPhoneClean =
       // }
   
       const config = {
-        headers: {
-          'Content-Type': 'application/json',
+        headers: {  
+          'Content-Type': 'application/json', 
         },
       }
   
-      const { data } = await axios.post('/phoneslist/register-data', config)
-
-
+      //const { data } = await axios.post('/phoneslist/register-data', config)
+      const { data } = await axios.post('/phoneslist/import-data', config)
+     
       console.log("data", data);
       dispatch({
         type: PHONE_IMPORT_SUCCESS,
         payload: data,
-      })
+      })   
     } catch (error) {
       dispatch({
         type: PHONE_IMPORT_FAIL,

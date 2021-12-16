@@ -535,13 +535,13 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
         let countData = await ModelTemporal.countDocuments()
         if (!countData) {
           console.log('SUCCESS')
-          const resultImport = count - (newPhone.length + updatePhone.length)
+        
           resultTemp = []
           res.status(200).json({
             message: 'Import Successfully !!!!',
             news: newPhone.length,
             update: updatePhone.length,
-            total: resultImport,
+            total: count,
           })
         }
       }

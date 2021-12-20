@@ -38,7 +38,6 @@ import DashboardItem from '../../../DashboardItem/DashboardItem'
 import Message from '../../../DashboardItem/DashboardItem'
 import Loader from '../../../Loader/Loader'
 import Swal from 'sweetalert2'
-//import useStyles from './styles'
 
 const DashboardHome = () => {
   //const classes = useStyles()

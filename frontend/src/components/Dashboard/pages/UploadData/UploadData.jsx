@@ -19,11 +19,11 @@ import {
   Box,
   Button,
 } from '@material-ui/core'
-import MaterialTable from 'material-table'
-import { TablePagination } from '@material-ui/core'
-import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
-import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
-import tableIcons from '../../../tableIcons'
+// import MaterialTable from 'material-table'
+// import { TablePagination } from '@material-ui/core'
+// import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
+// import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
+// import tableIcons from '../../../tableIcons'
 import dataStyle from '../../../DataTable/styles'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from '../DataTablePhones/styles'
@@ -35,7 +35,7 @@ const UploadData = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-  const tableRef = React.createRef()
+  //const tableRef = React.createRef()
 
   // const [uploadingCsv, setUploadingCsv] = useState(false)
   // const [openCsv, setOpenCsv] = useState(false)
@@ -49,7 +49,7 @@ const UploadData = () => {
   const { loading, success } = uploadCsvData
 
   const listTemporalData = useSelector((state) => state.listPhoneTemp)
-  const { tempListPhones, page, count } = listTemporalData
+  const { page, count } = listTemporalData
   const [pageState, setPageState] = useState(page || 0)
  
   useEffect(() => {

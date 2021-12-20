@@ -38,7 +38,11 @@ import DashboardItem from '../../../DashboardItem/DashboardItem'
 import Message from '../../../DashboardItem/DashboardItem'
 import Loader from '../../../Loader/Loader'
 import Swal from 'sweetalert2'
+<<<<<<< HEAD
 //TEST
+=======
+//import useStyles from './styles'
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
 
 const DashboardHome = () => {
   //const classes = useStyles()
@@ -122,6 +126,7 @@ const DashboardHome = () => {
       history.push('/')
       return
     }
+<<<<<<< HEAD
    // dispatch(getCountClicker())
     // dispatch(getCountConverter())
     // dispatch(getCountCCC())
@@ -133,8 +138,21 @@ const DashboardHome = () => {
     // dispatch(getCountTMobile())
     // dispatch(getCountUsCellular())
     // dispatch(getCountVerizon())
+=======
+    dispatch(getCountClicker())
+    dispatch(getCountConverter())
+    dispatch(getCountCCC())
+    dispatch(getCountBadState())
+    dispatch(getCountHardBounce())
+    dispatch(getCountSuppressed())
+    dispatch(getCountAtt())
+    dispatch(getCountSprint())
+    dispatch(getCountTMobile())
+    dispatch(getCountUsCellular())
+    dispatch(getCountVerizon())
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [history, userInfo])
+  }, [history, userInfo,dispatch])
 
   console.log("values: ", badState);
 
@@ -156,6 +174,7 @@ const DashboardHome = () => {
                {!loadingBadState ? (
                   <DashboardItem
                   title={'Bad State'}
+<<<<<<< HEAD
                   icon={<FaLock />}
                   detailColor="colorLight"
                   bgColor="green"
@@ -163,6 +182,13 @@ const DashboardHome = () => {
                   action = {()=>dispatch(getCountBadState())}
                   to="#"
                   tooltip = {"Please click here, search value"}
+=======
+                  icon={<FaUserFriends />}
+                  detailColor="colorLight"
+                  bgColor="green"
+                  value={Intl.NumberFormat().format(badState)}
+                  to="#"
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 />) : (<Loader/>)
               }
               </Grid>
@@ -174,9 +200,13 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="red"
                   value={Intl.NumberFormat().format(ccc)}
+<<<<<<< HEAD
                   action = {()=>dispatch(getCountCCC())}
                   to="#"
                   tooltip = {"Please click here, search value"}
+=======
+                  to="#"
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 />) : (<Loader/>)
               }
               </Grid>
@@ -189,9 +219,13 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="green"
                   value={Intl.NumberFormat().format(suppressed)}
+<<<<<<< HEAD
                   action = {()=>dispatch(getCountSuppressed())}
                   to="#"
                   tooltip = {"Please click here, search value"}
+=======
+                  to="#"
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 />) : (<Loader/>)
               }
               </Grid>
@@ -217,7 +251,10 @@ const DashboardHome = () => {
             <Grid container spacing={3}>
               <Grid item xs={12} sm={6} md={4}>
               { !loadingClicker ? (
+<<<<<<< HEAD
               
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 <DashboardItem
                   title={'Clicker'}
                   icon={<FaEnvelope />}
@@ -226,7 +263,10 @@ const DashboardHome = () => {
                   bgColor="blue"
                   action = {()=> dispatch(getCountClicker())}
                   to="#"
+<<<<<<< HEAD
                   tooltip = {"Please click here, search value"}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 /> ): (<Loader/>)}
               </Grid>
 
@@ -234,12 +274,19 @@ const DashboardHome = () => {
                 {!loadingHardBounce ? (
                   <DashboardItem
                   title={'Hard Bounce'}
+<<<<<<< HEAD
                   icon={<FaPhoneSlash />}
                   detailColor="colorLight"
                   bgColor="red"
                   value={Intl.NumberFormat().format(hardBounce)}
                   action = {()=>dispatch(getCountHardBounce())}
                   tooltip = {"Please click here, search value"}
+=======
+                  icon={<FaExclamationTriangle />}
+                  detailColor="colorLight"
+                  bgColor="red"
+                  value={Intl.NumberFormat().format(hardBounce)}
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                   to="#"
                 />) : (<Loader/>)
               }
@@ -253,9 +300,13 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="orange"
                   value={Intl.NumberFormat().format(converter)}
+<<<<<<< HEAD
                   action = {()=>dispatch(getCountConverter())}
                   to="#"
                   tooltip = {"Please click here, for search value"}
+=======
+                  to="#"
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 />) : (<Loader/>)
               }
               </Grid>
@@ -288,8 +339,11 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="green"
                   value={Intl.NumberFormat().format(verizon)}
+<<<<<<< HEAD
                   tooltip = {"Please click here, for search value"}
                   action = {()=>dispatch(getCountVerizon())}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                   to="#"
                 />) : (<Loader/>)}
               </Grid>
@@ -301,8 +355,11 @@ const DashboardHome = () => {
                   detailColor="colorLight"
                   bgColor="red"
                   value={Intl.NumberFormat().format(tMobile)}
+<<<<<<< HEAD
                   tooltip = {"Please click here, for search value"}
                   action = {()=>dispatch(getCountTMobile)}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                   to="#"
                 />) : (<Loader/>)}
               </Grid>
@@ -313,8 +370,11 @@ const DashboardHome = () => {
                   title={'Sprint'}
                   icon={<FaBroadcastTower />}
                   value={Intl.NumberFormat().format(sprint)}
+<<<<<<< HEAD
                   tooltip = {"Please click here, for search value"}
                   action = {()=>getCountSprint()}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                   detailColor="colorLight"
                   bgColor="orange"
                   to="#"
@@ -327,8 +387,11 @@ const DashboardHome = () => {
                   title={'AT&T'}
                   icon={<FaBroadcastTower />}
                   value={Intl.NumberFormat().format(att)}
+<<<<<<< HEAD
                   action = {()=>dispatch(getCountAtt())}
                   tooltip = {"Please click here, for search value"}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                   detailColor="colorLight"
                   bgColor="blue"
                   to="#"
@@ -340,8 +403,11 @@ const DashboardHome = () => {
                   title={'US Cellular'}
                   icon={<FaBroadcastTower />}
                   value={Intl.NumberFormat().format(usCellular)}
+<<<<<<< HEAD
                   action = {()=>dispatch(getCountUsCellular())}
                   tooltip = {"Please click here, for search value"}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                   detailColor="colorLight"
                   bgColor="dark"
                   to="#"

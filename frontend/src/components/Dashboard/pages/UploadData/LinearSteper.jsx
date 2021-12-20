@@ -147,7 +147,10 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                   endIcon={<FaUpload />}
                   onClick={() => setOpenCsv(true)}
                   style={{ width: '100%' }}
+<<<<<<< HEAD
                   disabled = {count ? true : false}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 >
                   upload file
                 </Button>
@@ -236,6 +239,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                 sm={12}
                 justifyContent="space-around"
                 className={classes.h3}
+<<<<<<< HEAD
                 
               >
                 <h3>Report In Progress no complete yet</h3>
@@ -245,6 +249,13 @@ const LinearStepper = ({ loader, loading, success, count }) => {
               {/* 
               <TextField
                 
+=======
+              >
+                <h3>Report</h3>
+              </Grid>
+
+              <TextField
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
                 id="address1"
                 label="Total update phones"
                 variant="outlined"
@@ -271,7 +282,10 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                 margin="dense"
                 name="country"
               />
+<<<<<<< HEAD
               */}
+=======
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
             </Grid>
           </>
         )
@@ -328,8 +342,14 @@ const LinearStepper = ({ loader, loading, success, count }) => {
       </Stepper>
 
       {activeStep === steps.length ? (
+<<<<<<< HEAD
         setActiveStep(0)
      
+=======
+        <Typography variant="h3" align="center">
+          Thank You
+        </Typography>
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
       ) : (
         <>
           <Grid

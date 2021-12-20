@@ -23,10 +23,17 @@ export const uploadData = (file, options) => async (dispatch, getState) => {
       onUploadProgress: options.onUploadProgress,
     }
     
+<<<<<<< HEAD
     const { data } = await axios.post('/upload-csv/test', file, config)
     //const { data } = await axios.post('/upload-csv/add-csv', file, config)
 
     dispatch({ 
+=======
+    //const { data } = await axios.post('/upload-csv', file, config)
+    const { data } = await axios.post('/upload-csv/add-csv', file, config)
+
+    dispatch({
+>>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
       type: UPLOAD_CSV_SUCCESS,
       payload: data,
     })

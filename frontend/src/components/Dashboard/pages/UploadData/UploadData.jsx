@@ -19,19 +19,11 @@ import {
   Box,
   Button,
 } from '@material-ui/core'
-<<<<<<< HEAD
 // import MaterialTable from 'material-table'
 // import { TablePagination } from '@material-ui/core'
 // import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
 // import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
 // import tableIcons from '../../../tableIcons'
-=======
-import MaterialTable from 'material-table'
-import { TablePagination } from '@material-ui/core'
-import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
-import { createRows } from '../../../../utils/dataModels/PhoneListDataModel.js'
-import tableIcons from '../../../tableIcons'
->>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
 import dataStyle from '../../../DataTable/styles'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from '../DataTablePhones/styles'
@@ -43,20 +35,13 @@ const UploadData = () => {
   const dispatch = useDispatch()
   const history = useHistory()
 
-<<<<<<< HEAD
   //const tableRef = React.createRef()
-=======
-  const tableRef = React.createRef()
->>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
 
   // const [uploadingCsv, setUploadingCsv] = useState(false)
   // const [openCsv, setOpenCsv] = useState(false)
 
   // login status
-<<<<<<< HEAD
   //test 
-=======
->>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
 
@@ -64,11 +49,7 @@ const UploadData = () => {
   const { loading, success } = uploadCsvData
 
   const listTemporalData = useSelector((state) => state.listPhoneTemp)
-<<<<<<< HEAD
   const { page, count } = listTemporalData
-=======
-  const { tempListPhones, page, count } = listTemporalData
->>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
   const [pageState, setPageState] = useState(page || 0)
  
   useEffect(() => {
@@ -84,11 +65,7 @@ const UploadData = () => {
 
   useEffect(() => {
     dispatch(listPhoneTemporalData(pageState))
-<<<<<<< HEAD
   }, [dispatch, userInfo])
-=======
-  }, [dispatch])
->>>>>>> 76be99decc225a1f1b4f07eaab78bbcf1b6026f0
 
   // const PaginationTemp = () => {
   //   return (

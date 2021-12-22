@@ -225,11 +225,11 @@ export const updateListPhoneClean =
       })   
     } catch (error) {
       dispatch({
-        type: PHONE_IMPORT_FAIL,
+        type: PHONE_IMPORT_FAIL, 
         payload:
-          error.response && error.response.data.message
+          error.response && error.response.data.message 
             ? error.response.data.message
             : error.message,
-      })
+      }) 
     }
   }

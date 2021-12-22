@@ -37,124 +37,7 @@ let NewArray = []
 let insertData = []
 
 const size = 10000
-// Import csv file
-router.post('/', protect, upload.single('file'), async (req, res) => {
-  try {
-    if (req.file === undefined) {
-      return res.status(400).send({
-        message: 'Please upload a CSV file!',
-      })
-    }
-
-    csvtojson({ ignoreEmpty: true, maxRowLength: 65535 })
-      .fromFile(req.file.path)
-      .then((jsonObj) => {
-        if (jsonObj) {
-          console.log('jsonObj: ', jsonObj.length)
-
-          const chunk = (arr, size) =>
-            Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-              NewArray.push(arr.slice(i * size, i * size + size))
-            )
-          console.log('chunk', chunk(jsonObj, size))
-          console.log('NewArray', NewArray.length)
-
-          for (let x = 0; x < NewArray.length; x++) {
-            //console.log('length: ', NewArray[x].length)
-            //console.log('x: ', x)
-
-            NewArray[x].map(async (z) => {
-              if (z.clicker) {
-                temp = Boolean(z.clicker)
-                z.clicker = temp
-              }
-              if (z.converter) {
-                temp = Boolean(z.converter)
-                z.converter = temp
-              }
-              if (z.hardBounce) {
-                temp = Boolean(z.hardBounce)
-                z.hardBounce = temp
-              }
-              if (z.suppressed) {
-                temp = Boolean(z.suppressed)
-                z.suppressed = temp
-              }
-              if (z.recentAbuse) {
-                temp = Boolean(z.recentAbuse)
-                z.recentAbuse = temp
-              }
-              if (z.validMobile) {
-                temp = Boolean(z.validMobile)
-                z.validMobile = temp
-              }
-              if (z.blackListAlliance) {
-                temp = Boolean(z.blackListAlliance)
-                z.blackListAlliance = temp
-              }
-              if (z.prepaid) {
-                temp = Boolean(z.prepaid)
-                z.prepaid = temp
-              }
-
-              if (z.validity) {
-                temp = Boolean(z.validity)
-                z.validity = temp
-              }
-              if (z.risky) {
-                temp = Boolean(z.risky)
-                z.risky = temp
-              }
-              if (z.burstOptOut) {
-                temp = Boolean(z.burstOptOut)
-                z.burstOptOut = temp
-              }
-
-              insertData.push(z)
-            })
-            NewArray[x].map(async (data) => {
-              const uniquePhone = await TemporalData.findOne({
-                phone: data.phone,
-              })
-
-              csvData.push(data)
-              console.log('csvData: ', csvData.length)
-              // if (uniquePhone) {
-              //   console.log('phone exist')
-              // }
-              if (!uniquePhone) {
-                //console.log('phone NO exist')
-
-                await TemporalData.insertMany(data, (err) => {
-                  console.log('New')
-
-                  if (err) {
-                    return console.log(err)
-                  }
-                })
-              }
-              let rowsAll = csvData.length
-              if (rowsAll === jsonObj.length) {
-                csvData = []
-                NewArray = []
-                console.log('complete!!!')
-                return res.json({
-                  message:
-                    'Upload/import the CSV data into database successfully',
-                })
-              }
-            })
-          }
-        }
-      })
-  } catch (error) {
-    console.log('catch error-', error)
-    return res.status(500).send({
-      message: 'Could not upload the file: ' + req.file.originalname,
-    })
-  }
-})
-//----------------
+// Import csv file slot
 
 router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
   try {
@@ -267,7 +150,7 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
     })
   }
 })
-//----------------
+//------------ using now ---- file upload csv faster ----
 router.post('/test', upload.single('file'), async (req, res) => {
   try {
     if (req.file === undefined) {

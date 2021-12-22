@@ -4,15 +4,15 @@ import { uploadData } from '../../../../actions/uploadCsvActions.js'
 import { ImportData } from '../../../../actions/phoneListCleanActions'
 import PropTypes from 'prop-types'
 import {
-  Typography,
-  TextField,
+  //Typography,
+  //TextField,
   Button,
   Stepper,
   Step,
   StepLabel,
   Grid,
   LinearProgress,
-  Box,
+ // Box,
 } from '@material-ui/core'
 import { DropzoneDialog } from 'material-ui-dropzone'
 import {
@@ -114,10 +114,10 @@ const LinearStepper = ({ loader, loading, success, count }) => {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!',
+        confirmButtonText: 'Yes!', 
       }).then((result) => {
-        if (result.isConfirmed) {
-          dispatch(ImportData())
+        if (result.isConfirmed) { 
+          dispatch(ImportData()) 
         }
       })
     }else{
@@ -130,11 +130,11 @@ const LinearStepper = ({ loader, loading, success, count }) => {
     
   }
 
-  const getSteps = () => {
-    return ['Upload CSV', 'Import Data', 'Info Import']
+  const getSteps = () => { 
+    return ['Upload CSV', 'Import Data', 'Info Import'] 
   }
 
-  const getStepContent = (step) => {
+  const getStepContent = (step) => { 
     switch (step) {
       case 0:
         return (

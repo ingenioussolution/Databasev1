@@ -1,14 +1,18 @@
 // carrier Model
-import Carrier from '../models/carrier.js'
+import Carrier from '../models/carrierModel.js'
 import asyncHandler from 'express-async-handler'
 
 // @routes GET /carrier
 // @des GET All PhoneCarrier
-export const getPhoneCarrier = async (req, res) => {
+export const getCarrier = async (req, res) => {
   try {
-    const carrier = await Carrier.find({})
-    if (!carrier) throw Error('Not items')
-    res.status(200).json(carrier)
+    const listCarrier = await Carrier.find({})
+    if (listCarrier) {
+      res.json(listCarrier)
+      
+    } else {
+      throw Error('Not items')
+    }
   } catch (err) {
     res.status(400).json({ msg: err })
   }
@@ -16,29 +20,25 @@ export const getPhoneCarrier = async (req, res) => {
 
 // @routes POST /carrier
 // @des Register an PhoneCarrier
-export const registerPhoneCarrier = asyncHandler(async (req, res, next) => {
+export const registerCarrier = asyncHandler(async (req, res, next) => {
   try {
-    const { phone, name, wireless, status, results } = req.body
-    const phoneExists = await Carrier.findOne({ phone: phone })
-    console.log(phoneExists)
-    if (phoneExists) throw Error('Carrier already exists')
-
-    const carrier = await Carrier.create({
-      phone,
-      name,
-      wireless,
-      status,
-      results,
+    const { carrier, status } = req.body
+    const carrierExists = await Carrier.findOne({
+      carrier: { $regex: `${carrier}`, $options: 'i' },
     })
-    console.log(carrier)
-    if (carrier) {
+
+    if (carrierExists) throw Error('Carrier already exists')
+
+    const carrierList = await Carrier.create({
+      carrier,
+      status,
+    })
+
+    if (carrierList) {
       res.status(201).json({
         _id: carrier._id,
-        phone: carrier.phone,
         name: carrier.name,
-        wireless: carrier.wireless,
         status: carrier.status,
-        results: carrier.results,
       })
     } else {
       res.status(400)

@@ -18,6 +18,7 @@ import badAreaCodeRoutes from './routes/badAreaCodeRouters.js'
 import settingsRoutes from './routes/siteSettingsRoutes.js'
 import uploadRoutes from './routes/uploadCsvRoutes.js'
 import homeFilter from './routes/homeFilterRouters.js'
+import partner from './routes/partnerRouters.js'
 
 dotenv.config()
 
@@ -52,6 +53,7 @@ app.use('/bad-area-code', badAreaCodeRoutes)
 app.use('/settings', settingsRoutes)
 app.use('/upload-csv', uploadRoutes)
 app.use('/filters', homeFilter)
+app.use('/partners', partner)
 
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))

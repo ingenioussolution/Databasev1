@@ -1,12 +1,12 @@
 import express from 'express'
 import {
-  getPhoneCarrier,
-  registerPhoneCarrier,
+  getCarrier,
+  registerCarrier,
 } from '../controllers/carrierController.js'
 
 const router = express.Router()
 
-router.get('/', getPhoneCarrier)
-router.post('/', registerPhoneCarrier)
+router.get('/', getCarrier)
+router.post('/', registerCarrier)
 
 export default router

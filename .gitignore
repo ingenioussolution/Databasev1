@@ -5,7 +5,7 @@ node_modules/
 /.pnp
 .pnp.js
 upload/
-export/
+exports/
 # misc
 .DS_Store
 .env

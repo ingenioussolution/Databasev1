@@ -181,7 +181,7 @@ export const register = (user) => async (dispatch, getState) => {
   }
 }
 
-export const getUserDetails = (id) => async (dispatch, getState) => {
+export const getUserDetails = () => async (dispatch, getState) => {
   try {
     dispatch({
       type: USER_DETAILS_REQUEST,
@@ -376,21 +376,16 @@ export const listUsers = () => async (dispatch, getState) => {
     dispatch({
       type: USER_LIST_REQUEST,
     })
+
+    const {
+      adminUserLogin: { adminUserInfo },
+    } = getState()
+
     const config = {
       headers: {
-        'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
-
-    // const {
-    //   adminUserLogin: { adminUserInfo },
-    // } = getState()
-
-    // const config = {
-    //   headers: {
-    //     Authorization: `Bearer ${adminUserInfo.token}`,
-    //   },
-    // }
 
     const { data } = await axios.get('/users', config)
 
@@ -479,23 +474,19 @@ export const deleteUserAsAdmin = (id) => async (dispatch, getState) => {
     dispatch({
       type: USER_DELETE_REQUEST,
     })
+
+    const {
+      adminUserLogin: { adminUserInfo },
+    } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
 
-    // const {
-    //   adminUserLogin: { adminUserInfo },
-    // } = getState()
-
-    // const config = {
-    //   headers: {
-    //     Authorization: `Bearer ${adminUserInfo.token}`,
-    //   },
-    // }
-
-    await axios.delete(`/api/users/${id}`, config)
+    await axios.delete(`/users/${id}`, config)
 
     dispatch({
       type: USER_DELETE_SUCCESS,
@@ -512,26 +503,25 @@ export const deleteUserAsAdmin = (id) => async (dispatch, getState) => {
 }
 
 export const updateUser = (user) => async (dispatch, getState) => {
+  console.log("user Action", user);
   try {
     dispatch({
       type: USER_UPDATE_REQUEST,
     })
+ 
+    const {
+      adminUserLogin: { adminUserInfo },
+    } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
+        Authorization: `Bearer ${adminUserInfo.token}`,
       },
     }
-    // const {
-    //   adminUserLogin: { adminUserInfo },
-    // } = getState()
-
-    // const config = {
-    //   headers: {
-    //     Authorization: `Bearer ${adminUserInfo.token}`,
-    //   },
-    // }
 
     const { data } = await axios.put(`/users/${user._id}`, user, config)
+    console.log("data", data);
 
     dispatch({
       type: USER_UPDATE_SUCCESS,

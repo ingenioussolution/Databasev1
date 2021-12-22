@@ -46,7 +46,7 @@ const CleanList = () => {
   const listPhone = useSelector((state) => state.listPhoneClean)
   const { loading, listPhones, page, pages } = listPhone
 
-  console.log("page current", page);
+  console.log('page current', page)
 
   const [rowsPerPage, setRowsPerPage] = useState(10 || 5)
 
@@ -69,13 +69,13 @@ const CleanList = () => {
     if (pageState === 0) {
       setPageState(0)
       dispatch(listPhoneData(pageState))
-    } else { 
+    } else {
       dispatch(listPhoneData(pageState))
     }
   }, [dispatch, history, pageState, userInfo])
 
   const handleChangePage = (event, newPage) => {
-   console.log("newPage",newPage);
+    console.log('newPage', newPage)
     setPageState(newPage)
   }
 
@@ -105,7 +105,7 @@ const CleanList = () => {
     setFilterState({ ...filterState, [name]: value })
   }
 
-  console.log(filterState);
+  console.log(filterState)
 
   const filterListPhones = (listPhones) => {
     return listPhones?.filter((phones) => {
@@ -124,14 +124,11 @@ const CleanList = () => {
     if (query) {
       for (const filter of query.keys()) {
         setFilterState({ ...filterState, [filter]: query.get(filter) })
-        
       }
     }
-    
+
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [loading])
-
-  
 
   const filters = (
     <Grid container spacing={4} className={classes.filtersSection}>
@@ -175,7 +172,7 @@ const CleanList = () => {
           }}
         />
       </Grid>
-  {/*
+      {/*
   <Grid item xs={12} md={4}>
         <FormControl variant="outlined" className={classes.formControl}>
           <InputLabel id="clicker-label">Clicker</InputLabel>

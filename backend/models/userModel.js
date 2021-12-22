@@ -26,7 +26,6 @@ const userSchema = mongoose.Schema(
     },
     isAdmin: {
       type: Boolean,
-      require: true,
       default: false,
     },
     status: {
@@ -61,8 +60,6 @@ userSchema.pre('save', async function (next) {
   const salt = await bcrypt.genSalt(10)
   this.password = await bcrypt.hash(this.password, salt)
 })
-userSchema.index({isAdmin: 1}, {unique: true, partialFilterExpression: {isAdmin: true}});
-
 const User = mongoose.model('User', userSchema)
 
 export default User

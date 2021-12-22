@@ -3,7 +3,7 @@ import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import ModelTemporal from '../models/TemporalData.js'
 import BadAreaCode from '../models/badAreaCode.js'
-import {listAreaCode} from '../controllers/badAreaCodeController.js'
+//import { listAreaCode } from '../controllers/badAreaCodeController.js'
 
 import axios from 'axios'
 
@@ -21,6 +21,8 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const revenue = req.query.revenue
     const converter = req.query.converter
     const suppressed = req.query.suppressed
+    let sourceFilter = req.query.source
+    let source = { $regex: `${sourceFilter}`, $options: 'i' }
     let carrierFilter = req.query.carrier
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
     const firstNameFilter = req.query.firstName
@@ -37,13 +39,11 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const page = parseInt(req.query.pageNumber) || 1
 
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({},{areaCode:1, _id:0})
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
 
-    areaBadCode.map(obj => {
-        arrayBadArea.push(new RegExp('^'+obj.areaCode))
+    areaBadCode.map((obj) => {
+      arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-
-    console.log(arrayBadArea);
 
     if (
       clicker ||
@@ -55,7 +55,9 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       firstNameFilter ||
       carrierFilter ||
       areaCode ||
-      (createdAt_start || createdAt_end )
+      createdAt_start ||
+      createdAt_end ||
+      sourceFilter
     ) {
       if (clicker) {
         arrayFilters.push({ clicker: clicker })
@@ -64,8 +66,8 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       if (hardBounce === 'false') {
         console.log('hard bounce FALSE', hardBounce)
         arrayFilters.push({ hardBounce: { $ne: true } })
-      } else if(hardBounce === 'true'){
-        console.log("hard bounce TRUE");
+      } else if (hardBounce === 'true') {
+        console.log('hard bounce TRUE')
         arrayFilters.push({ hardBounce: hardBounce })
       }
       if (revenue) {
@@ -80,12 +82,15 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       if (suppressed) {
         if (suppressed === 'false') {
           arrayFilters.push({ suppressed: { $ne: true } })
-        } else if(suppressed === 'true'){
+        } else if (suppressed === 'true') {
           arrayFilters.push({ suppressed: suppressed })
         }
       }
       if (carrierFilter) {
         arrayFilters.push({ carrier: carrier })
+      }
+      if (sourceFilter) {
+        arrayFilters.push({ source: source })
       }
       if (firstNameFilter) {
         arrayFilters.push({ firstName: firstName })
@@ -102,85 +107,6 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
         arrayFilters.push({
           phone: {
             $nin: arrayBadArea,
-            // [
-            //   /^1808/,
-            //   /^1203/,
-            //   /^1475/,
-            //   /^1860/,
-            //   /^1959/,
-            //   /^1276/,
-            //   /^1434/,
-            //   /^1540/,
-            //   /^1571/,
-            //   /^1703/,
-            //   /^1757/,
-            //   /^1804/,
-            //   /^1215/,
-            //   /^1223/,
-            //   /^1267/,
-            //   /^1272/,
-            //   /^1412/,
-            //   /^1484/,
-            //   /^16570/,
-            //   /^1610/,
-            //   /^1717/,
-            //   /^1724/,
-            //   /^1814/,
-            //   /^1878/,
-            //   /^1802/,
-            //   /^1202/,
-            //   /^1304/,
-            //   /^1681/,
-            //   /^1801/,
-            //   /^1385/,
-            //   /^1435/,
-            //   /^1204/,
-            //   /^1226/,
-            //   /^1236/,
-            //   /^1249/,
-            //   /^1250/,
-            //   /^1289/,
-            //   /^1306/,
-            //   /^1343/,
-            //   /^1365/,
-            //   /^1367/,
-            //   /^1403/,
-            //   /^1416/,
-            //   /^1418/,
-            //   /^1431/,
-            //   /^1437/,
-            //   /^1438/,
-            //   /^1450/,
-            //   /^1506/,
-            //   /^1514/,
-            //   /^1519/,
-            //   /^1548/,
-            //   /^1579/,
-            //   /^1581/,
-            //   /^1587/,
-            //   /^1604/,
-            //   /^1613/,
-            //   /^1639/,
-            //   /^1647/,
-            //   /^1705/,
-            //   /^1709/,
-            //   /^1778/,
-            //   /^1780/,
-            //   /^1782/,
-            //   /^1807/,
-            //   /^1819/,
-            //   /^1825/,
-            //   /^1867/,
-            //   /^1873/,
-            //   /^1902/,
-            //   /^1905/,
-            //   /^1684/,
-            //   /^1671/,
-            //   /^1670/,
-            //   /^1787/,
-            //   /^1340/,
-            //   /^1931/,
-            // ],
           },
         })
       }
@@ -298,7 +224,7 @@ export const getPhoneList = asyncHandler(async (req, res, next) => {
   try {
     const listPhones = await PhoneList.find()
 
-    listPhones.reduce(async (prev, phoneNumber) => {
+    await listPhones.reduce(async (prev, phoneNumber) => {
       await prev
       const { data } = await axios.get(
         `https://api.blacklistalliance.com/standard/api/v1/Lookup/key/b128a57d1da0fdaea16f8ab95883a5f2/response/json/phone/${phoneNumber.phone}`
@@ -907,42 +833,39 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
   }
 })
 
-// @routes POST /register-data-temporal
+// @routes POST /register-data
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
-  let requestCount = parseInt(req.query.count) || 100000
+  
+  let requestCount = 100000//parseInt(req.query.count) || 100000
   let count = await ModelTemporal.countDocuments()
   const skipCount = 100000
-
   const total = Math.ceil(count / requestCount)
+  let newPhone = []
+  let updatePhone = []
 
   console.log('count: ', count)
-  console.log('requestCount: ', requestCount)
 
   for (let i = 1; i <= total; i++) {
-    console.log('i:', i)
-    console.log('total:', total)
-
+    console.log('i:', i, total)
+    
     const TemporalData = await ModelTemporal.find({})
       .limit(requestCount)
       .skip(skipCount * (i - 1))
 
     console.log('TemporalData', TemporalData.length)
 
-    if (TemporalData.length !== 0) {
-      console.log('Ok temporal')
-
-      await TemporalData.forEach(async (prev, phoneCount) => {
+    if (TemporalData.length) {
+      await TemporalData?.forEach(async (prev, phoneCount) => {
         await prev
         const phoneExists = await PhoneList.findOne({
           phone: TemporalData[phoneCount].phone,
         })
-
-        console.log('After Foreach')
-
         if (phoneExists) {
           console.log('Phone Exists')
+          // Count total update phones
+          updatePhone.push(phoneExists)
 
           phoneExists.firstName =
             phoneExists.firstName === undefined
@@ -1342,15 +1265,18 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
           const DeletePhone = await ModelTemporal.findOne({
             phone: TemporalData[phoneCount].phone,
           })
-
           if (DeletePhone) {
-            // console.log('Phone Update delete')
+            console.log('Phone Update delete')
             await DeletePhone.remove()
           } else {
             res.status(404)
             throw new Error('Phone not found')
           }
         } else {
+          // count total New Phones
+          newPhone.push(TemporalData[phoneCount])
+
+          console.log('New Phone row')
           const phoneCreated = await PhoneList.create({
             firstName: TemporalData[phoneCount].firstName,
             lastName: TemporalData[phoneCount].lastName,
@@ -1407,7 +1333,7 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
           })
 
           if (phoneCreated) {
-            console.log('Creating new row')
+            console.log('New Phone row')
 
             const DeletePhoneNew = await ModelTemporal.findOne({
               phone: TemporalData[phoneCount].phone,
@@ -1424,16 +1350,17 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
             throw new Error('Invalid Phone data')
           }
         }
-        if (requestCount - 1 === phoneCount) {
-          console.log('i - complete:', i)
-          console.log('Upload Completed')
-        }
       }) // end For
-    } else {
-      console.log('TemporalData empty')
-    }
+    } 
   }
+  res.status(201).json({ 
+    message: 'Import Successfully !!!!',
+    news: newPhone.length,
+    update: updatePhone.length,
+    total: count,
+ })
 })
+
 
 // @routes PUT /phoneslist:phone
 // @des Update an Phones List

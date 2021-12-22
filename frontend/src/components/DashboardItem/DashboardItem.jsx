@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Card, CardContent, Grid } from '@material-ui/core'
+import { Card, CardContent, Grid , Tooltip} from '@material-ui/core'
 import clsx from 'clsx'
 import { Link } from 'react-router-dom'
 
@@ -12,12 +12,15 @@ const DashboardItem = ({
   detailColor,
   bgColor,
   isFaIcon,
+  action,
+  tooltip,
   to,
 }) => {
   const classes = useStyles()
 
   return (
-    <Link to={to || '#'}>
+    <Link to={to || '#'} onClick={action}>
+    <Tooltip title={tooltip} aria-label="message">
       <Card variant='outlined' className={clsx(classes.card, classes[bgColor])}>
         <CardContent className={clsx('dashboard-item-content', classes.content)}>
           <Grid
@@ -28,7 +31,7 @@ const DashboardItem = ({
           >
             <Grid item>
               <h5 className={clsx(classes.dataValue, classes[detailColor])}>
-                {value}
+                {value === 'NaN' ? 0 : value}
               </h5>
             </Grid>
             <Grid item className={isFaIcon ? classes.faIcon : ''}>
@@ -40,6 +43,7 @@ const DashboardItem = ({
           </Grid>
         </CardContent>
       </Card>
+      </Tooltip>
     </Link>
   )
 }

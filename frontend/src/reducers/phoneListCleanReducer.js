@@ -12,6 +12,10 @@ import {
   PHONE_CLEAN_LIST_SUCCESS,
   PHONE_CLEAN_LIST_FAIL,
   PHONE_CLEAN_LIST_RESET,
+  PHONE_IMPORT_REQUEST,
+  PHONE_IMPORT_SUCCESS,
+  PHONE_IMPORT_FAIL,
+  PHONE_IMPORT_RESET
 } from '../constants/phonesListClean'
 
 export const listPhoneCleanReducer = (state = { listPhones: [] }, action) => {
@@ -29,6 +33,28 @@ export const listPhoneCleanReducer = (state = { listPhones: [] }, action) => {
       return { loading: false, error: action.payload }
     case PHONE_CLEAN_LIST_RESET:
       return { listPhones: [] }
+    default:
+      return state
+  }
+}
+
+export const importDataReducer = (state = {}, action) => {
+  switch (action.type) {
+    case PHONE_IMPORT_REQUEST:
+      return { loading: true }
+    case PHONE_IMPORT_SUCCESS:
+      return {
+        loading: false,
+        success: true,
+        message: action.payload.message,
+        newTotal: action.payload.news,
+        updateTotal: action.payload.update,
+        total: action.payload.total,
+      }
+    case PHONE_IMPORT_FAIL:
+      return { loading: false, error: action.payload }
+    case PHONE_IMPORT_RESET:
+      return {loading: false}
     default:
       return state
   }

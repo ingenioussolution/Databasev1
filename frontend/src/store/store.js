@@ -28,8 +28,9 @@ import {
   userUpdateProfileReducer,
 } from '../reducers/userReducers'
 
-import { listPhoneCleanReducer } from '../reducers/phoneListCleanReducer'
+import { listPhoneCleanReducer, importDataReducer } from '../reducers/phoneListCleanReducer'
 
+import {listPhoneTempReducer} from '../reducers/tempTableReducers'
 import {
   siteSettingsReducer,
   siteSettingsUpdateReducer,
@@ -46,6 +47,20 @@ import {
 import {listExportDataReducer} from '../reducers/exportDataReducers'
 import {uploadCsvDataReducer} from '../reducers/uploadCsvReducers'
 
+import {
+  CountClickerReducer,
+  CountConverterReducer,
+  CountCCCReducer,
+  CountBadStatesReducer,
+  CountHardBounceReducer,
+  CountSupressedReducer,
+  CountVerizonReducer,
+  CountAttReducer,
+  CountSprintReducer,
+  CountTMobileReducer,
+  CountUsCellularReducer,
+} from '../reducers/homeFilterReducers'
+
 const reducer = combineReducers({
   //List Phones reducers
   registerPhone: registerPhoneReducer,
@@ -55,6 +70,8 @@ const reducer = combineReducers({
   deletePhoneCarrier: deletePhoneCarrierReducer,
   phoneCarrierList: phoneCarrierListReducer,
   listPhoneClean: listPhoneCleanReducer,
+  //Import Data
+  importData: importDataReducer,
   //User reducers
   userLogin: userLoginReducer,
   userForgotPassword: userForgotPasswordReducer,
@@ -83,6 +100,22 @@ const reducer = combineReducers({
 
   // Upload data
   uploadCsvData: uploadCsvDataReducer,
+
+  // Temporal table Data
+  listPhoneTemp: listPhoneTempReducer,
+
+  // filter home
+  CountClicker: CountClickerReducer,
+  CountConverter: CountConverterReducer,
+  CountCCC: CountCCCReducer,
+  CountBadStates: CountBadStatesReducer,
+  CountHardBounce: CountHardBounceReducer,
+  CountSupressed: CountSupressedReducer,
+  CountVerizon: CountVerizonReducer,
+  CountAtt: CountAttReducer,
+  CountSprint: CountSprintReducer,
+  CountTMobile: CountTMobileReducer,
+  CountUsCellular: CountUsCellularReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

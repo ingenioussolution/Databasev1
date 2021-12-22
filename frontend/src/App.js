@@ -27,6 +27,7 @@ import AdminNavigation from './components/AdminDashboard/AdminNavigation/AdminNa
 import AdminLogin from './components/AdminDashboard/AdminLogin/AdminLogin'
 import AdminHome from './components/AdminDashboard/AdminSettings/AdminHome'
 import UploadCsv from './components/Dashboard/pages/UploadData/UploadData'
+import UpdateUser from './components/AdminDashboard/AdminCRUD/UpdateUser/UpdateUser'
 
 const App = ({ location }) => {
   const classes = StyleApp()
@@ -102,6 +103,8 @@ const App = ({ location }) => {
               />
               <Route path="/admin/admin-dashboard" exact component={AdminHome} />
               <Route path="/admin/list-users" exact component={AdminDashboard} />
+              <Route path="/admin/list-users/:id/edit" exact component={UpdateUser} />
+              <Route path="/admin/list-users/add" exact component={UpdateUser} />
 
             </Switch>
           </main>

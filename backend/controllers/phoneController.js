@@ -2,7 +2,7 @@
 import Phone from '../models/phone.js'
 import asyncHandler from 'express-async-handler'
 
-// @routes GET /phone
+// @routes GET /phoneList
 // @des GET All Phone
 export const getPhone = async (req, res) => {
   try {

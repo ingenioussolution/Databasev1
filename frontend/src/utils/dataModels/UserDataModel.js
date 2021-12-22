@@ -50,6 +50,12 @@ export const createRows = (data) => {
                 (`${el.lastName}` === 'undefined' ? '' : `${el.lastName}`)
               )
             }
+            case 'email': {
+              return (
+                `${el.email}`
+                
+              )
+            }
             default:
               return el[columnName]
           }

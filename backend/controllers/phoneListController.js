@@ -171,6 +171,173 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   }
 })
 
+// @routes GET /phoneslist/
+// @des GET All Phone List
+// @access  Private/User
+
+export const getMasterCCC = asyncHandler(async (req, res, next) => {
+  try {
+    // FILTERS QUERY
+
+    const hardBounce = req.query.hardBounce
+    const clicker = req.query.clicker
+    const revenue = req.query.revenue
+    const converter = req.query.converter
+    const suppressed = req.query.suppressed
+    let sourceFilter = req.query.source
+    let source = { $regex: `${sourceFilter}`, $options: 'i' }
+    let carrierFilter = req.query.carrier
+    let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
+
+    const createdAt_start = req.query.start
+    const createdAt_end = req.query.end
+    const areaCode = req.query.areaCode
+    let arrayFilters = []
+
+    let regex = req.query.q
+    let search = { $regex: regex, $options: 'i' }
+    const pageSize = 10
+    const page = parseInt(req.query.pageNumber) || 1
+
+    let arrayBadArea = []
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+
+    areaBadCode.map((obj) => {
+      arrayBadArea.push(new RegExp('^' + obj.areaCode))
+    })
+
+    if (
+      clicker ||
+      hardBounce ||
+      revenue ||
+      converter ||
+      suppressed ||
+      carrierFilter ||
+      areaCode ||
+      createdAt_start ||
+      createdAt_end ||
+      sourceFilter
+    ) {
+      if (hardBounce === 'false') {
+        console.log('hard bounce FALSE', hardBounce)
+        arrayFilters.push({ hardBounce: { $ne: true } })
+      } else if (hardBounce === 'true') {
+        console.log('hard bounce TRUE')
+        arrayFilters.push({ hardBounce: hardBounce })
+      }
+
+      if (revenue) {
+        arrayFilters.push({ revenue: revenue })
+      }
+      if (clicker || converter) {
+        if (converter === 'true' && clicker === 'true') {
+          arrayFilters.push({
+            $or: [{ converter: converter }, { clicker: clicker }],
+          })
+          // }else if(clicker === 'false' && converter === 'false'){
+          //   arrayFilters.push({
+          //     $or: [{ converter: { $ne: true } }, { clicker: { $ne: true } }],
+          //   })
+        } else if (clicker === 'false') {
+          arrayFilters.push({ clicker: { $ne: true } })
+        } else if (clicker === 'true') {
+          arrayFilters.push({ clicker: clicker })
+        } else if (converter === 'false') {
+          arrayFilters.push({ converter: { $ne: true } })
+        } else if (converter === 'true') {
+          arrayFilters.push({ converter: converter })
+        }
+      }
+
+      if (suppressed) {
+        if (suppressed === 'false') {
+          arrayFilters.push({ suppressed: { $ne: true } })
+        } else if (suppressed === 'true') {
+          arrayFilters.push({ suppressed: suppressed })
+        }
+      }
+      if (carrierFilter) {
+        arrayFilters.push({ carrier: carrier })
+      }
+      if (sourceFilter) {
+        arrayFilters.push({ source: source })
+      }
+
+      if (createdAt_start || createdAt_end) {
+        arrayFilters.push({
+          createdAt: {
+            $gte: new Date(createdAt_start),
+            $lt: new Date(createdAt_end),
+          },
+        })
+      }
+      if (areaCode) {
+        arrayFilters.push({
+          phone: {
+            $nin: arrayBadArea,
+          },
+        })
+      }
+
+      console.log('Array:', ...arrayFilters)
+      if (arrayFilters) {
+        const count = await PhoneList.countDocuments({
+          $and: arrayFilters,
+        })
+        const data = await PhoneList.find({
+          $and: arrayFilters,
+        })
+          .limit(pageSize)
+          .skip(pageSize * (page - 1))
+
+        res.status(200).json({
+          data,
+          clicker,
+          revenue,
+          suppressed,
+          converter,
+          hardBounce,
+          search,
+          page,
+          totalPages: Math.ceil(count / pageSize),
+        })
+      }
+    }
+    //------------------------------------
+    else if (regex) {
+      console.log('search', regex)
+      const count = await PhoneList.countDocuments({ carrier: search })
+      const data = await PhoneList.find({ carrier: search })
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
+
+      res.status(200).json({
+        data,
+        search,
+        hardBounce,
+        page,
+        totalPages: Math.ceil(count / pageSize),
+      })
+    } else {
+      console.log('no filters')
+      const count = await PhoneList.countDocuments({})
+      const data = await PhoneList.find({})
+        .limit(pageSize)
+        .skip(pageSize * (page - 1))
+
+      res.status(200).json({
+        data,
+        search,
+        hardBounce,
+        page,
+        totalPages: Math.ceil(count / pageSize),
+      })
+    }
+  } catch (error) {
+    next(error)
+  }
+})
+
 // Controller test GET SHOW ALL DATA
 export const getPhoneListFrontEnd1 = asyncHandler(async (req, res, next) => {
   try {
@@ -216,6 +383,8 @@ export const getPhoneListFrontEnd1 = asyncHandler(async (req, res, next) => {
   //   offset: listPhones.offset,
   //})
 })
+
+// @route Get Master CCC
 
 // FILTER DATA API BLACKLIST ALLIANCE
 const temporal = []
@@ -837,8 +1006,7 @@ export const registerPhoneList = asyncHandler(async (req, res) => {
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
 export const AddPhoneList = asyncHandler(async (req, res, next) => {
-  
-  let requestCount = 100000//parseInt(req.query.count) || 100000
+  let requestCount = 100000 //parseInt(req.query.count) || 100000
   let count = await ModelTemporal.countDocuments()
   const skipCount = 100000
   const total = Math.ceil(count / requestCount)
@@ -849,7 +1017,7 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
 
   for (let i = 1; i <= total; i++) {
     console.log('i:', i, total)
-    
+
     const TemporalData = await ModelTemporal.find({})
       .limit(requestCount)
       .skip(skipCount * (i - 1))
@@ -1351,16 +1519,15 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
           }
         }
       }) // end For
-    } 
+    }
   }
-  res.status(201).json({ 
+  res.status(201).json({
     message: 'Import Successfully !!!!',
     news: newPhone.length,
     update: updatePhone.length,
     total: count,
- })
+  })
 })
-
 
 // @routes PUT /phoneslist:phone
 // @des Update an Phones List

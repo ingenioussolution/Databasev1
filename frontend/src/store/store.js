@@ -28,7 +28,7 @@ import {
   userUpdateProfileReducer,
 } from '../reducers/userReducers'
 
-import { listPhoneCleanReducer, importDataReducer } from '../reducers/phoneListCleanReducer'
+import { listPhoneCleanReducer, importDataReducer, masterCCCReducer } from '../reducers/phoneListCleanReducer'
 
 import {listPhoneTempReducer} from '../reducers/tempTableReducers'
 import {
@@ -44,7 +44,7 @@ import {
   deleteBadAreaReducer,
 } from '../reducers/badAreaReducers'
 
-import {listExportDataReducer} from '../reducers/exportDataReducers'
+import {listExportDataReducer, MasterCCC_DataReducer} from '../reducers/exportDataReducers'
 import {uploadCsvDataReducer} from '../reducers/uploadCsvReducers'
 
 import {
@@ -69,7 +69,12 @@ const reducer = combineReducers({
   registerPhoneCarrier: registerPhoneCarrierReducer,
   deletePhoneCarrier: deletePhoneCarrierReducer,
   phoneCarrierList: phoneCarrierListReducer,
+
+  // tables phoneList
+
   listPhoneClean: listPhoneCleanReducer,
+  masterCCC: masterCCCReducer,
+
   //Import Data
   importData: importDataReducer,
   //User reducers
@@ -97,6 +102,7 @@ const reducer = combineReducers({
 
   // Export data
   listExportData: listExportDataReducer,
+  MasterCCC_Data: MasterCCC_DataReducer,
 
   // Upload data
   uploadCsvData: uploadCsvDataReducer,

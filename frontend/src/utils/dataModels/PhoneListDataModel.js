@@ -91,6 +91,7 @@ export const clicker = {
     </div>
   ),
   lookup: { true: 'true', false: 'false' },
+  filtering: false,
 }
 
 export const converter = {
@@ -103,6 +104,7 @@ export const converter = {
     </div>
   ),
   lookup: { true: 'true', false: 'false' },
+  filtering: false,
 }
 
 export const hardBounce = {

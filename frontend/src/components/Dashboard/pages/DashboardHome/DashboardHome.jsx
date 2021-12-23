@@ -301,7 +301,7 @@ const DashboardHome = () => {
                   bgColor="red"
                   value={Intl.NumberFormat().format(tMobile)}
                   tooltip = {"Please click here, for search value"}
-                  action = {()=>dispatch(getCountTMobile)}
+                  action = {()=>dispatch(getCountTMobile())}
                   to="#"
                 />) : (<Loader/>)}
               </Grid>
@@ -313,7 +313,7 @@ const DashboardHome = () => {
                   icon={<FaBroadcastTower />}
                   value={Intl.NumberFormat().format(sprint)}
                   tooltip = {"Please click here, for search value"}
-                  action = {()=>getCountSprint()}
+                  action = {()=>dispatch(getCountSprint())}
                   detailColor="colorLight"
                   bgColor="orange"
                   to="#"

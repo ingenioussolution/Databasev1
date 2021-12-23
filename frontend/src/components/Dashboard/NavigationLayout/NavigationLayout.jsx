@@ -45,6 +45,21 @@ const NavigationLayout = () => {
             <ListItemText>Data Table</ListItemText>
           </ListItem>
         </Link>
+        {/* Master CCC */}
+        <Link to={'/dashboard/data-master-ccc'}>
+        <ListItem
+          button
+          key="dashboard-data-table-phones"
+          className={clsx({
+            active: pathname === '/dashboard/data-master-ccc',
+          })}
+        >
+          <ListItemIcon>
+            <FaListUl />
+          </ListItemIcon>
+          <ListItemText>Master CCC</ListItemText>
+        </ListItem>
+      </Link>
         <Link to={'/dashboard/bad-area-code'}>
           <ListItem
             button

@@ -4,8 +4,8 @@
 node_modules/
 /.pnp
 .pnp.js
-upload/
-exports/
+#upload/
+#exports/
 # misc
 .DS_Store
 .env
@@ -13,3 +13,6 @@ exports/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.old
+.env.development
+.env.production

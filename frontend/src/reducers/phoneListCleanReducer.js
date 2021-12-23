@@ -15,7 +15,11 @@ import {
   PHONE_IMPORT_REQUEST,
   PHONE_IMPORT_SUCCESS,
   PHONE_IMPORT_FAIL,
-  PHONE_IMPORT_RESET
+  PHONE_IMPORT_RESET,
+  MASTER_CCC_LIST_REQUEST,
+  MASTER_CCC_LIST_SUCCESS,
+  MASTER_CCC_LIST_FAIL,
+  MASTER_CCC_LIST_RESET
 } from '../constants/phonesListClean'
 
 export const listPhoneCleanReducer = (state = { listPhones: [] }, action) => {
@@ -32,6 +36,27 @@ export const listPhoneCleanReducer = (state = { listPhones: [] }, action) => {
     case PHONE_CLEAN_LIST_FAIL:
       return { loading: false, error: action.payload }
     case PHONE_CLEAN_LIST_RESET:
+      return { listPhones: [] }
+    default:
+      return state
+  }
+}
+
+
+export const masterCCCReducer = (state = { listPhones: [] }, action) => {
+  switch (action.type) {
+    case MASTER_CCC_LIST_REQUEST:
+      return { loading: true }
+    case MASTER_CCC_LIST_SUCCESS:
+      return {
+        loading: false,
+        listPhones: action.payload.data,
+        page: action.payload.page,
+        pages: action.payload.totalPages,
+      }
+    case MASTER_CCC_LIST_FAIL:
+      return { loading: false, error: action.payload }
+    case MASTER_CCC_LIST_RESET:
       return { listPhones: [] }
     default:
       return state

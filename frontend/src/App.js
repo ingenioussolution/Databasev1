@@ -28,6 +28,7 @@ import AdminLogin from './components/AdminDashboard/AdminLogin/AdminLogin'
 import AdminHome from './components/AdminDashboard/AdminSettings/AdminHome'
 import UploadCsv from './components/Dashboard/pages/UploadData/UploadData'
 import UpdateUser from './components/AdminDashboard/AdminCRUD/UpdateUser/UpdateUser'
+import DataMasterCCC from './components/Dashboard/pages/DataMasterCCC/DataMasterCCC'
 
 const App = ({ location }) => {
   const classes = StyleApp()
@@ -86,10 +87,15 @@ const App = ({ location }) => {
                 component={DataTablePhones}
               />
               <Route
+                path="/dashboard/data-master-ccc"
+                exact
+                component={DataMasterCCC}
+              />
+              {/*<Route
                 path="/dashboard/list-phones"
                 exact
                 component={CleanList}
-              />
+              />*/}
               <Route path="/dashboard/profile" exact component={ProfileUser} />
               <Route
                 path="/dashboard/bad-area-code"

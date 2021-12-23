@@ -27,6 +27,8 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
     const createdAt_start = req.query.start
     const createdAt_end = req.query.end
     const areaCode = req.query.areaCode
+    let sourceFilter = req.query.source
+    let source = { $regex: `${sourceFilter}`, $options: 'i' }
 
     //console.log('start', createdAt_start)
 
@@ -58,12 +60,20 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       carrierFilter ||
       areaCode ||
       createdAt_start ||
-      createdAt_end
+      createdAt_end ||
+      sourceFilter
     ) {
+      if (sourceFilter) {
+        arrayFilters.push({ source: source })
+      }
       if (clicker) {
         arrayFilters.push({ clicker: clicker })
       }
-      if (hardBounce) {
+      if (hardBounce === 'false') {
+        console.log('hard bounce FALSE', hardBounce)
+        arrayFilters.push({ hardBounce: { $ne: true } })
+      } else if (hardBounce === 'true') {
+        console.log('hard bounce TRUE')
         arrayFilters.push({ hardBounce: hardBounce })
       }
       if (revenue) {
@@ -76,7 +86,11 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
         arrayFilters.push({ converter: converter })
       }
       if (suppressed) {
-        arrayFilters.push({ suppressed: suppressed })
+        if (suppressed === 'false') {
+          arrayFilters.push({ suppressed: { $ne: true } })
+        } else if (suppressed === 'true') {
+          arrayFilters.push({ suppressed: suppressed })
+        }
       }
       if (carrierFilter) {
         arrayFilters.push({ carrier: carrier })
@@ -104,7 +118,7 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       let requestCount = 10000
       let count = await PhoneList.countDocuments({ $and: arrayFilters })
 
-      const skipSize = 10000 
+      const skipSize = 10000
 
       const total = Math.ceil(count / requestCount)
       console.log('total: ', total)
@@ -223,8 +237,7 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
   }
 })
 
-
-export const Export_v2 = asyncHandler(async (req, res, next) => {
+export const Export_Master_CCC_CSV = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
     const hardBounce = req.query.hardBounce
@@ -240,6 +253,8 @@ export const Export_v2 = asyncHandler(async (req, res, next) => {
     const createdAt_start = req.query.start
     const createdAt_end = req.query.end
     const areaCode = req.query.areaCode
+    let sourceFilter = req.query.source
+    let source = { $regex: `${sourceFilter}`, $options: 'i' }
 
     //console.log('start', createdAt_start)
 
@@ -271,12 +286,17 @@ export const Export_v2 = asyncHandler(async (req, res, next) => {
       carrierFilter ||
       areaCode ||
       createdAt_start ||
-      createdAt_end
+      createdAt_end ||
+      sourceFilter
     ) {
       if (clicker) {
         arrayFilters.push({ clicker: clicker })
       }
-      if (hardBounce) {
+      if (hardBounce === 'false') {
+        console.log('hard bounce FALSE', hardBounce)
+        arrayFilters.push({ hardBounce: { $ne: true } })
+      } else if (hardBounce === 'true') {
+        console.log('hard bounce TRUE')
         arrayFilters.push({ hardBounce: hardBounce })
       }
       if (revenue) {
@@ -289,7 +309,11 @@ export const Export_v2 = asyncHandler(async (req, res, next) => {
         arrayFilters.push({ converter: converter })
       }
       if (suppressed) {
-        arrayFilters.push({ suppressed: suppressed })
+        if (suppressed === 'false') {
+          arrayFilters.push({ suppressed: { $ne: true } })
+        } else if (suppressed === 'true') {
+          arrayFilters.push({ suppressed: suppressed })
+        }
       }
       if (carrierFilter) {
         arrayFilters.push({ carrier: carrier })
@@ -312,12 +336,32 @@ export const Export_v2 = asyncHandler(async (req, res, next) => {
           },
         })
       }
+      if (clicker || converter) {
+        if (converter === 'true' && clicker === 'true') {
+          arrayFilters.push({
+            $or: [{ converter: converter }, { clicker: clicker }],
+          })
+        } else if (clicker === 'false') {
+          arrayFilters.push({ clicker: { $ne: true } })
+        } else if (clicker === 'true') {
+          arrayFilters.push({ clicker: clicker })
+        } else if (converter === 'false') {
+          arrayFilters.push({ converter: { $ne: true } })
+        } else if (converter === 'true') {
+          arrayFilters.push({ converter: converter })
+        }
+      }
+
+      if (sourceFilter) {
+        arrayFilters.push({ source: source })
+      }
+
       console.log('arrayFilters', arrayFilters)
 
       let requestCount = 10000
       let count = await PhoneList.countDocuments({ $and: arrayFilters })
 
-      const skipSize = 10000 
+      const skipSize = 10000
 
       const total = Math.ceil(count / requestCount)
       console.log('total: ', total)
@@ -339,14 +383,13 @@ export const Export_v2 = asyncHandler(async (req, res, next) => {
         }
       }
       console.log('Create CSV...', arrayExport.length)
-      
 
       await fastcsv
-        .write(arrayExport, { ignoreEmpty: true,
+        .write(arrayExport, {ignoreEmpty: true,
           headers: [
             'phone',
             'carrier',
-            'firstName',
+            'firstName', 
             'lastName',
             'email',
             'clicker',

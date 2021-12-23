@@ -57,13 +57,12 @@ const LinearStepper = ({ loader, loading, success, count }) => {
   const [uploadingCsv, setUploadingCsv] = useState(false)
   const [openCsv, setOpenCsv] = useState(false)
   const [uploadPercentage, setUploadPercentage] = useState(0)
-  const [progress, setProgress] = React.useState(0)
 
   const importReducer = useSelector((state) => state.importData)
   const {
     loading: loadingImport,
-    success: successImport,
-    error: errorImport,
+    // success: successImport,
+    // error: errorImport,
   } = importReducer
 
   const uploadCsvHandle = async (file) => {
@@ -75,9 +74,9 @@ const LinearStepper = ({ loader, loading, success, count }) => {
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent
 
-        console.log('total', loaded, total, progressEvent)
+       // console.log('total', loaded, total, progressEvent)
         let percent = Math.floor((loaded * 100) / total)
-        console.log(`${loaded}kb of ${total}kb | ${percent}%`)
+       // console.log(`${loaded}kb of ${total}kb | ${percent}%`)
 
         if (percent <= 100) {
           setUploadPercentage(percent)
@@ -101,8 +100,6 @@ const LinearStepper = ({ loader, loading, success, count }) => {
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [uploadPercentage, loading])
-
-  console.log('uploadPercentage: ', uploadPercentage)
 
   const ImportDataCSV = () => {
     // setOpenCsv(true)

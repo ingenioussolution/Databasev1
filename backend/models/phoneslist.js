@@ -160,7 +160,7 @@ const PhoneListSchema = mongoose.Schema(
   }
 )
 
-//PhoneListSchema.plugin(Pagination)
+PhoneListSchema.plugin(Pagination)
 PhoneListSchema.plugin(aggregatePaginate);
 
 const PhoneList = mongoose.model('PhoneList', PhoneListSchema)

@@ -147,7 +147,7 @@ const DataMasterCCC = () => {
           urlExport += '&end='
         }
 
-        // console.log('URL with filters: ', url)
+        console.log('URL with filters: ', url)
         // console.log('Query: ', query)
 
         axios

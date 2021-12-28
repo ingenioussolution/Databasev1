@@ -1,12 +1,9 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-//import { uploadData } from '../../../../actions/uploadCsvActions.js'
 import { listPhoneTemporalData } from '../../../../actions/tempTableActions.js'
 import { useHistory } from 'react-router-dom'
 import Swal from 'sweetalert2'
 import clsx from 'clsx'
-//import { DropzoneDialog } from 'material-ui-dropzone'
-//import { FaUpload } from 'react-icons/fa'
 import HorizontalLoader from '../../../horizontalLoader/HorizontalLoader'
 import LinearStepper from './LinearSteper'
 import {
@@ -41,7 +38,7 @@ const UploadData = () => {
   // const [openCsv, setOpenCsv] = useState(false)
 
   // login status
-  //test 
+
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
 
@@ -49,8 +46,8 @@ const UploadData = () => {
   const { loading, success } = uploadCsvData
 
   const listTemporalData = useSelector((state) => state.listPhoneTemp)
-  const { page, count } = listTemporalData
-  const [pageState, setPageState] = useState(page || 0)
+  const { count } = listTemporalData
+  const page = 0
  
   useEffect(() => {
     document.title = 'Upload New Data | Ingenious Solution Group'
@@ -64,40 +61,8 @@ const UploadData = () => {
   }, [history, userInfo])
 
   useEffect(() => {
-    dispatch(listPhoneTemporalData(pageState))
+    dispatch(listPhoneTemporalData(page))
   }, [dispatch, userInfo])
-
-  // const PaginationTemp = () => {
-  //   return (
-  //     <TablePagination
-  //       //rowsPerPageOptions={[10]}
-  //       rowsPerPage={10}
-  //       component="div"
-  //       count={pages || 0}
-  //       page={pageState}
-  //       onPageChange={handleChangePage}
-  //     />
-  //   )
-  // }
-
-  // const handleChangePage = (event, newPage) => {
-  //   console.log('newPage', newPage)
-  //   setPageState(newPage)
-  // }
-
-  //   const uploadCsvHandle = async (file) => {
-  //     let formData = new FormData()
-  //     formData.append('file', file)
-  //     setUploadingCsv(true)
-
-  //     try {
-  //       dispatch(uploadData(formData))
-  //       setUploadingCsv(false)
-  //     } catch (error) {
-  //       console.error(error)
-  //       setUploadingCsv(false)
-  //     }
-  //   }
 
   return (
     <div>
@@ -135,7 +100,7 @@ const UploadData = () => {
                 <Grid item xs={12} sm={3} md={2}>
                   <Button variant="outlined" 
                   className={commons.secondaryBtn}
-                  onClick={()=>dispatch(listPhoneTemporalData(pageState))}>
+                  onClick={()=>dispatch(listPhoneTemporalData(page))}>
                     Refresh Data
                   </Button>
                 </Grid>
@@ -143,40 +108,7 @@ const UploadData = () => {
                 <h6>Total Temporal Table: {count === undefined ? 0 : count}</h6>
                 </Grid>
 
-                {/*<Grid item xs={12} sm={3} md={2}>
-                  {!loading ? (
-                    <Button
-                      variant="outlined"
-                      className={commons.secondaryBtn}
-                      endIcon={<FaUpload />}
-                      onClick={() => setOpenCsv(true)}
-                      style={{ width: '100%' }}
-                    >
-                      upload file
-                    </Button>
-                  ) : (
-                    <Loader />
-                  )}
-                </Grid>
-                <Grid item xs={12} sm={3} md={2}>
-                  <DropzoneDialog
-                    acceptedFiles={['.csv']}
-                    cancelButtonText={'cancel'}
-                    submitButtonText={'submit'}
-                    maxFileSize={50000000}
-                    filesLimit={1}
-                    open={openCsv}
-                    onClose={() => setOpenCsv(false)}
-                    onSave={(files) => {
-                      uploadCsvHandle(files[0])
-                      setOpenCsv(false)
-                    }}
-                    showPreviews={true}
-                    showFileNamesInPreview={true}
-                    clearOnUnmount={true}
-                  />
-                  {uploadingCsv && <Loader />}
-                </Grid>*/}
+                
               </Grid>
             </Grid>
           </Toolbar>

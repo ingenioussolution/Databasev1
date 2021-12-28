@@ -59,6 +59,10 @@ import {
   CountSprintReducer,
   CountTMobileReducer,
   CountUsCellularReducer,
+  MasterCCCVerizonReducer,
+  MasterCCCAttReducer,
+  MasterCCCSprintReducer,
+  MasterCCC_T_MobileReducer
 } from '../reducers/homeFilterReducers'
 
 const reducer = combineReducers({
@@ -122,6 +126,10 @@ const reducer = combineReducers({
   CountSprint: CountSprintReducer,
   CountTMobile: CountTMobileReducer,
   CountUsCellular: CountUsCellularReducer,
+  MasterCCCVerizon: MasterCCCVerizonReducer,
+  MasterCCCAtt: MasterCCCAttReducer,
+  MasterCCCSprint: MasterCCCSprintReducer,
+  MasterCCC_T_Mobile: MasterCCC_T_MobileReducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

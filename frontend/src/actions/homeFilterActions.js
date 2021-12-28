@@ -33,28 +33,35 @@ import {
   US_CELLULAR_REQUEST,
   US_CELLULAR_SUCCESS,
   US_CELLULAR_FAIL,
+  MASTER_VERIZON_REQUEST,
+  MASTER_VERIZON_SUCCESS,
+  MASTER_VERIZON_FAIL,
+  MASTER_ATT_REQUEST,
+  MASTER_ATT_SUCCESS,
+  MASTER_ATT_FAIL,
+  MASTER_SPRINT_REQUEST,
+  MASTER_SPRINT_SUCCESS,
+  MASTER_SPRINT_FAIL,
+  MASTER_T_MOBILE_REQUEST,
+  MASTER_T_MOBILE_SUCCESS,
+  MASTER_T_MOBILE_FAIL,
 } from '../constants/homeFilterConstants'
 
-export const getCountClicker = () => async (dispatch, getState) => {
+export const getCountClicker = () => async (dispatch) => {
   try {
     dispatch({
       type: CLICKER_REQUEST,
     })
 
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
-
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
 
     const { data } = await axios.get('/filters/clicker', config)
 
-    console.log("data clicker", data);
+    console.log('data clicker', data)
 
     dispatch({
       type: CLICKER_SUCCESS,
@@ -71,18 +78,15 @@ export const getCountClicker = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountConverter = () => async (dispatch, getState) => {
+export const getCountConverter = () => async (dispatch) => {
   try {
     dispatch({
       type: CONVERTER_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/converter', config)
@@ -101,18 +105,15 @@ export const getCountConverter = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountCCC = () => async (dispatch, getState) => {
+export const getCountCCC = () => async (dispatch) => {
   try {
     dispatch({
       type: CCC_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/ccc', config)
@@ -131,18 +132,15 @@ export const getCountCCC = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountBadState = () => async (dispatch, getState) => {
+export const getCountBadState = () => async (dispatch) => {
   try {
     dispatch({
       type: BAD_STATE_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/bad-states-code', config)
@@ -161,18 +159,15 @@ export const getCountBadState = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountHardBounce = () => async (dispatch, getState) => {
+export const getCountHardBounce = () => async (dispatch) => {
   try {
     dispatch({
       type: HARD_BOUNCE_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/hard-bounce', config)
@@ -191,18 +186,15 @@ export const getCountHardBounce = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountSuppressed = () => async (dispatch, getState) => {
+export const getCountSuppressed = () => async (dispatch) => {
   try {
     dispatch({
       type: SUPPRESSED_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/suppressed', config)
@@ -221,18 +213,15 @@ export const getCountSuppressed = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountVerizon = () => async (dispatch, getState) => {
+export const getCountVerizon = () => async (dispatch) => {
   try {
     dispatch({
       type: VERIZON_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/verizon', config)
@@ -251,18 +240,15 @@ export const getCountVerizon = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountAtt = () => async (dispatch, getState) => {
+export const getCountAtt = () => async (dispatch) => {
   try {
     dispatch({
       type: ATT_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/att', config)
@@ -281,18 +267,15 @@ export const getCountAtt = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountSprint = () => async (dispatch, getState) => {
+export const getCountSprint = () => async (dispatch) => {
   try {
     dispatch({
       type: SPRINT_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/sprint', config)
@@ -311,18 +294,15 @@ export const getCountSprint = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountTMobile = () => async (dispatch, getState) => {
+export const getCountTMobile = () => async (dispatch) => {
   try {
     dispatch({
       type: T_MOBILE_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/t-mobile', config)
@@ -341,18 +321,15 @@ export const getCountTMobile = () => async (dispatch, getState) => {
   }
 }
 
-export const getCountUsCellular = () => async (dispatch, getState) => {
+export const getCountUsCellular = () => async (dispatch) => {
   try {
     dispatch({
       type: US_CELLULAR_REQUEST,
     })
-    //   const {
-    //     userLogin: { userInfo },
-    //   } = getState()
+
     const config = {
       headers: {
         'Content-Type': 'application/json',
-        // Authorization: `Bearer ${userInfo.token}`,
       },
     }
     const { data } = await axios.get('/filters/us-cellular', config)
@@ -363,6 +340,118 @@ export const getCountUsCellular = () => async (dispatch, getState) => {
   } catch (error) {
     dispatch({
       type: US_CELLULAR_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+// Master CCC by Carrier
+
+export const getMasterVerizon = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: MASTER_VERIZON_REQUEST,
+    })
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const { data } = await axios.get('/filters/master-verizon', config)
+    dispatch({
+      type: MASTER_VERIZON_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: MASTER_VERIZON_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+
+export const getMasterAtt = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: MASTER_ATT_REQUEST,
+    })
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const { data } = await axios.get('/filters/master-att', config)
+    dispatch({
+      type: MASTER_ATT_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: MASTER_ATT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+
+export const getMasterSprint = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: MASTER_SPRINT_REQUEST,
+    })
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const { data } = await axios.get('/filters/master-sprint', config)
+    dispatch({
+      type: MASTER_SPRINT_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: MASTER_SPRINT_FAIL,
+      payload:
+        error.response && error.response.data.message
+          ? error.response.data.message
+          : error.message,
+    })
+  }
+}
+
+export const getMasterTMobile = () => async (dispatch) => {
+  try {
+    dispatch({
+      type: MASTER_T_MOBILE_REQUEST,
+    })
+
+    const config = {
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    }
+    const { data } = await axios.get('/filters/master-t-mobile', config)
+    dispatch({
+      type: MASTER_T_MOBILE_SUCCESS,
+      payload: data,
+    })
+  } catch (error) {
+    dispatch({
+      type: MASTER_T_MOBILE_FAIL,
       payload:
         error.response && error.response.data.message
           ? error.response.data.message

@@ -26,8 +26,6 @@ import {
   //FormControl,
 } from '@material-ui/core'
 import { FaSearch } from 'react-icons/fa'
-//import Loader from '../../../Loader/Loader'
-//import Message from '../../../message/Message'
 
 import dataStyle from '../../../DataTable/styles'
 import useStyles from './styles'
@@ -48,7 +46,7 @@ const CleanList = () => {
 
   console.log('page current', page)
 
-  const [rowsPerPage, setRowsPerPage] = useState(10 || 5)
+  //const [rowsPerPage, setRowsPerPage] = useState(10 || 5)
 
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState(listPhones ? listPhones : '')
@@ -167,7 +165,7 @@ const CleanList = () => {
             startAdornment: (
               <InputAdornment position="start">
                 <FaSearch />
-              </InputAdornment>
+              </InputAdornment> 
             ),
           }}
         />
@@ -269,7 +267,7 @@ const CleanList = () => {
           rowsPerPageOptions={[5, 10]}
           component="div"
           count={pages || 0}
-          rowsPerPage={rowsPerPage}
+          rowsPerPage={10}
           page={pageState}
           onPageChange={handleChangePage}
         />

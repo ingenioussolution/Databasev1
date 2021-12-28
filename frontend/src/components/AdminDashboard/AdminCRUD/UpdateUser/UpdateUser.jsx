@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { useHistory, useLocation } from 'react-router-dom'
+import { useHistory } from 'react-router-dom'
 import { useDispatch, useSelector } from 'react-redux'
 import {
   updateUser,
@@ -33,7 +33,6 @@ const UpdateUserAdmin = ({ match, width }) => {
   const commons = layoutStyles()
   const classes = useStyles()
   const history = useHistory()
-  const location = useLocation()
   const dispatch = useDispatch()
   const { id } = match.params ? match.params : { id: -1 }
   const isNew = !(id && id !== -1)
@@ -45,7 +44,7 @@ const UpdateUserAdmin = ({ match, width }) => {
     error: errorRegister,
     loading: registering,
     success,
-    adminUserInfo,
+    //adminUserInfo,
   } = userRegister
 
   const updateUsers = useSelector((state) => state.userUpdate)
@@ -79,7 +78,7 @@ const UpdateUserAdmin = ({ match, width }) => {
       setUserData(userDataInitialState)
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [dispatch, location])
+  }, [dispatch,isNew])
 
   const validationSchema = {
     email: {
@@ -171,6 +170,7 @@ const UpdateUserAdmin = ({ match, width }) => {
       })
       setTimeout(() => {}, 500)
     }
+     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     user,
     userUpdated,

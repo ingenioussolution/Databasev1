@@ -273,3 +273,134 @@ export const countUsCellular = asyncHandler(async (req, res) => {
     res.status(400).json({ msg: err })
   }
 })
+
+// Master CCC Verizon 
+
+export const master_CCC_Verizon = asyncHandler(async(req,res) =>{
+  try {
+    let arrayBadArea = []
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    areaBadCode.map((obj) => {
+      arrayBadArea.push(new RegExp('^' + obj.areaCode))
+    })
+
+    const masterCCCVerizon = await PhoneList.find({
+      $and: [
+        { carrier: { $regex: 'Verizon', $options: 'i' } },
+        { hardBounce: { $ne: true } },
+        { suppressed: { $ne: true } },
+        {
+          phone: {
+            $nin: arrayBadArea,
+          },
+        },
+        { $or: [{ converter: true }, { clicker: true }]}
+      ],
+    })
+
+    if (!masterCCCVerizon) throw Error('Not exist Master CCC Verizon')
+    res.status(200).json(masterCCCVerizon)
+  } catch (error) {
+    res.status(400).json({ msg: err })
+  }
+})
+
+
+// Master CCC At&t 
+
+export const master_CCC_Att = asyncHandler(async(req,res) =>{
+  try {
+    let arrayBadArea = []
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    areaBadCode.map((obj) => {
+      arrayBadArea.push(new RegExp('^' + obj.areaCode))
+    })
+
+    const masterCCCAtt = await PhoneList.find({
+      $and: [
+        { carrier: { $regex: 'At&t', $options: 'i' } },
+        { hardBounce: { $ne: true } },
+        { suppressed: { $ne: true } },
+        {
+          phone: {
+            $nin: arrayBadArea,
+          },
+        },
+        { $or: [{ converter: true }, { clicker: true }]}
+      ],
+    })
+
+    console.log("masterCCCAtt",masterCCCAtt.length);
+
+    if (!masterCCCAtt) throw Error('Not exist Master CCC At&t')
+    res.status(200).json(masterCCCAtt)
+  } catch (error) {
+    res.status(400).json({ msg: err })
+  }
+})
+
+// Master CCC Sprint
+
+export const master_CCC_Sprint = asyncHandler(async(res) =>{
+  try {
+    let arrayBadArea = []
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    areaBadCode.map((obj) => {
+      arrayBadArea.push(new RegExp('^' + obj.areaCode))
+    })
+
+    const masterCCCSprint = await PhoneList.find({
+      $and: [
+        { carrier: { $regex: 'Sprint', $options: 'i' } },
+        { hardBounce: { $ne: true } },
+        { suppressed: { $ne: true } },
+        {
+          phone: {
+            $nin: arrayBadArea,
+          },
+        },
+        { $or: [{ converter: true }, { clicker: true }]}
+      ],
+    })
+
+    if (!masterCCCSprint) throw Error('Not exist Master CCC Sprint')
+    res.status(200).json(masterCCCSprint)
+  } catch (error) {
+    res.status(400).json({ msg: err })
+  }
+})
+
+// Master CCC T-Mobile
+
+export const master_CCC_TMobile = asyncHandler(async(res) => {
+  try {
+    let arrayBadArea = []
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    areaBadCode.map((obj) => {
+      arrayBadArea.push(new RegExp('^' + obj.areaCode))
+    })
+
+    const masterTMobile = await PhoneList.find({
+      $and: [
+        { carrier: { $regex: 't-mobile', $options: 'i' } },
+        { hardBounce: { $ne: true } },
+        { suppressed: { $ne: true } },
+        {
+          phone: {
+            $nin: arrayBadArea,
+          },
+        },
+        { $or: [{ converter: true }, { clicker: true }]}  
+      ],
+    })
+
+    if (!masterTMobile) throw Error('Not exist Master CCC T-Mobile')
+    res.status(200).json(masterTMobile)
+  } catch (error) {
+    res.status(400).json({ msg: err })
+  }
+})
+
+
+
+

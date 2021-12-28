@@ -43,6 +43,22 @@ import {
   US_CELLULAR_SUCCESS,
   US_CELLULAR_FAIL,
   US_CELLULAR_RESET,
+  MASTER_VERIZON_REQUEST,
+  MASTER_VERIZON_SUCCESS,
+  MASTER_VERIZON_FAIL,
+  MASTER_VERIZON_RESET,
+  MASTER_ATT_REQUEST,
+  MASTER_ATT_SUCCESS,
+  MASTER_ATT_FAIL,
+  MASTER_ATT_RESET,
+  MASTER_SPRINT_REQUEST,
+  MASTER_SPRINT_SUCCESS,
+  MASTER_SPRINT_FAIL,
+  MASTER_SPRINT_RESET,
+  MASTER_T_MOBILE_REQUEST,
+  MASTER_T_MOBILE_SUCCESS,
+  MASTER_T_MOBILE_FAIL,
+  MASTER_T_MOBILE_RESET,
 } from '../constants/homeFilterConstants'
 
 export const CountClickerReducer = (state = {}, action) => {
@@ -224,6 +240,70 @@ export const CountUsCellularReducer = (state = {}, action) => {
     case US_CELLULAR_FAIL:
       return { loading: false, error: action.payload }
     case US_CELLULAR_RESET:
+      return {}
+    default:
+      return state
+  }
+}
+
+// Master CCC 
+
+export const MasterCCCVerizonReducer = (state = {}, action) => {
+  switch (action.type) {
+    case MASTER_VERIZON_REQUEST:
+      return { loading: true }
+    case MASTER_VERIZON_SUCCESS:
+      return { loading: false, success: true, masterVerizon: action.payload }
+    case MASTER_VERIZON_FAIL:
+      return { loading: false, error: action.payload }
+    case MASTER_VERIZON_RESET:
+      return {}
+    default:
+      return state
+  }
+}
+
+
+export const MasterCCCAttReducer = (state = {}, action) => {
+  switch (action.type) {
+    case MASTER_ATT_REQUEST:
+      return { loading: true }
+    case MASTER_ATT_SUCCESS:
+      return { loading: false, success: true, masterAtt: action.payload } 
+    case MASTER_ATT_FAIL:
+      return { loading: false, error: action.payload }
+    case MASTER_ATT_RESET:
+      return {}
+    default:
+      return state
+  }
+}
+
+
+export const MasterCCCSprintReducer = (state = {}, action) => {
+  switch (action.type) {
+    case MASTER_SPRINT_REQUEST:
+      return { loading: true }
+    case MASTER_SPRINT_SUCCESS:
+      return { loading: false, success: true, masterSprint: action.payload } 
+    case MASTER_SPRINT_FAIL:
+      return { loading: false, error: action.payload }
+    case MASTER_SPRINT_RESET:
+      return {}
+    default:
+      return state
+  }
+}
+
+export const MasterCCC_T_MobileReducer = (state = {}, action) => {
+  switch (action.type) {
+    case MASTER_T_MOBILE_REQUEST:
+      return { loading: true }
+    case MASTER_T_MOBILE_SUCCESS:
+      return { loading: false, success: true, masterTMobile: action.payload } 
+    case MASTER_T_MOBILE_FAIL:
+      return { loading: false, error: action.payload }
+    case MASTER_T_MOBILE_RESET:
       return {}
     default:
       return state

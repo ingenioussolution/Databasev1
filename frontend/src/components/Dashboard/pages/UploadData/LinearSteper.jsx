@@ -2,7 +2,6 @@ import React, { useState, useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { uploadData } from '../../../../actions/uploadCsvActions.js'
 import { ImportData } from '../../../../actions/phoneListCleanActions'
-import PropTypes from 'prop-types'
 import {
   //Typography,
   //TextField,
@@ -162,7 +161,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                 acceptedFiles={['.csv']}
                 cancelButtonText={'cancel'}
                 submitButtonText={'submit'}
-                maxFileSize={5000000000}
+                maxFileSize={5000000}
                 filesLimit={1}
                 open={openCsv}
                 onClose={() => setOpenCsv(false)}
@@ -285,13 +284,6 @@ const LinearStepper = ({ loader, loading, success, count }) => {
   const [skippedSteps, setSkippedSteps] = useState([])
   const steps = getSteps()
 
-  const isStepOptional = (step) => {
-    return step === 1 || step === 2
-  }
-
-  const isStepSkipped = (step) => {
-    return skippedSteps.includes(step)
-  }
 
   const handleNext = () => {
     setActiveStep(activeStep + 1)
@@ -302,12 +294,6 @@ const LinearStepper = ({ loader, loading, success, count }) => {
     setActiveStep(activeStep - 1)
   }
 
-  const handleSkip = () => {
-    if (!isStepSkipped(activeStep)) {
-      setSkippedSteps([...skippedSteps, activeStep])
-    }
-    setActiveStep(activeStep + 1)
-  }
 
   return (
     <div>

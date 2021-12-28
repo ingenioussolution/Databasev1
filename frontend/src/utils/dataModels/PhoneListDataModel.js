@@ -436,6 +436,7 @@ export const defaultColumns = [
   hardBounce,
   revenue,
   suppressed,
+  createdAt,
   updatedAt,
   email,
   monthlyIncome,

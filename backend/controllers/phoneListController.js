@@ -113,51 +113,38 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
 
       console.log('Array:', ...arrayFilters)
       if (arrayFilters) {
-        const count = await PhoneList.countDocuments({
-          $and: arrayFilters,
-        })
+        console.time()
+        const count = await PhoneList.find({ $and: arrayFilters }, { phone: 1 })
+          .limit(500000)
+          .count()
+          .lean()
+
+        console.timeEnd()
         const data = await PhoneList.find({
           $and: arrayFilters,
         })
           .limit(pageSize)
           .skip(pageSize * (page - 1))
+          .lean()
 
         res.status(200).json({
           data,
-          clicker,
-          phone,
-          revenue,
-          suppressed,
-          converter,
-          hardBounce,
-          search,
           page,
           totalPages: Math.ceil(count / pageSize),
         })
       }
     }
     //------------------------------------
-    else if (regex) {
-      console.log('search', regex)
-      const count = await PhoneList.countDocuments({ carrier: search })
-      const data = await PhoneList.find({ carrier: search })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      res.status(200).json({
-        data,
-        search,
-        hardBounce,
-        page,
-        totalPages: Math.ceil(count / pageSize),
-      })
-    } else {
+    else {
       console.log('no filters')
-      const count = await PhoneList.countDocuments({})
+
+      const count = await PhoneList.countDocuments({}).lean()
+      //const count = await PhoneList.find({}).count()
       const data = await PhoneList.find({})
         .limit(pageSize)
         .skip(pageSize * (page - 1))
-
+        .lean()
+      console.log('data', data.length)
       res.status(200).json({
         data,
         search,
@@ -191,6 +178,12 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
 
     const createdAt_start = req.query.start
     const createdAt_end = req.query.end
+
+    const updateAt_start = req.query.start
+    const updateAt_end = req.query.end
+
+    console.log(updateAt_start, updateAt_end)
+
     const areaCode = req.query.areaCode
     let arrayFilters = []
 
@@ -216,13 +209,15 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
       areaCode ||
       createdAt_start ||
       createdAt_end ||
+      updateAt_start ||
+      updateAt_end ||
       sourceFilter
     ) {
       if (hardBounce === 'false') {
-        console.log('hard bounce FALSE', hardBounce)
+        //console.log('hard bounce FALSE', hardBounce)
         arrayFilters.push({ hardBounce: { $ne: true } })
       } else if (hardBounce === 'true') {
-        console.log('hard bounce TRUE')
+        // console.log('hard bounce TRUE')
         arrayFilters.push({ hardBounce: hardBounce })
       }
 
@@ -265,10 +260,20 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
 
       if (createdAt_start || createdAt_end) {
         arrayFilters.push({
-          createdAt: {
-            $gte: new Date(createdAt_start),
-            $lt: new Date(createdAt_end),
-          },
+          $or: [
+            {
+              createdAt: {
+                $gte: new Date(createdAt_start),
+                $lt: new Date(createdAt_end),
+              },
+            },
+            {
+              updatedAt: {
+                $gte: new Date(createdAt_start),
+                $lt: new Date(createdAt_end),
+              },
+            },
+          ],
         })
       }
       if (areaCode) {
@@ -279,16 +284,21 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
         })
       }
 
-      console.log('Array:', ...arrayFilters)
+      // console.log('Array:', ...arrayFilters)
       if (arrayFilters) {
-        const count = await PhoneList.countDocuments({
-          $and: arrayFilters,
-        })
+        console.time()
+        const count = await PhoneList.find({ $and: arrayFilters }, { phone: 1 })
+          .limit(500000)
+          .count()
+          .lean()
+        console.timeEnd()
+
         const data = await PhoneList.find({
           $and: arrayFilters,
         })
           .limit(pageSize)
           .skip(pageSize * (page - 1))
+          .lean()
 
         res.status(200).json({
           data,
@@ -304,26 +314,13 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
       }
     }
     //------------------------------------
-    else if (regex) {
-      console.log('search', regex)
-      const count = await PhoneList.countDocuments({ carrier: search })
-      const data = await PhoneList.find({ carrier: search })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      res.status(200).json({
-        data,
-        search,
-        hardBounce,
-        page,
-        totalPages: Math.ceil(count / pageSize),
-      })
-    } else {
+    else {
       console.log('no filters')
-      const count = await PhoneList.countDocuments({})
+      const count = await PhoneList.find({}, { phone: 1 }).count().lean()
       const data = await PhoneList.find({})
         .limit(pageSize)
         .skip(pageSize * (page - 1))
+        .lean()
 
       res.status(200).json({
         data,
@@ -341,47 +338,26 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
 // Controller test GET SHOW ALL DATA
 export const getPhoneListFrontEnd1 = asyncHandler(async (req, res, next) => {
   try {
-    // FILTERS QUERY
-    let regex = req.query.q
-    let search = { $regex: regex, $options: 'i' }
+    const page = parseInt(req.query.page) || 1
+    const limit = parseInt(req.query.limit) || 10
+    const listPhones = await PhoneList.paginate({}, { page, limit }).lean()
 
-    const pageSize = 10
-    const page = parseInt(req.query.pageNumber) || 1
-
-    if (regex) {
-      const count = await PhoneList.countDocuments({ carrier: search })
-      const data = await PhoneList.find({ carrier: search })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      res.status(200).json({
-        data,
-        search,
-        page,
-        totalPages: Math.ceil(count / pageSize),
-      })
-    }
+    if (!listPhones) throw Error('Not items')
+    res.status(200).json({
+      data: listPhones.docs,
+      limit: listPhones.limit,
+      page: listPhones.page,
+      totalDocs: listPhones.totalDocs,
+      nextPage: listPhones.nextPage,
+      prevPage: listPhones.prevPage,
+      hasNextPage: listPhones.hasNextPage,
+      hasPrevPage: listPhones.hasPrevPage,
+      totalPages: listPhones.totalPages,
+      pagingCounter: listPhones.pagingCounter,
+    })
   } catch (error) {
     next(error)
   }
-  // const page = parseInt(req.query.page) || 1
-  // const limit = parseInt(req.query.limit) || 10
-  // const totalPages = parseInt(req.query.totalPages)
-  // const listPhones = await PhoneList.paginate({}, { page, limit, totalPages })
-
-  // if (!listPhones) throw Error('Not items')
-  // res.status(200).json({
-  //   data: listPhones.docs,
-  //   limit: listPhones.limit,
-  //   page: listPhones.page,
-  //   nextPage: listPhones.nextPage,
-  //   prevPage: listPhones.prevPage,
-  //   hasNextPage: listPhones.hasNextPage,
-  //   hasPrevPage: listPhones.hasPrevPage,
-  //   totalPages: listPhones.totalPages,
-  //   pagingCounter: listPhones.pagingCounter,
-  //   offset: listPhones.offset,
-  //})
 })
 
 // @route Get Master CCC

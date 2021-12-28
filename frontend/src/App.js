@@ -18,7 +18,7 @@ import Navigation from './components/Dashboard/NavigationLayout/NavigationLayout
 import DashboardHome from './components/Dashboard/pages/DashboardHome/DashboardHome'
 import DataTablePhones from './components/Dashboard/pages/DataTablePhones/DataTablePhones'
 import Login from './components/Dashboard/pages/Login/Login'
-import CleanList from './components/Dashboard/pages/CleanList/CleanList'
+//import CleanList from './components/Dashboard/pages/CleanList/CleanList'
 import ResetPassword from './components/Dashboard/pages/Reset-Password/ResetPassword'
 import ProfileUser from './components/Dashboard/pages/ProfileUser/ProfileUser'
 import BadAreaCode from './components/Dashboard/pages/BadAreaCode/BadAreaCode'

@@ -47,13 +47,14 @@ const DataTablePhones = () => {
   const [dataTable, setDataTable] = useState([])
   const [exportCSV, setExportCSV] = useState(false)
   const [queryExport, setQueryExport] = useState('')
+  const [filter, setFilter] = useState('')
   const [areaCode, setAreaCode] = useState(false)
 
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
 
   const listExportData = useSelector((state) => state.listExportData)
-  const { loading, success, exporting } = listExportData
+  const { loading, error: exportError, success, exporting } = listExportData
 
   const [arrayExport, setArrayExport] = useState(false)
   const [download, setDownload] = useState(true)
@@ -96,6 +97,8 @@ const DataTablePhones = () => {
 
         let url = '/phoneslist?'
         let urlExport = 'export-csv?'
+        let urlCount = 'count-filter?'
+
         url += '&pageNumber=' + (query.page + 1)
 
         //searching area Code
@@ -163,15 +166,20 @@ const DataTablePhones = () => {
             })
           })
           .then((result) => {
-            resolve({
-              data: createRows(result.data.data),
-              page: result.data.page - 1,
-              totalCount: result.data.totalPages,
-            })
+            if (result.data !== undefined) {
+              resolve({
+                data: createRows(result.data.data),
+                page: result.data.page - 1,
+                totalCount: result.data.totalPages,
+              })
+            } else {
+              ;<Loader />
+            }
             setDataTable(result)
             //console.log('urlExport', urlExport)
             setQueryExport(urlExport)
             setTotalPages(result.data.totalPages)
+            setFilter(urlCount)
           })
 
         dispatch({
@@ -181,7 +189,12 @@ const DataTablePhones = () => {
       }
     })
 
-  // verify onclick Export Button
+
+  useEffect(() => {
+    console.log("filter count", filter);
+  }, [filter])
+    
+  //verify onclick Export Button
   useEffect(() => {
     if (exportCSV) {
       setArrayExport(true)
@@ -207,7 +220,6 @@ const DataTablePhones = () => {
   const ExportData = (queryExport) => {
     dispatch(exportData(queryExport))
   }
-
   // Update state exportCSV false
   useEffect(() => {
     if (exportCSV && success) {

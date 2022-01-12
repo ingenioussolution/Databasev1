@@ -44,7 +44,7 @@ import {
   deleteBadAreaReducer,
 } from '../reducers/badAreaReducers'
 
-import {listExportDataReducer, MasterCCC_DataReducer} from '../reducers/exportDataReducers'
+import {listExportDataReducer, ExportMaster_CCC_Reducer, Export_Csv_Reducer} from '../reducers/exportDataReducers'
 import {uploadCsvDataReducer} from '../reducers/uploadCsvReducers'
 
 import {
@@ -106,7 +106,8 @@ const reducer = combineReducers({
 
   // Export data
   listExportData: listExportDataReducer,
-  MasterCCC_Data: MasterCCC_DataReducer,
+  ExportMaster_CCC: ExportMaster_CCC_Reducer,
+  Export_Csv: Export_Csv_Reducer,
 
   // Upload data
   uploadCsvData: uploadCsvDataReducer,

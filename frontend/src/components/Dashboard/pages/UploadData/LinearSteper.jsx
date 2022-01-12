@@ -11,7 +11,7 @@ import {
   StepLabel,
   Grid,
   LinearProgress,
- // Box,
+  // Box,
 } from '@material-ui/core'
 import { DropzoneDialog } from 'material-ui-dropzone'
 import {
@@ -73,9 +73,9 @@ const LinearStepper = ({ loader, loading, success, count }) => {
       onUploadProgress: (progressEvent) => {
         const { loaded, total } = progressEvent
 
-       // console.log('total', loaded, total, progressEvent)
+        // console.log('total', loaded, total, progressEvent)
         let percent = Math.floor((loaded * 100) / total)
-       // console.log(`${loaded}kb of ${total}kb | ${percent}%`)
+        // console.log(`${loaded}kb of ${total}kb | ${percent}%`)
 
         if (percent <= 100) {
           setUploadPercentage(percent)
@@ -102,7 +102,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
 
   const ImportDataCSV = () => {
     // setOpenCsv(true)
-    if(count){
+    if (count) {
       Swal.fire({
         title: 'You want Import Data',
         text: 'Please Continue',
@@ -110,27 +110,26 @@ const LinearStepper = ({ loader, loading, success, count }) => {
         showCancelButton: true,
         confirmButtonColor: '#3085d6',
         cancelButtonColor: '#d33',
-        confirmButtonText: 'Yes!', 
+        confirmButtonText: 'Yes!',
       }).then((result) => {
-        if (result.isConfirmed) { 
-          dispatch(ImportData()) 
+        if (result.isConfirmed) {
+          dispatch(ImportData())
         }
       })
-    }else{
+    } else {
       Swal.fire({
         icon: 'error',
         title: 'Oops... There is no Data to Import',
         text: 'Please, Go back and Upload Data to continue',
       })
     }
-    
   }
 
-  const getSteps = () => { 
-    return ['Upload CSV', 'Import Data', 'Info Import'] 
+  const getSteps = () => {
+    return ['Upload CSV', 'Import Data', 'Info Import']
   }
 
-  const getStepContent = (step) => { 
+  const getStepContent = (step) => {
     switch (step) {
       case 0:
         return (
@@ -143,7 +142,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                   endIcon={<FaUpload />}
                   onClick={() => setOpenCsv(true)}
                   style={{ width: '100%' }}
-                  disabled = {count ? true : false}
+                  disabled={count ? true : false}
                 >
                   upload file
                 </Button>
@@ -232,10 +231,8 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                 sm={12}
                 justifyContent="space-around"
                 className={classes.h3}
-                
               >
                 <h3>Report In Progress no complete yet</h3>
-                
               </Grid>
 
               {/* 
@@ -284,7 +281,6 @@ const LinearStepper = ({ loader, loading, success, count }) => {
   const [skippedSteps, setSkippedSteps] = useState([])
   const steps = getSteps()
 
-
   const handleNext = () => {
     setActiveStep(activeStep + 1)
     setSkippedSteps(skippedSteps.filter((skipItem) => skipItem !== activeStep))
@@ -293,7 +289,6 @@ const LinearStepper = ({ loader, loading, success, count }) => {
   const handleBack = () => {
     setActiveStep(activeStep - 1)
   }
-
 
   return (
     <div>
@@ -312,7 +307,6 @@ const LinearStepper = ({ loader, loading, success, count }) => {
 
       {activeStep === steps.length ? (
         setActiveStep(0)
-     
       ) : (
         <>
           <Grid

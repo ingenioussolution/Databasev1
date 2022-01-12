@@ -6,4 +6,5 @@ const router = express.Router()
 router.get('/', getPartner)
 router.post('/', registerPartner)
 
+
 export default router

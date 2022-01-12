@@ -7,7 +7,8 @@ import asyncHandler from 'express-async-handler'
 
 export const countClicker = asyncHandler(async (req, res) => {
   try {
-    const countClicker = await PhoneList.countDocuments({ clicker: true })
+    const countClicker = await PhoneList.find({ clicker: true }).lean().count()
+    //const countClicker = await PhoneList.countDocuments({ clicker: true })
     if (!countClicker) throw Error('Not clickers')
     res.status(200).json(countClicker)
   } catch (err) {
@@ -19,7 +20,9 @@ export const countClicker = asyncHandler(async (req, res) => {
 //@des GET/ filters/converter
 export const countConverter = asyncHandler(async (req, res) => {
   try {
-    const countConverter = await PhoneList.countDocuments({ converter: true })
+    const countConverter = await PhoneList.find({ converter: true }).lean().count()
+    //    const countConverter = await PhoneList.countDocuments({ converter: true })
+
     if (!countConverter) throw Error('Not converter')
     res.status(200).json(countConverter)
   } catch (err) {
@@ -32,12 +35,12 @@ export const countConverter = asyncHandler(async (req, res) => {
 export const countCCC = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
 
-    const countCCC = await PhoneList.countDocuments({
+    const countCCC = await PhoneList.find({
       $and: [
         { hardBounce: { $ne: true } },
         { suppressed: { $ne: true } },
@@ -45,7 +48,7 @@ export const countCCC = asyncHandler(async (req, res) => {
             $nin: arrayBadArea,
           },}
       ],
-    })
+    }).lean().count()
     if (!countCCC) throw Error('Not converter clicker combined')
     res.status(200).json(countCCC)
   } catch (err) {
@@ -58,16 +61,16 @@ export const countCCC = asyncHandler(async (req, res) => {
 export const countBadStates = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
 
-    const countBadArea = await PhoneList.countDocuments({
+    const countBadArea = await PhoneList.find({
       phone: {
         $in: arrayBadArea,
       },
-    })
+    }).lean().count()
     if (!countBadArea) throw Error('Not Bad Area Code')
     res.status(200).json(countBadArea)
   } catch (err) {
@@ -81,11 +84,11 @@ export const countBadStates = asyncHandler(async (req, res) => {
 export const countHardBounce = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    const countHardBounce = await PhoneList.countDocuments({
+    const countHardBounce = await PhoneList.find({
       $and: [
         { hardBounce: true },
         {
@@ -94,7 +97,7 @@ export const countHardBounce = asyncHandler(async (req, res) => {
           },
         },
       ],
-    })
+    }).lean().count()
     if (!countHardBounce) throw Error('Not Hard Bounces')
     res.status(200).json(countHardBounce)
   } catch (err) {
@@ -108,11 +111,11 @@ export const countHardBounce = asyncHandler(async (req, res) => {
 export const countSupressed = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    const countSupressed = await PhoneList.countDocuments({
+    const countSupressed = await PhoneList.find({
       $and: [
         { suppressed: true },
         {
@@ -121,7 +124,7 @@ export const countSupressed = asyncHandler(async (req, res) => {
           },
         },
       ],
-    })
+    }).lean().count()
     if (!countSupressed) throw Error('Not Suppressed')
     res.status(200).json(countSupressed)
   } catch (err) {
@@ -135,11 +138,11 @@ export const countSupressed = asyncHandler(async (req, res) => {
 export const countVerizon = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    const countVerizon = await PhoneList.countDocuments({
+    const countVerizon = await PhoneList.find({
       $and: [
         { carrier: { $regex: 'Verizon', $options: 'i' } },
         { hardBounce: { $ne: true } },
@@ -150,7 +153,7 @@ export const countVerizon = asyncHandler(async (req, res) => {
           },
         },
       ],
-    })
+    }).lean().count()
     if (!countVerizon) throw Error('Not Verizon')
     res.status(200).json(countVerizon)
   } catch (err) {
@@ -164,11 +167,11 @@ export const countVerizon = asyncHandler(async (req, res) => {
 export const countAtt = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    const countHardBounce = await PhoneList.countDocuments({
+    const countHardBounce = await PhoneList.find({
       $and: [
         { carrier: { $regex: 'AT&T', $options: 'i' } },
         { hardBounce: { $ne: true } },
@@ -179,7 +182,7 @@ export const countAtt = asyncHandler(async (req, res) => {
           },
         },
       ],
-    })
+    }).lean().count()
     if (!countHardBounce) throw Error('Not AT&T')
     res.status(200).json(countHardBounce)
   } catch (err) {
@@ -193,11 +196,11 @@ export const countAtt = asyncHandler(async (req, res) => {
 export const countSprint = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    const countHardBounce = await PhoneList.countDocuments({
+    const countHardBounce = await PhoneList.find({
       $and: [
         { carrier: { $regex: 'Sprint', $options: 'i' } },
         { hardBounce: { $ne: true } },
@@ -208,7 +211,7 @@ export const countSprint = asyncHandler(async (req, res) => {
           },
         },
       ],
-    })
+    }).lean().count()
     if (!countHardBounce) throw Error('Not Sprint')
     res.status(200).json(countHardBounce)
   } catch (err) {
@@ -222,11 +225,11 @@ export const countSprint = asyncHandler(async (req, res) => {
 export const countTMobile = asyncHandler(async (req, res) => {
   try {
     let arrayBadArea = []
-    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+    const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 }).lean()
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    const countHardBounce = await PhoneList.countDocuments({
+    const countHardBounce = await PhoneList.find({
       $and: [
         { carrier: { $regex: 'T-Mobile', $options: 'i' } },
         { hardBounce: { $ne: true } },
@@ -237,7 +240,7 @@ export const countTMobile = asyncHandler(async (req, res) => {
           },
         },
       ],
-    })
+    }).lean().count()
     if (!countHardBounce) throw Error('Not T-Mobile')
     res.status(200).json(countHardBounce)
   } catch (err) {

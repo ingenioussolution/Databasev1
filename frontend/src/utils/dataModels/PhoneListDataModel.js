@@ -50,12 +50,12 @@ export const monthlyIncome = {
   filtering: false,
 }
 
-export const status = {
-  field: 'status',
-  title: 'Status',
-  align: 'center',
-  filtering: false,
-}
+// export const status = {
+//   field: 'status',
+//   title: 'Status',
+//   align: 'center',
+//   filtering: false,
+// }
 
 export const countryCode = {
   field: 'countryCode',
@@ -131,11 +131,11 @@ export const suppressed = {
   lookup: { true: 'true', false: 'false' },
 }
 
-export const list = {
-  field: 'list',
-  title: 'List',
-  filtering: false,
-}
+// export const list = {
+//   field: 'list',
+//   title: 'List',
+//   filtering: false,
+// }
 
 export const source = {
   field: 'source',
@@ -143,11 +143,11 @@ export const source = {
   //filtering: false,
 }
 
-export const ip = {
-  field: 'ip',
-  title: 'IP',
-  filtering: false,
-}
+// export const ip = {
+//   field: 'ip',
+//   title: 'IP',
+//   filtering: false,
+// }
 
 export const site = {
   field: 'site',
@@ -161,26 +161,26 @@ export const zipCode = {
   filtering: false,
 }
 
-export const subId = {
-  field: 'subId',
-  title: 'SubId',
-  filtering: false,
-}
-export const vertical = {
-  field: 'vertical',
-  title: 'Vertical',
-  filtering: false,
-}
-export const platform = {
-  field: 'platform',
-  title: 'Platform',
-  filtering: false,
-}
-export const message = {
-  field: 'message',
-  title: 'Message',
-  filtering: false,
-}
+// export const subId = {
+//   field: 'subId',
+//   title: 'SubId',
+//   filtering: false,
+// }
+// export const vertical = {
+//   field: 'vertical',
+//   title: 'Vertical',
+//   filtering: false,
+// }
+// export const platform = {
+//   field: 'platform',
+//   title: 'Platform',
+//   filtering: false,
+// }
+// export const message = {
+//   field: 'message',
+//   title: 'Message',
+//   filtering: false,
+// }
 export const recentAbuse = {
   field: 'recentAbuse',
   title: 'Recent Abuse',
@@ -240,61 +240,61 @@ export const city = {
   title: 'City',
   filtering: false,
 }
-export const listID = {
-  field: 'listID',
-  title: 'ListID',
-  filtering: false,
-}
-export const birthDate = {
-  field: 'birthDate',
-  title: 'Birth date',
-  filtering: false,
-}
+// export const listID = {
+//   field: 'listID',
+//   title: 'ListID',
+//   filtering: false,
+// }
+// export const birthDate = {
+//   field: 'birthDate',
+//   title: 'Birth date',
+//   filtering: false,
+// }
 export const gender = {
   field: 'gender',
   title: 'Gender',
   filtering: false,
 }
-export const senderID = {
-  field: 'senderID',
-  title: 'SenderID',
-  filtering: false,
-}
-export const sendAt = {
-  field: 'sendAt',
-  title: 'SendAt',
-  filtering: false,
-}
+// export const senderID = {
+//   field: 'senderID',
+//   title: 'SenderID',
+//   filtering: false,
+// }
+// export const sendAt = {
+//   field: 'sendAt',
+//   title: 'SendAt',
+//   filtering: false,
+// }
 
-export const validity = {
-  field: 'validity',
-  title: 'Validity',
-  align: 'center',
-  render: (row) => (
-    <div className={row.validity ? 'text-success' : 'text-error'}>
-      {row.validity ? 'True' : 'False'}
-    </div>
-  ),
-  filtering: false,
-}
+// export const validity = {
+//   field: 'validity',
+//   title: 'Validity',
+//   align: 'center',
+//   render: (row) => (
+//     <div className={row.validity ? 'text-success' : 'text-error'}>
+//       {row.validity ? 'True' : 'False'}
+//     </div>
+//   ),
+//   filtering: false,
+// }
 
-export const subject = {
-  field: 'subject',
-  title: 'Subject',
-  filtering: false,
-}
+// export const subject = {
+//   field: 'subject',
+//   title: 'Subject',
+//   filtering: false,
+// }
 
-export const vertical2 = {
-  field: 'vertical2',
-  title: 'Vertical2',
-  filtering: false,
-}
+// export const vertical2 = {
+//   field: 'vertical2',
+//   title: 'Vertical2',
+//   filtering: false,
+// }
 
-export const vertical3 = {
-  field: 'vertical3',
-  title: 'Vertical3',
-  filtering: false,
-}
+// export const vertical3 = {
+//   field: 'vertical3',
+//   title: 'Vertical3',
+//   filtering: false,
+// }
 
 export const updatedAt = {
   field: 'updatedAt',
@@ -436,38 +436,38 @@ export const defaultColumns = [
   hardBounce,
   revenue,
   suppressed,
+  source,
   createdAt,
   updatedAt,
   email,
   monthlyIncome,
   validMobile,
   blackListAlliance,
-  status,
+  // status,
   incomeSource,
   risky,
   lineType,
   creditScore,
-  list,
-  source,
-  ip,
+  //list,
+  // ip,
   site,
   zipCode,
   state,
-  subId,
-  vertical,
-  platform,
-  message,
+  //subId,
+  //vertical,
+  //platform,
+  // message,
   recentAbuse,
   fraudScore,
   prepaid,
   city,
-  listID,
-  birthDate,
-  gender,
-  senderID,
-  sendAt,
-  validity,
-  subject,
-  vertical2,
-  vertical3,
+  //listID,
+  // birthDate,
+  // gender,
+  // senderID,
+  // sendAt,
+  // validity,
+  // subject,
+  // vertical2,
+  // vertical3,
 ]

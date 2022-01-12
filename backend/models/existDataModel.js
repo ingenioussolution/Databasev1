@@ -1,13 +1,11 @@
 import mongoose from 'mongoose'
-import Pagination from 'mongoose-paginate-v2'
-import aggregatePaginate from 'mongoose-aggregate-paginate-v2';
 
-const PhoneListSchema = mongoose.Schema(
+const ExistDataSchema = mongoose.Schema(
   {
     phone: {
       type: String,
       required: true,
-      unique: true,
+   
       trim: true,
       min: 9,
       max: 10,
@@ -18,24 +16,24 @@ const PhoneListSchema = mongoose.Schema(
     },
     clicker: {
       type: Boolean,
-      default:false,
+      default: false,
     },
     revenue: {
       type: String,
     },
     converter: {
       type: Boolean,
-      default:false,
+      default: false,
     },
     hardBounce: {
       type: Boolean,
-      default:false,
+      default: false,
     },
     suppressed: {
       type: Boolean,
-      default:false,
+      default: false,
     },
-    list: { type: String,trim: true, },
+    list: { type: String, trim: true },
     source: { type: String },
     email: {
       type: String,
@@ -45,9 +43,11 @@ const PhoneListSchema = mongoose.Schema(
     },
     firstName: {
       type: String,
+      
     },
     lastName: {
       type: String,
+      
     },
     ip: {
       type: String,
@@ -110,16 +110,27 @@ const PhoneListSchema = mongoose.Schema(
     },
     lineType: {
       type: String,
-      enum: ['wireless' , 'landline', 'voip', 'mobile','mobile_prepaid','wifi','pager','lookup','wireless_prepaid',null],
+      enum: [
+        'wireless',
+        'landline',
+        'voip',
+        'mobile',
+        'mobile_prepaid',
+        'wifi',
+        'pager',
+        'lookup',
+        'wireless_prepaid',
+        null,
+      ],
       trim: true,
     },
     prepaid: {
       type: Boolean,
-      default:false,
+      default: false,
     },
     risky: {
       type: Boolean,
-      default:false,
+      default: false,
     },
     city: {
       type: String,
@@ -144,15 +155,15 @@ const PhoneListSchema = mongoose.Schema(
     },
     validity: {
       type: Boolean,
-      default:false,
+      default: false,
     },
     subject: { type: String },
     vertical2: { type: String },
     vertical3: { type: String },
-    
-    burstOptOut:{
+
+    burstOptOut: {
       type: Boolean,
-      default:false,
+      default: false,
     },
   },
   {
@@ -160,14 +171,7 @@ const PhoneListSchema = mongoose.Schema(
   }
 )
 
-PhoneListSchema.plugin(Pagination)
-PhoneListSchema.plugin(aggregatePaginate);
+//ExistDataSchema.index({ createdAt: 1 })
+const ExistData = mongoose.model('ExistData', ExistDataSchema)
 
-PhoneListSchema.index({ createdAt: 1})
-PhoneListSchema.index({ updatedAt: 1}) 
-PhoneListSchema.index({ carrier: 1})
-const PhoneList = mongoose.model('PhoneList', PhoneListSchema)
-
-export default PhoneList
-
-
+export default ExistData

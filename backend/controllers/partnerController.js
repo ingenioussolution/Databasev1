@@ -35,7 +35,7 @@ export const registerPartner = async (req, res, next) => {
     if (partners) {
       res.status(201).json({ partnerName: partnerName })
     } else {
-      res.status(400)
+      res.status(400) 
       throw new Error('Invalid partner')
     }
   } catch (error) {next(error)}

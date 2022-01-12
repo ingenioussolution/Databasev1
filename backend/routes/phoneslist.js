@@ -8,7 +8,7 @@ import {
   getPhoneListByStatus,
   getPhoneListFrontEnd1,
   getMasterCCC,
-
+  getCountFilters,
 } from '../controllers/phoneListController.js'
 
 import { ExportCSV, Export_Master_CCC_CSV } from '../controllers/UploadPhoneList.js'
@@ -20,8 +20,8 @@ import { protect } from '../middlewere/authMiddlewere.js'
 
 const route = express.Router()
 route.get('/', protect, getPhoneListFrontEnd)
-//route.get('/', protect, getShowPhones)
 route.get('/master-ccc', protect, getMasterCCC)
+route.get('/count-filter', protect, getCountFilters)
 route.get('/fetch-data', getShowPhones)
 route.get('/status', getPhoneListByStatus)
 route.get('/filters', getPhoneListFrontEnd1)

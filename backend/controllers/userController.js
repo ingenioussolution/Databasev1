@@ -64,7 +64,7 @@ export const authAdminUser = asyncHandler(async (req, res, next) => {
         email: user.email,
         isAdmin: user.isAdmin,
         status: user.status,
-        token: generateToken(user._id),
+        token: generateToken(user._id), 
       })
     } else {
       res.status(404)

@@ -34,7 +34,6 @@ const upload = multer({
 let temp
 let csvData = []
 let NewArray = []
-let insertData = []
 
 const size = 10000
 // Import csv file slot
@@ -236,7 +235,7 @@ router.post('/test', upload.single('file'), async (req, res) => {
                 return res.json({
                   message:
                     'Upload/import the CSV data into database successfully',
-                   total: count,
+                  total: count,
                   duplicate: duplicate,
                 })
               }
@@ -254,4 +253,4 @@ router.post('/test', upload.single('file'), async (req, res) => {
   }
 })
 
-export default router
+export default router 

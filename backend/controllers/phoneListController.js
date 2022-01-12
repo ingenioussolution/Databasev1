@@ -3,7 +3,6 @@ import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import ModelTemporal from '../models/TemporalData.js'
 import BadAreaCode from '../models/badAreaCode.js'
-//import { listAreaCode } from '../controllers/badAreaCodeController.js'
 
 import axios from 'axios'
 
@@ -11,10 +10,120 @@ import axios from 'axios'
 // @des GET All Phone List
 // @access  Private/User
 
+export const getCountFilters = asyncHandler(async (req, res, next) => {
+  // FILTERS QUERY
+  const hardBounce = req.query.hardBounce
+  const clicker = req.query.clicker
+  const phone = req.query.phone
+  const revenue = req.query.revenue
+  const converter = req.query.converter
+  const suppressed = req.query.suppressed
+  let sourceFilter = req.query.source
+  let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
+  let carrierFilter = req.query.carrier
+  let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
+  const firstNameFilter = req.query.firstName
+  let firstName = { $regex: `${firstNameFilter}`, $options: 'i' }
+
+  const createdAt_start = req.query.start
+  const createdAt_end = req.query.end
+  const areaCode = req.query.areaCode
+  let arrayFilters = []
+
+  let arrayBadArea = []
+  const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
+
+  areaBadCode.map((obj) => {
+    arrayBadArea.push(new RegExp('^' + obj.areaCode))
+  })
+
+  if (
+    clicker ||
+    hardBounce ||
+    phone ||
+    revenue ||
+    converter ||
+    suppressed ||
+    firstNameFilter ||
+    carrierFilter ||
+    areaCode ||
+    createdAt_start ||
+    createdAt_end ||
+    sourceFilter
+  ) {
+    if (clicker) {
+      arrayFilters.push({ clicker: clicker })
+    }
+
+    if (hardBounce === 'false') {
+      console.log('hard bounce FALSE', hardBounce)
+      arrayFilters.push({ hardBounce: { $ne: true } })
+    } else if (hardBounce === 'true') {
+      console.log('hard bounce TRUE')
+      arrayFilters.push({ hardBounce: hardBounce })
+    }
+    if (revenue) {
+      arrayFilters.push({ revenue: revenue })
+    }
+    if (phone) {
+      arrayFilters.push({ phone: phone })
+    }
+    if (converter) {
+      arrayFilters.push({ converter: converter })
+    }
+    if (suppressed) {
+      if (suppressed === 'false') {
+        arrayFilters.push({ suppressed: { $ne: true } })
+      } else if (suppressed === 'true') {
+        arrayFilters.push({ suppressed: suppressed })
+      }
+    }
+    if (carrierFilter) {
+      arrayFilters.push({ carrier: carrier })
+    }
+    if (sourceFilter) {
+      arrayFilters.push({ source: source })
+    }
+    if (firstNameFilter) {
+      arrayFilters.push({ firstName: firstName })
+    }
+    if (createdAt_start || createdAt_end) {
+      arrayFilters.push({
+        createdAt: {
+          $gte: new Date(createdAt_start),
+          $lt: new Date(createdAt_end),
+        },
+      })
+    }
+    if (areaCode) {
+      arrayFilters.push({
+        phone: {
+          $nin: arrayBadArea,
+        },
+      })
+    }
+    console.log('Array:', ...arrayFilters)
+    if (arrayFilters) {
+      console.time()
+      const countFilter = await PhoneList.find(
+        { $and: arrayFilters },
+        { phone: 1, _id: 0 }
+      )
+        .count()
+        .limit(500000)
+
+      res.status(200).json({
+        countFilter,
+      })
+    }
+  }
+})
+
+// GET/ Data
+
 export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
-
     const hardBounce = req.query.hardBounce
     const clicker = req.query.clicker
     const phone = req.query.phone
@@ -22,11 +131,13 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const converter = req.query.converter
     const suppressed = req.query.suppressed
     let sourceFilter = req.query.source
-    let source = { $regex: `${sourceFilter}`, $options: 'i' }
+    let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
     let carrierFilter = req.query.carrier
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
+
     const firstNameFilter = req.query.firstName
     let firstName = { $regex: `${firstNameFilter}`, $options: 'i' }
+    console.log('carrier: ', carrier)
 
     const createdAt_start = req.query.start
     const createdAt_end = req.query.end
@@ -59,6 +170,14 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       createdAt_end ||
       sourceFilter
     ) {
+      if (createdAt_start || createdAt_end) {
+        arrayFilters.push({
+          createdAt: {
+            $gte: new Date(createdAt_start),
+            $lt: new Date(createdAt_end),
+          },
+        })
+      }
       if (clicker) {
         arrayFilters.push({ clicker: clicker })
       }
@@ -95,14 +214,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       if (firstNameFilter) {
         arrayFilters.push({ firstName: firstName })
       }
-      if (createdAt_start || createdAt_end) {
-        arrayFilters.push({
-          createdAt: {
-            $gte: new Date(createdAt_start),
-            $lt: new Date(createdAt_end),
-          },
-        })
-      }
+
       if (areaCode) {
         arrayFilters.push({
           phone: {
@@ -110,16 +222,20 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           },
         })
       }
-
       console.log('Array:', ...arrayFilters)
       if (arrayFilters) {
         console.time()
-        const count = await PhoneList.find({ $and: arrayFilters }, { phone: 1 })
-          .limit(500000)
+        const count = await PhoneList.find(
+          { $and: arrayFilters },
+          { phone: 1, _id: 0 }
+        )
           .count()
           .lean()
 
+        //.limit(500000)
+
         console.timeEnd()
+
         const data = await PhoneList.find({
           $and: arrayFilters,
         })
@@ -127,7 +243,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           .skip(pageSize * (page - 1))
           .lean()
 
-        res.status(200).json({
+        res.status(200).json({ 
           data,
           page,
           totalPages: Math.ceil(count / pageSize),
@@ -165,24 +281,21 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
 export const getMasterCCC = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
-
     const hardBounce = req.query.hardBounce
     const clicker = req.query.clicker
     const revenue = req.query.revenue
     const converter = req.query.converter
     const suppressed = req.query.suppressed
     let sourceFilter = req.query.source
-    let source = { $regex: `${sourceFilter}`, $options: 'i' }
+    let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
     let carrierFilter = req.query.carrier
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
 
     const createdAt_start = req.query.start
     const createdAt_end = req.query.end
 
-    const updateAt_start = req.query.start
-    const updateAt_end = req.query.end
-
-    console.log(updateAt_start, updateAt_end)
+    // const updateAt_start = req.query.update-start
+    // const updateAt_end = req.query.update-end
 
     const areaCode = req.query.areaCode
     let arrayFilters = []
@@ -209,15 +322,13 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
       areaCode ||
       createdAt_start ||
       createdAt_end ||
-      updateAt_start ||
-      updateAt_end ||
       sourceFilter
+      // updateAt_start ||
+      // updateAt_end ||
     ) {
       if (hardBounce === 'false') {
-        //console.log('hard bounce FALSE', hardBounce)
         arrayFilters.push({ hardBounce: { $ne: true } })
       } else if (hardBounce === 'true') {
-        // console.log('hard bounce TRUE')
         arrayFilters.push({ hardBounce: hardBounce })
       }
 
@@ -229,10 +340,6 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
           arrayFilters.push({
             $or: [{ converter: converter }, { clicker: clicker }],
           })
-          // }else if(clicker === 'false' && converter === 'false'){
-          //   arrayFilters.push({
-          //     $or: [{ converter: { $ne: true } }, { clicker: { $ne: true } }],
-          //   })
         } else if (clicker === 'false') {
           arrayFilters.push({ clicker: { $ne: true } })
         } else if (clicker === 'true') {
@@ -257,25 +364,25 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
       if (sourceFilter) {
         arrayFilters.push({ source: source })
       }
-
+      // created phone
       if (createdAt_start || createdAt_end) {
         arrayFilters.push({
-          $or: [
-            {
-              createdAt: {
-                $gte: new Date(createdAt_start),
-                $lt: new Date(createdAt_end),
-              },
-            },
-            {
-              updatedAt: {
-                $gte: new Date(createdAt_start),
-                $lt: new Date(createdAt_end),
-              },
-            },
-          ],
+          createdAt: {
+            $gte: new Date(createdAt_start),
+            $lt: new Date(createdAt_end),
+          },
         })
       }
+      // updated phone
+      // if (updateAt_start || updateAt_end) {
+      //   arrayFilters.push({
+      //     createdAt: {
+      //       $gte: new Date(updateAt_start),
+      //       $lt: new Date(updateAt_end),
+      //     },
+      //   })
+      // }
+
       if (areaCode) {
         arrayFilters.push({
           phone: {
@@ -284,14 +391,15 @@ export const getMasterCCC = asyncHandler(async (req, res, next) => {
         })
       }
 
-      // console.log('Array:', ...arrayFilters)
+      console.log('Array:', ...arrayFilters)
       if (arrayFilters) {
         console.time()
-        const count = await PhoneList.find({ $and: arrayFilters }, { phone: 1 })
+        const count = await PhoneList.find(
+          { $and: arrayFilters },
+          { phone: 1, _id: 0 }
+        )
           .limit(500000)
           .count()
-          .lean()
-        console.timeEnd()
 
         const data = await PhoneList.find({
           $and: arrayFilters,

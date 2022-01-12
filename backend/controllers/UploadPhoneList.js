@@ -1,18 +1,55 @@
 import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import BadAreaCode from '../models/badAreaCode.js'
-//import moment from 'moment'
 import fastcsv from 'fast-csv'
 import fs from 'fs'
 import path from 'path'
 import { fileURLToPath } from 'url'
+import { uploadExportFile } from '../controllers/ExportController.js'
 
 // @routes GET /phoneslist/export-csv
 // @des GET Export csv
 // @access  Private/User
+let arrayHeader = [
+  'phone',
+  'carrier',
+  'firstName',
+  'lastName',
+  'email',
+  'clicker',
+  'revenue',
+  'converter',
+  'status',
+  'risky',
+  'lineType',
+  'createdAt',
+  'updatedAt',
+  'source',
+  'name',
+  'ip',
+  'site',
+  'status',
+  'zipCode',
+  'state',
+  'monthlyIncome',
+  'incomeSource',
+  'creditScore',
+  'vertical',
+  'countryCode',
+  'fraudScore',
+  'validMobile',
+  'blackListAlliance',
+  'prepaid',
+  'city',
+  'birthDate',
+  'gender',
+]
 
 export const ExportCSV = asyncHandler(async (req, res, next) => {
   try {
+    // BODY
+    const user = req.query.user
+    console.log('user', user)
     // FILTERS QUERY
     const hardBounce = req.query.hardBounce
     const clicker = req.query.clicker
@@ -28,24 +65,19 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
     const createdAt_end = req.query.end
     const areaCode = req.query.areaCode
     let sourceFilter = req.query.source
-    let source = { $regex: `${sourceFilter}`, $options: 'i' }
-
-    //console.log('start', createdAt_start)
+    let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
 
     let arrayFilters = []
     let arrayExport = []
-
-    let regex = req.query.q
-    let search = { $regex: regex, $options: 'i' }
 
     let arrayBadArea = []
     const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    //const dateTime = moment().format('YYYY-MM-DD')
     const __dirname = path.dirname(fileURLToPath(import.meta.url))
     const filePath = path.join(__dirname, '../../exports', 'csv-data.csv')
+
     // create route for csv file
     const ws = fs.createWriteStream(filePath)
 
@@ -63,40 +95,8 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       createdAt_end ||
       sourceFilter
     ) {
-      if (sourceFilter) {
-        arrayFilters.push({ source: source })
-      }
-      if (clicker) {
-        arrayFilters.push({ clicker: clicker })
-      }
-      if (hardBounce === 'false') {
-        console.log('hard bounce FALSE', hardBounce)
-        arrayFilters.push({ hardBounce: { $ne: true } })
-      } else if (hardBounce === 'true') {
-        console.log('hard bounce TRUE')
-        arrayFilters.push({ hardBounce: hardBounce })
-      }
-      if (revenue) {
-        arrayFilters.push({ revenue: revenue })
-      }
       if (phone) {
         arrayFilters.push({ phone: phone })
-      }
-      if (converter) {
-        arrayFilters.push({ converter: converter })
-      }
-      if (suppressed) {
-        if (suppressed === 'false') {
-          arrayFilters.push({ suppressed: { $ne: true } })
-        } else if (suppressed === 'true') {
-          arrayFilters.push({ suppressed: suppressed })
-        }
-      }
-      if (carrierFilter) {
-        arrayFilters.push({ carrier: carrier })
-      }
-      if (firstNameFilter) {
-        arrayFilters.push({ firstName: firstName })
       }
       if (createdAt_start || createdAt_end) {
         arrayFilters.push({
@@ -106,6 +106,29 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           },
         })
       }
+      if (carrierFilter) {
+        arrayFilters.push({ carrier: carrier })
+      }
+
+      if (clicker) {
+        arrayFilters.push({ clicker: clicker })
+      }
+      if (hardBounce === 'false') {
+        console.log('hard bounce FALSE', hardBounce)
+        arrayFilters.push({ hardBounce: { $ne: true } })
+      } else if (hardBounce === 'true') {
+        console.log('hard bounce TRUE')
+        arrayFilters.push({ hardBounce: hardBounce })
+      }
+
+      if (suppressed) {
+        if (suppressed === 'false') {
+          arrayFilters.push({ suppressed: { $ne: true } })
+        } else if (suppressed === 'true') {
+          arrayFilters.push({ suppressed: suppressed })
+        }
+      }
+
       if (areaCode) {
         arrayFilters.push({
           phone: {
@@ -113,125 +136,79 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           },
         })
       }
-      console.log('arrayFilters', arrayFilters)
 
-      let requestCount = 10000
-      let count = await PhoneList.countDocuments({ $and: arrayFilters })
-
-      const skipSize = 10000
-
-      const total = Math.ceil(count / requestCount)
-      console.log('total: ', total)
-      console.log('count: ', count)
-
-      for (let i = 1; i <= total; i++) {
-        console.log('i:', i)
-
-        if (arrayFilters) {
-          const data = await PhoneList.find({
-            $and: arrayFilters,
-          })
-            .limit(requestCount)
-            .skip(skipSize * (i - 1))
-
-          await arrayExport.push(...data)
-
-          console.log('arrayExport All: ', arrayExport.length)
-        }
+      if (converter) {
+        arrayFilters.push({ converter: converter })
       }
-      console.log('Create CSV...', arrayExport.length)
+
+      if (firstNameFilter) {
+        arrayFilters.push({ firstName: firstName })
+      }
+      if (sourceFilter) {
+        arrayFilters.push({ source: source })
+      }
+      if (revenue) {
+        arrayFilters.push({ revenue: revenue })
+      }
+
+      console.log('Array Export: ', arrayFilters)
+
+      const aggregation = await PhoneList.aggregate([
+        {$match: {$and: arrayFilters}},
+      ]).cursor()
+      for await (const doc of aggregation) {
+      //  console.log(doc.phone);
+
+        await arrayExport.push(doc)
+      }
+
+      console.log("aggregation",arrayExport.length);
+
+      // const cursor = await PhoneList.find({
+      //   $and: arrayFilters,
+      // })
+      //   .lean()
+      //   .cursor()
+
+      // for (let ex = await cursor.next(); ex != null; ex = await cursor.next()) {
+      //   await arrayExport.push(ex)
+      // }
+
+      // console.log('cursor: ', arrayExport.length)
 
       await fastcsv
         .write(arrayExport, {
-          headers: [
-            'phone',
-            'carrier',
-            'firstName',
-            'lastName',
-            'email',
-            'clicker',
-            'revenue',
-            'converter',
-            'status',
-            'risky',
-            'lineType',
-            'createdAt',
-            'updatedAt',
-            'list',
-            'source',
-            'name',
-            'ip',
-            'site',
-            'status',
-            'zipCode',
-            'state',
-            'monthlyIncome',
-            'incomeSource',
-            'creditScore',
-            'subId',
-            'vertical',
-            'countryCode',
-            'platform',
-            'message',
-            'recentAbuse',
-            'fraudScore',
-            'validMobile',
-            'blackListAlliance',
-            'prepaid',
-            'city',
-            'listID',
-            'birthDate',
-            'gender',
-            'senderID',
-            'sendAt',
-            'validity',
-            'subject',
-            'vertical2',
-            'vertical3',
-          ],
+          headers: arrayHeader,
         })
         .pipe(ws)
         .on('finish', function () {
-          res.download(filePath)
-          //.on('finish', function (err) {
-          // if (err) {
-          //   return res.json(err).status(500)
-          // } else {
-          //   setTimeout(function () {
-          //     fs.unlink(filePath, function (err) {
-          //       // delete this file after 30 seconds
-          //       if (err) {
-          //         console.error(err)
-          //       }
-          //       console.log('File has been Deleted')
-          //     })
-          //   }, 10000)
-          // }
+          uploadExportFile(filePath, user)
+          console.log('Write to CSV successfully!')
+          res.status(200).json('Write to CSV successfully!')
         })
-      console.log('Write to CSV successfully!')
-    }
-    //------------------------------------
-    else if (regex) {
-      const data = await PhoneList.find({ carrier: search })
-      fastcsv
-        .write(data, { headers: true })
-        .pipe(ws)
-        .on('finish', function (err) {
-          res.download(filePath)
-          console.log('Export complete')
-        })
-    } else {
-      console.log('no filters')
-      const data = await PhoneList.find({})
 
-      fastcsv
-        .write(data, { headers: true })
-        .pipe(ws)
-        .on('finish', function (err) {
-          res.download(filePath)
-          console.log('Export complete')
-        })
+      // await PhoneList.find({
+      //   $and: arrayFilters,
+      // })
+      //   .lean()
+      //   .exec({}, function (err, result) {
+      //     if (err) console.log(err)
+
+      //     console.log('result: ', result.length)
+
+      //     fastcsv
+      //       .write(result, {
+      //         headers: arrayHeader,
+      //       })
+      //       .pipe(ws)
+      //       .on('finish', function () {
+      //         uploadExportFile(filePath, user)
+      //         console.log('Write to CSV successfully!')
+      //         res.status(200).json('Write to CSV successfully!')
+      //       })
+      //   })
     }
+ 
   } catch (error) {
     next(error)
   }
@@ -240,6 +217,9 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
 export const Export_Master_CCC_CSV = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
+    const user = req.query.user
+    console.log('user', user)
+    //-----
     const hardBounce = req.query.hardBounce
     const clicker = req.query.clicker
     const phone = req.query.phone
@@ -254,24 +234,20 @@ export const Export_Master_CCC_CSV = asyncHandler(async (req, res, next) => {
     const createdAt_end = req.query.end
     const areaCode = req.query.areaCode
     let sourceFilter = req.query.source
-    let source = { $regex: `${sourceFilter}`, $options: 'i' }
-
-    //console.log('start', createdAt_start)
+    let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
 
     let arrayFilters = []
     let arrayExport = []
-
-    let regex = req.query.q
-    let search = { $regex: regex, $options: 'i' }
 
     let arrayBadArea = []
     const areaBadCode = await BadAreaCode.find({}, { areaCode: 1, _id: 0 })
     areaBadCode.map((obj) => {
       arrayBadArea.push(new RegExp('^' + obj.areaCode))
     })
-    //const dateTime = moment().format('YYYY-MM-DD')
+
     const __dirname = path.dirname(fileURLToPath(import.meta.url))
     const filePath = path.join(__dirname, '../../exports', 'csv-data.csv')
+
     // create route for csv file
     const ws = fs.createWriteStream(filePath)
 
@@ -289,9 +265,6 @@ export const Export_Master_CCC_CSV = asyncHandler(async (req, res, next) => {
       createdAt_end ||
       sourceFilter
     ) {
-      if (clicker) {
-        arrayFilters.push({ clicker: clicker })
-      }
       if (hardBounce === 'false') {
         console.log('hard bounce FALSE', hardBounce)
         arrayFilters.push({ hardBounce: { $ne: true } })
@@ -305,9 +278,7 @@ export const Export_Master_CCC_CSV = asyncHandler(async (req, res, next) => {
       if (phone) {
         arrayFilters.push({ phone: phone })
       }
-      if (converter) {
-        arrayFilters.push({ converter: converter })
-      }
+
       if (suppressed) {
         if (suppressed === 'false') {
           arrayFilters.push({ suppressed: { $ne: true } })
@@ -356,124 +327,81 @@ export const Export_Master_CCC_CSV = asyncHandler(async (req, res, next) => {
         arrayFilters.push({ source: source })
       }
 
-      console.log('arrayFilters', arrayFilters)
+      console.log('Export Master CCC: ', arrayFilters)
 
-      let requestCount = 10000
-      let count = await PhoneList.countDocuments({ $and: arrayFilters })
+      const cursor = await PhoneList.find({
+        $and: arrayFilters,
+      })
+        .lean()
+        .cursor()
 
-      const skipSize = 10000
-
-      const total = Math.ceil(count / requestCount)
-      console.log('total: ', total)
-      console.log('count: ', count)
-
-      for (let i = 1; i <= total; i++) {
-        console.log('i:', i)
-
-        if (arrayFilters) {
-          const data = await PhoneList.find({
-            $and: arrayFilters,
-          })
-            .limit(requestCount)
-            .skip(skipSize * (i - 1))
-
-          await arrayExport.push(...data)
-
-          console.log('arrayExport All: ', arrayExport.length)
-        }
+      for (let ex = await cursor.next(); ex != null; ex = await cursor.next()) {
+        await arrayExport.push(ex)
       }
-      console.log('Create CSV...', arrayExport.length)
-
+      console.log('cursor: ', arrayExport.length)
       await fastcsv
-        .write(arrayExport, {ignoreEmpty: true,
-          headers: [
-            'phone',
-            'carrier',
-            'firstName', 
-            'lastName',
-            'email',
-            'clicker',
-            'revenue',
-            'converter',
-            'status',
-            'risky',
-            'lineType',
-            'createdAt',
-            'updatedAt',
-            'list',
-            'source',
-            'name',
-            'ip',
-            'site',
-            'status',
-            'zipCode',
-            'state',
-            'monthlyIncome',
-            'incomeSource',
-            'creditScore',
-            'subId',
-            'vertical',
-            'countryCode',
-            'platform',
-            'message',
-            'recentAbuse',
-            'fraudScore',
-            'validMobile',
-            'blackListAlliance',
-            'prepaid',
-            'city',
-            'listID',
-            'birthDate',
-            'gender',
-            'senderID',
-            'sendAt',
-            'validity',
-            'subject',
-            'vertical2',
-            'vertical3',
-          ],
+        .write(arrayExport, {
+          headers: arrayHeader,
         })
         .pipe(ws)
         .on('finish', function () {
-          res.download(filePath)
-          //.on('finish', function (err) {
-          // if (err) {
-          //   return res.json(err).status(500)
-          // } else {
-          //   setTimeout(function () {
-          //     fs.unlink(filePath, function (err) {
-          //       // delete this file after 30 seconds
-          //       if (err) {
-          //         console.error(err)
-          //       }
-          //       console.log('File has been Deleted')
-          //     })
-          //   }, 10000)
-          // }
+          uploadExportFile(filePath, user)
+          console.log('Write to CSV successfully!')
+          res.status(200).json('Write to CSV successfully!')
         })
-      console.log('Write to CSV successfully!')
-    }
-    //------------------------------------
-    else if (regex) {
-      const data = await PhoneList.find({ carrier: search })
-      fastcsv
-        .write(data, { headers: true })
-        .pipe(ws)
-        .on('finish', function (err) {
-          res.download(filePath)
-          console.log('Export complete')
-        })
-    } else {
-      console.log('no filters')
-      const data = await PhoneList.find({})
 
-      fastcsv
-        .write(data, { headers: true })
-        .pipe(ws)
-        .on('finish', function (err) {
-          res.download(filePath)
-          console.log('Export complete')
-        })
+      //   let requestCount = 100000
+      //   let count = await PhoneList.countDocuments({ $and: arrayFilters })
+
+      //   const skipSize = 100000
+
+      //   const total = Math.ceil(count / requestCount)
+      //   console.log('total: ', total)
+      //   console.log('count: ', count)
+
+      //   for (let i = 1; i <= total; i++) {
+      //     console.log('i:', i)
+
+      //     if (arrayFilters) {
+      //       const data = await PhoneList.find({
+      //         $and: arrayFilters,
+      //       })
+      //         .limit(requestCount)
+      //         .skip(skipSize * (i - 1))
+
+      //       await arrayExport.push(...data)
+
+      //       console.log('arrayExport All: ', arrayExport.length)
+      //     }
+      //   }
+      //   console.log('Create CSV...', arrayExport.length)
+
+      //   await fastcsv
+      //     .write(arrayExport, {
+      //       ignoreEmpty: true,
+      //       headers: arrayHeader,
+      //     })
+      //     .on('finish', function () {
+      //       uploadExportFile(filePath, user)
+      //       console.log('Write to CSV successfully!')
+      //       res.download(filePath)
+      //     })
+      //     .pipe(ws)
+      // }
+      // //------------------------------------
+      // else {
+      //   console.log('no filters')
+      //   const data = await PhoneList.find({})
+
+      //   fastcsv
+      //     .write(data, { headers: true })
+      //     .pipe(ws)
+      //     .on('finish', function () {
+      //       uploadExportFile(filePath, user)
+      //       res.download(filePath)
+      //       console.log('Write to CSV successfully!')
+      //     })
+      // }
     }
   } catch (error) {
     next(error)

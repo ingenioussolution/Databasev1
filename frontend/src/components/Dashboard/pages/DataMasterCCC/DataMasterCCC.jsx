@@ -53,7 +53,7 @@ const DataMasterCCC = () => {
   const { userInfo } = UserLogin
 
   // export data
-  const MasterCCC_Data = useSelector((state) => state.MasterCCC_Data)
+  const MasterCCC_Data = useSelector((state) => state.ExportMaster_CCC)
   const { loading, success, exporting } = MasterCCC_Data
 
   const [arrayExport, setArrayExport] = useState(false)
@@ -97,6 +97,7 @@ const DataMasterCCC = () => {
 
         let url = '/phoneslist/master-ccc?'
         let urlExport = 'export-master-ccc-csv?'
+        urlExport += '&user='+userInfo._id
         url += '&pageNumber=' + (query.page + 1)
 
         //searching area Code
@@ -197,7 +198,14 @@ const DataMasterCCC = () => {
           }
         })
       } else {
-        ExportData(queryExport)
+        Swal.fire({
+          icon: 'info',
+          title: 'Download in Progress!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            ExportData(queryExport)
+          }
+        })
       }
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps

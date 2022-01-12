@@ -29,6 +29,7 @@ import AdminHome from './components/AdminDashboard/AdminSettings/AdminHome'
 import UploadCsv from './components/Dashboard/pages/UploadData/UploadData'
 import UpdateUser from './components/AdminDashboard/AdminCRUD/UpdateUser/UpdateUser'
 import DataMasterCCC from './components/Dashboard/pages/DataMasterCCC/DataMasterCCC'
+import DownloadCsv from './components/Dashboard/pages/DownloadCsv/DownloadCsv'
 
 const App = ({ location }) => {
   const classes = StyleApp()
@@ -107,6 +108,8 @@ const App = ({ location }) => {
                 exact
                 component={UploadCsv}
               />
+              <Route path="/dashboard/download-csv" exact component={DownloadCsv} />
+
               <Route path="/admin/admin-dashboard" exact component={AdminHome} />
               <Route path="/admin/list-users" exact component={AdminDashboard} />
               <Route path="/admin/list-users/:id/edit" exact component={UpdateUser} />

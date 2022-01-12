@@ -11,8 +11,8 @@ import {
   PHONE_CLEAN_LIST_REQUEST,
   PHONE_CLEAN_LIST_SUCCESS,
   PHONE_CLEAN_LIST_FAIL,
+  PHONE_CLEAN_LIST_RESET,
 } from '../../../../constants/phonesListClean'
-import { CSVLink } from 'react-csv'
 import { exportData } from '../../../../actions/exportDataAction'
 import Swal from 'sweetalert2'
 import moment from 'moment'
@@ -25,6 +25,7 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  Snackbar,
 } from '@material-ui/core'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from './styles'
@@ -34,6 +35,7 @@ import { FaFileDownload, FaFileExport, FaSearch } from 'react-icons/fa'
 
 import Loader from '../../../Loader/Loader'
 import DateRangePicker from '../../../dateRangePicker/DateRangePicker'
+import Message from '../../../message/Message'
 
 const DataTablePhones = () => {
   const tableRef = React.createRef()
@@ -54,16 +56,23 @@ const DataTablePhones = () => {
   const { userInfo } = UserLogin
 
   const listExportData = useSelector((state) => state.listExportData)
-  const { loading, error: exportError, success, exporting } = listExportData
+  const { loading, error: exportError, success } = listExportData
 
-  const [arrayExport, setArrayExport] = useState(false)
-  const [download, setDownload] = useState(true)
+  console.log("loading", loading);
+
   const [totalProcessPages, setTotalPages] = useState()
+  const [errorMsg, setErrorMsg] = useState('')
+  const [successMsg, setSuccessMsg] = useState('')
 
   const [filterState, setFilterState] = useState({
     startDate: '',
     endDate: '',
   })
+
+  const handleAlertClose = () => {
+    setErrorMsg('')
+    setSuccessMsg('')
+  }
 
   //------------ UseEffect---------
   useEffect(() => {
@@ -97,6 +106,7 @@ const DataTablePhones = () => {
 
         let url = '/phoneslist?'
         let urlExport = 'export-csv?'
+        urlExport += '&user=' + userInfo._id
         let urlCount = 'count-filter?'
 
         url += '&pageNumber=' + (query.page + 1)
@@ -176,7 +186,7 @@ const DataTablePhones = () => {
               ;<Loader />
             }
             setDataTable(result)
-            //console.log('urlExport', urlExport)
+            console.log('urlExport', urlExport)
             setQueryExport(urlExport)
             setTotalPages(result.data.totalPages)
             setFilter(urlCount)
@@ -189,62 +199,39 @@ const DataTablePhones = () => {
       }
     })
 
-
   useEffect(() => {
-    console.log("filter count", filter);
+    console.log('filter count', filter)
   }, [filter])
-    
+
   //verify onclick Export Button
   useEffect(() => {
     if (exportCSV) {
-      setArrayExport(true)
-      if (totalProcessPages > 49900) {
+      if (totalProcessPages > 100000) {
         Swal.fire({
           icon: 'info',
           title: 'Exceeded limit of rows to export',
-          text: 'No more than 500,000',
+          text: 'No more than 100,000',
         }).then((result) => {
           if (result.isConfirmed) {
             setExportCSV(false)
-            setArrayExport(false)
+          }
+        }) 
+      } else {
+        Swal.fire({
+          icon: 'info',
+          title: 'Download in Progress!',
+        }).then((result) => {
+          if (result.isConfirmed) {
+            console.log('call export ')
+            dispatch(exportData(queryExport))
+          } else {
+            console.log('error')
           }
         })
-      } else {
-        ExportData(queryExport)
-      }
+      } 
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportCSV])
-
-  // function export data
-  const ExportData = (queryExport) => {
-    dispatch(exportData(queryExport))
-  }
-  // Update state exportCSV false
-  useEffect(() => {
-    if (exportCSV && success) {
-      setExportCSV(false)
-
-      if (exporting) {
-        Swal.fire({
-          icon: 'info',
-          title: 'Download Ready!',
-        }).then((result) => {
-          if (result.isConfirmed) {
-            setDownload(false)
-          }
-        })
-      }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [exportCSV, success])
-
-  useEffect(() => {
-    if (!download) {
-      setArrayExport(false)
-    }
-  }, [download])
 
   const handleChangeAreaCode = (event) => {
     setAreaCode(event.target.checked)
@@ -265,8 +252,16 @@ const DataTablePhones = () => {
       endDate: '',
     })
   }
+ // Alert new export complete
+  useEffect(() => {
+    if (success) {
+      dispatch({ type: PHONE_CLEAN_LIST_RESET })
+      setSuccessMsg('File is Complete Export')
+    }
+    if (exportError) setErrorMsg(exportError)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [exportError, success])
 
-  //console.log('exporting', exporting)
   return (
     <div>
       <Grid container item xs={12}>
@@ -278,6 +273,22 @@ const DataTablePhones = () => {
           </Toolbar>
         </Card>
         <Card className={classesTable.mainWrapper}>
+          <Snackbar
+            open={errorMsg ? true : false} 
+            autoHideDuration={5000} 
+            onClose={handleAlertClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <Message severity="error">{errorMsg}</Message>
+          </Snackbar>
+          <Snackbar
+            open={successMsg ? true : false}
+            autoHideDuration={5000}
+            onClose={handleAlertClose}
+            anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+          >
+            <Message severity="success">{successMsg}</Message>
+          </Snackbar>
           <Toolbar className={clsx(classes.tableHeader)}>
             <Grid container>
               <Grid
@@ -332,37 +343,30 @@ const DataTablePhones = () => {
 
                 <Grid item xs={12} sm={3} md={2}>
                   <Tooltip title="Export" aria-label="export">
-                    <Button
-                      variant="outlined"
-                      className={commons.secondaryBtn}
-                      endIcon={<FaFileExport />}
-                      onClick={() => setExportCSV(true)}
-                      disabled={arrayExport}
-                    >
-                      Export
-                    </Button>
+                    {!loading ? (
+                      <Button
+                        variant="outlined"
+                        className={commons.secondaryBtn}
+                        endIcon={<FaFileExport />}
+                        onClick={() => setExportCSV(true)}
+                      >
+                        Export
+                      </Button>
+                    ) : (
+                      <Loader />
+                    )}
                   </Tooltip>
                 </Grid>
                 <Grid item xs={12} sm={3} md={2}>
                   <Tooltip title="Download Last Export" aria-label="export">
-                    {!loading ? (
-                      <CSVLink
-                        data={exporting}
-                        separator={','}
-                        filename={'my-file.csv'}
-                      >
-                        <Button
-                          variant="outlined"
-                          className={commons.successBtn}
-                          endIcon={<FaFileDownload />}
-                          disabled={download}
-                        >
-                          Download
-                        </Button>
-                      </CSVLink>
-                    ) : (
-                      <Loader />
-                    )}
+                    <Button
+                      variant="outlined"
+                      className={commons.successBtn}
+                      endIcon={<FaFileDownload />}
+                      href={'/dashboard/download-csv'}
+                    >
+                      Download
+                    </Button>
                   </Tooltip>
                 </Grid>
               </Grid>

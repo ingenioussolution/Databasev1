@@ -7,10 +7,16 @@ import { fileURLToPath } from 'url'
 import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewere/errorMiddlewere.js'
 
+// Middleware connect-timeout
+import timeout from 'connect-timeout';
+import bodyParser from 'body-parser';
+//import redis from 'redis'
+//---------------
+
 
 //Routes
 import phoneslistRoutes from './routes/phoneslist.js'
-import phoneRoutes from './routes/phone.js'
+import ExportCSVRoutes from './routes/ExportCSVRouters.js'
 import carrierRoutes from './routes/carrierRouters.js'
 import ModelTemporal from './routes/TemporalDataRouters.js'
 import userRoutes from './routes/userRoutes.js'
@@ -19,6 +25,10 @@ import settingsRoutes from './routes/siteSettingsRoutes.js'
 import uploadRoutes from './routes/uploadCsvRoutes.js'
 import homeFilter from './routes/homeFilterRouters.js'
 import partner from './routes/partnerRouters.js'
+
+// clean data
+
+import cleanData from './routes/cleanDataRouters.js'
 
 dotenv.config()
 
@@ -46,7 +56,7 @@ app.options('*', cors())
 // Use routes
 app.use('/phoneslist', phoneslistRoutes)
 app.use('/users', userRoutes)
-app.use('/phone', phoneRoutes)
+app.use('/export-aws', ExportCSVRoutes)
 app.use('/carrier', carrierRoutes)
 app.use('/data-temporal', ModelTemporal)
 app.use('/bad-area-code', badAreaCodeRoutes)
@@ -54,6 +64,23 @@ app.use('/settings', settingsRoutes)
 app.use('/upload-csv', uploadRoutes)
 app.use('/filters', homeFilter)
 app.use('/partners', partner)
+
+// route clean Data
+app.use('/clean-data', cleanData)
+
+//----------------
+
+// Connect-Timeout
+const haltOnTimedout = (req, res, next) => {
+  if (!req.timedout) {
+    next();
+  }
+}
+
+app.use(timeout('5s'))
+app.use(bodyParser.json({ extended: true }))
+app.use(haltOnTimedout)
+//----------------
 
 const __dirname = path.resolve()
 app.use('/uploads', express.static(path.join(__dirname, '/uploads')))
@@ -65,10 +92,24 @@ if (process.env.SITE_LIVE === 'true') {
     res.sendFile(path.resolve(__dirname, 'frontend', 'build', 'index.html'))
   )
 } else {
-  app.get('/', (req, res) => {
-    res.send('API is running...')
+  app.get('/', (req, res, next) => {
+    // time out heroku
+    setTimeout(() => {
+      if (req.timedout) {
+        next();
+      }
+      else {
+        res.send('API is running...');
+      }
+    }, Math.random() * 7000);
+
+    //------ end timeout
+
+    //res.send('API is running...')
   })
 }
+
+
 
 app.use(notFound)
 

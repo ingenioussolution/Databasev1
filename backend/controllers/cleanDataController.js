@@ -14,7 +14,7 @@ export const CleanOldData = asyncHandler(async (req, res, next) => {
     const phoneExists = await PhoneList.findOne({
       phone: ph.phone,
     })
-    //console.log(ph.phone)
+    //console.log(ph.phone) 
 
     if (phoneExists) {
       console.log('Phone Exists')

@@ -50,13 +50,6 @@ export const monthlyIncome = {
   filtering: false,
 }
 
-// export const status = {
-//   field: 'status',
-//   title: 'Status',
-//   align: 'center',
-//   filtering: false,
-// }
-
 export const countryCode = {
   field: 'countryCode',
   title: 'Country Code',
@@ -91,7 +84,7 @@ export const clicker = {
     </div>
   ),
   lookup: { true: 'true', false: 'false' },
-  filtering: false,
+  filtering: true,
 }
 
 export const converter = {
@@ -104,7 +97,7 @@ export const converter = {
     </div>
   ),
   lookup: { true: 'true', false: 'false' },
-  filtering: false,
+  filtering: true,
 }
 
 export const hardBounce = {
@@ -130,25 +123,6 @@ export const suppressed = {
   ),
   lookup: { true: 'true', false: 'false' },
 }
-
-// export const list = {
-//   field: 'list',
-//   title: 'List',
-//   filtering: false,
-// }
-
-export const source = {
-  field: 'source',
-  title: 'Source',
-  //filtering: false,
-}
-
-// export const ip = {
-//   field: 'ip',
-//   title: 'IP',
-//   filtering: false,
-// }
-
 export const site = {
   field: 'site',
   title: 'Site',
@@ -160,6 +134,32 @@ export const zipCode = {
   title: 'Zip Code',
   filtering: false,
 }
+export const source = {
+  field: 'source',
+  title: 'Source',
+  filtering: true,
+}
+
+
+// export const status = {
+//   field: 'status',
+//   title: 'Status',
+//   align: 'center',
+//   filtering: false,
+// }
+
+// export const list = {
+//   field: 'list',
+//   title: 'List',
+//   filtering: false,
+// }
+
+
+// export const ip = {
+//   field: 'ip',
+//   title: 'IP',
+//   filtering: false,
+// }
 
 // export const subId = {
 //   field: 'subId',
@@ -306,6 +306,7 @@ export const createdAt = {
   field: 'createdAt',
   title: 'Create Date',
   type: 'date',
+  customSort: (a, b) => a.createdAt - b.createdAt,
   filtering: false,
 }
 
@@ -434,33 +435,33 @@ export const defaultColumns = [
   clicker,
   converter,
   hardBounce,
-  revenue,
   suppressed,
   source,
+  revenue,
   createdAt,
   updatedAt,
   email,
   monthlyIncome,
   validMobile,
   blackListAlliance,
-  // status,
   incomeSource,
   risky,
   lineType,
   creditScore,
-  //list,
-  // ip,
-  site,
-  zipCode,
-  state,
-  //subId,
-  //vertical,
-  //platform,
-  // message,
   recentAbuse,
   fraudScore,
   prepaid,
   city,
+  site,
+  zipCode,
+  state,
+  //list,
+  // ip,
+  //subId,
+  //vertical,
+  //platform,
+  // message,
+  // status,
   //listID,
   // birthDate,
   // gender,

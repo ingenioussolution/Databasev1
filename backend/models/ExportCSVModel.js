@@ -18,7 +18,8 @@ const ExportSchema = mongoose.Schema(
   }
 )
 
-ExportSchema.index({ createdAt: 1 },{expireAfterSeconds: 604800})
+// remove history csv file daily 
+ExportSchema.index({ createdAt: 1 },{expireAfterSeconds: 86400})
 const Export = mongoose.model('Export', ExportSchema)
 
 export default Export 

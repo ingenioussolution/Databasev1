@@ -160,7 +160,7 @@ const LinearStepper = ({ loader, loading, success, count }) => {
                 acceptedFiles={['.csv']}
                 cancelButtonText={'cancel'}
                 submitButtonText={'submit'}
-                maxFileSize={5000000}
+                maxFileSize={10000000}
                 filesLimit={1}
                 open={openCsv}
                 onClose={() => setOpenCsv(false)}

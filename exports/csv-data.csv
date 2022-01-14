@@ -1,2 +1,2 @@
-phone,carrier,firstName,lastName,email,clicker,revenue,converter,status,risky,lineType,createdAt,updatedAt,source,name,ip,site,status,zipCode,state,monthlyIncome,incomeSource,creditScore,vertical,countryCode,fraudScore,validMobile,blackListAlliance,prepaid,city,birthDate,gender
-12012882181,Cablevision Lightpath,Robert,,,true,,true,,false,landline,Thu Oct 14 2021 21:11:33 GMT-0400 (Eastern Daylight Time),Fri Dec 10 2021 12:32:50 GMT-0500 (Eastern Standard Time),DCLK,,,,,,NJ,0,,,PL,1,0,false,true,false,bayonne,,
+phone,carrier,firstName,lastName,email,lineType,createdAt,source,name,zipCode,state,monthlyIncome,incomeSource,creditScore,fraudScore,prepaid,city,birthDate,gender
+12016408279,MetroPCS,francina,,,wireless,Fri Jan 07 2022 16:30:05 GMT-0500 (Eastern Standard Time),81,,,NJ,0,,,0,,bayonne,,

@@ -710,7 +710,7 @@ const DataTablePhones = () => {
               selection: false,
               padding: 'default',
               pageSizeOptions: [5, 10],
-              filtering: true,
+              filtering: false,
               search: false,
               sorting: true,
             }}

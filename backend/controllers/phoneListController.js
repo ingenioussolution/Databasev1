@@ -259,9 +259,9 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       //   .count()
       //   .lean()
       //const count = await PhoneList.countDocuments({})
-
-      const count1 = await PhoneList.count()
-      const total = Math.ceil(count1 / pageSize)
+    
+      let count = await PhoneList.count().limit(500000)
+      const total = Math.ceil(count / pageSize)
 
       const data = await PhoneList.find({})
         .limit(pageSize)

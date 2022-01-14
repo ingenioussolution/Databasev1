@@ -84,7 +84,7 @@ export const clicker = {
     </div>
   ),
   lookup: { true: 'true', false: 'false' },
-  filtering: true,
+  filtering: false,
 }
 
 export const converter = {
@@ -97,7 +97,7 @@ export const converter = {
     </div>
   ),
   lookup: { true: 'true', false: 'false' },
-  filtering: true,
+  filtering: false,
 }
 
 export const hardBounce = {
@@ -137,7 +137,7 @@ export const zipCode = {
 export const source = {
   field: 'source',
   title: 'Source',
-  filtering: true,
+  filtering: false,
 }
 
 

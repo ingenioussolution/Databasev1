@@ -16,29 +16,16 @@ let arrayHeader = [
   'firstName',
   'lastName',
   'email',
-  'clicker',
-  'revenue',
-  'converter',
-  'status',
-  'risky',
   'lineType',
   'createdAt',
-  'updatedAt',
   'source',
   'name',
-  'ip',
-  'site',
-  'status',
   'zipCode',
   'state',
   'monthlyIncome',
   'incomeSource',
   'creditScore',
-  'vertical',
-  'countryCode',
   'fraudScore',
-  'validMobile',
-  'blackListAlliance',
   'prepaid',
   'city',
   'birthDate',
@@ -110,9 +97,22 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
         arrayFilters.push({ carrier: carrier })
       }
 
-      if (clicker) {
-        arrayFilters.push({ clicker: clicker })
+      if (clicker || converter) {
+        if (converter === 'true' && clicker === 'true') {
+          arrayFilters.push({
+            $or: [{ converter: converter }, { clicker: clicker }],
+          })
+        } else if (clicker === 'false') {
+          arrayFilters.push({ clicker: { $ne: true } })
+        } else if (clicker === 'true') {
+          arrayFilters.push({ clicker: clicker })
+        } else if (converter === 'false') {
+          arrayFilters.push({ converter: { $ne: true } })
+        } else if (converter === 'true') {
+          arrayFilters.push({ converter: converter })
+        }
       }
+
       if (hardBounce === 'false') {
         console.log('hard bounce FALSE', hardBounce)
         arrayFilters.push({ hardBounce: { $ne: true } })
@@ -136,11 +136,6 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           },
         })
       }
-
-      if (converter) {
-        arrayFilters.push({ converter: converter })
-      }
-
       if (firstNameFilter) {
         arrayFilters.push({ firstName: firstName })
       }
@@ -153,28 +148,48 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
 
       console.log('Array Export: ', arrayFilters)
 
-      const aggregation = await PhoneList.aggregate([
-        {$match: {$and: arrayFilters}},
-      ]).cursor()
-      for await (const doc of aggregation) {
-      //  console.log(doc.phone);
+      // const aggregation = await PhoneList.aggregate([
+      //   {$match: { $and: arrayFilters } },
+      //   {$project:{phone:1, carrier:1, firstName:1, lastName:1, name:1, source:1, email:1, lineType:1, fraudScore:1, monthlyIncome:1, state:1, city:1, createdAt:1}}
+      // ]).cursor()
+      // for await (const doc of aggregation) {
 
-        await arrayExport.push(doc)
-      }
-
-      console.log("aggregation",arrayExport.length);
-
-      // const cursor = await PhoneList.find({
-      //   $and: arrayFilters,
-      // })
-      //   .lean()
-      //   .cursor()
-
-      // for (let ex = await cursor.next(); ex != null; ex = await cursor.next()) {
-      //   await arrayExport.push(ex)
+      //   await arrayExport.push(doc)
       // }
 
-      // console.log('cursor: ', arrayExport.length)
+      // console.log('aggregation', arrayExport.length)
+
+      const cursor = await PhoneList.find(
+        {
+          $and: arrayFilters,
+        },
+        {
+          phone: 1,
+          carrier: 1,
+          firstName: 1,
+          lastName: 1,
+          name: 1,
+          source: 1,
+          email: 1,
+          lineType: 1,
+          fraudScore: 1,
+          monthlyIncome: 1,
+          state: 1,
+          city: 1,
+          gender: 1,
+          createdAt: 1,
+          birthDate:1,
+          _id: 0,
+        }
+      )
+        .lean()
+        .cursor()
+
+      for (let ex = await cursor.next(); ex != null; ex = await cursor.next()) {
+        await arrayExport.push(ex)
+      }
+
+      console.log('cursor: ', arrayExport.length)
 
       await fastcsv
         .write(arrayExport, {
@@ -186,29 +201,7 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           console.log('Write to CSV successfully!')
           res.status(200).json('Write to CSV successfully!')
         })
-
-      // await PhoneList.find({
-      //   $and: arrayFilters,
-      // })
-      //   .lean()
-      //   .exec({}, function (err, result) {
-      //     if (err) console.log(err)
-
-      //     console.log('result: ', result.length)
-
-      //     fastcsv
-      //       .write(result, {
-      //         headers: arrayHeader,
-      //       })
-      //       .pipe(ws)
-      //       .on('finish', function () {
-      //         uploadExportFile(filePath, user)
-      //         console.log('Write to CSV successfully!')
-      //         res.status(200).json('Write to CSV successfully!')
-      //       })
-      //   })
     }
- 
   } catch (error) {
     next(error)
   }

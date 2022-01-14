@@ -16,7 +16,7 @@ export const getSettings = asyncHandler(async (req, res, next) => {
 // @desc     Update settings
 // @route    PUT /settings/:id
 // @access   Private/Admin
-export const updateSettings = asyncHandler(async (req, res, next) => {
+export const updateSettings = asyncHandler(async (req, res, next) => { 
   try {
     const {
       siteUnderMaintenance,

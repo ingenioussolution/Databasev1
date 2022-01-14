@@ -28,7 +28,7 @@ import AdminLogin from './components/AdminDashboard/AdminLogin/AdminLogin'
 import AdminHome from './components/AdminDashboard/AdminSettings/AdminHome'
 import UploadCsv from './components/Dashboard/pages/UploadData/UploadData'
 import UpdateUser from './components/AdminDashboard/AdminCRUD/UpdateUser/UpdateUser'
-import DataMasterCCC from './components/Dashboard/pages/DataMasterCCC/DataMasterCCC'
+//import DataMasterCCC from './components/Dashboard/pages/DataMasterCCC/DataMasterCCC'
 import DownloadCsv from './components/Dashboard/pages/DownloadCsv/DownloadCsv'
 
 const App = ({ location }) => {
@@ -87,16 +87,16 @@ const App = ({ location }) => {
                 exact
                 component={DataTablePhones}
               />
-              <Route
+              {/* <Route
                 path="/dashboard/data-master-ccc"
                 exact
                 component={DataMasterCCC}
-              />
-              {/*<Route
+             />*/}
+              {/* <Route
                 path="/dashboard/list-phones"
                 exact
                 component={CleanList}
-              />*/}
+            />*/}
               <Route path="/dashboard/profile" exact component={ProfileUser} />
               <Route
                 path="/dashboard/bad-area-code"
@@ -108,13 +108,32 @@ const App = ({ location }) => {
                 exact
                 component={UploadCsv}
               />
-              <Route path="/dashboard/download-csv" exact component={DownloadCsv} />
+              <Route
+                path="/dashboard/download-csv"
+                exact
+                component={DownloadCsv}
+              />
 
-              <Route path="/admin/admin-dashboard" exact component={AdminHome} />
-              <Route path="/admin/list-users" exact component={AdminDashboard} />
-              <Route path="/admin/list-users/:id/edit" exact component={UpdateUser} />
-              <Route path="/admin/list-users/add" exact component={UpdateUser} />
-
+              <Route
+                path="/admin/admin-dashboard"
+                exact
+                component={AdminHome}
+              />
+              <Route
+                path="/admin/list-users"
+                exact
+                component={AdminDashboard}
+              />
+              <Route
+                path="/admin/list-users/:id/edit"
+                exact
+                component={UpdateUser}
+              />
+              <Route
+                path="/admin/list-users/add"
+                exact
+                component={UpdateUser}
+              />
             </Switch>
           </main>
           <Grid item container className={classes.copyright} xs={11} md={12}>

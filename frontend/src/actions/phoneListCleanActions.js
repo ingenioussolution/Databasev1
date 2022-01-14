@@ -71,6 +71,8 @@ export const listPhoneData = (page) => async (dispatch, getState) => {
     }
 
     const { data } = await axios.get(`/phoneslist?pageNumber=${page}`, config)
+    
+    console.log("call action load");
 
     dispatch({
       type: PHONE_CLEAN_LIST_SUCCESS,

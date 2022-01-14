@@ -59,12 +59,15 @@ export default makeStyles((theme) => ({
 
   paperCheck:{
     justifyItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'left',
     display: 'flex',
     boxShadow: '0px !important'
   },
 
   upload:{
     margin: "30px",
+  },
+  filtersSection: {
+    padding: theme.spacing(4),
   },
 }))

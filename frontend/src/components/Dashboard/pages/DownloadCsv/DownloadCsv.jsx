@@ -61,7 +61,7 @@ const DownloadCsv = () => {
       type: 'date',
       customSort: (a, b) => a.createdAt - b.createdAt,
     },
-  ]
+  ] 
   return (
     <Grid container item xs={12}>
       <Grid item xs={12}>

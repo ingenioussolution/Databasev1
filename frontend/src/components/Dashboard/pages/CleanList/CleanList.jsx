@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useLayoutEffect } from 'react'
 import { useHistory, useLocation } from 'react-router-dom'
 
 import { defaultColumns } from '../../../../utils/dataModels/PhoneListDataModel'
@@ -23,11 +23,14 @@ import {
   //MenuItem,
   //Select,
   TextField,
+  Button,
   //FormControl,
 } from '@material-ui/core'
-import { FaSearch } from 'react-icons/fa'
 
+import { FaSearch } from 'react-icons/fa'
+import Loader from '../../../Loader/Loader'
 import dataStyle from '../../../DataTable/styles'
+import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from './styles'
 
 const CleanList = () => {
@@ -36,6 +39,7 @@ const CleanList = () => {
   const dispatch = useDispatch()
   const location = useLocation()
   const history = useHistory()
+  const commons = layoutStyles()
   const query = location.search ? new URLSearchParams(location.search) : false
 
   const UserLogin = useSelector((state) => state.userLogin)
@@ -44,14 +48,14 @@ const CleanList = () => {
   const listPhone = useSelector((state) => state.listPhoneClean)
   const { loading, listPhones, page, pages } = listPhone
 
-  console.log('page current', page)
-
   //const [rowsPerPage, setRowsPerPage] = useState(10 || 5)
 
   const [order, setOrder] = useState('asc')
   const [orderBy, setOrderBy] = useState(listPhones ? listPhones : '')
-  const [pageState, setPageState] = useState(page || 0)
+  const [pageState, setPageState] = useState(0)
   const [selected, setSelected] = useState([])
+
+  console.log('page state: ', page)
 
   const clearFilters = {}
 
@@ -64,13 +68,21 @@ const CleanList = () => {
       history.push('/')
       return
     }
-    if (pageState === 0) {
-      setPageState(0)
-      dispatch(listPhoneData(pageState))
-    } else {
-      dispatch(listPhoneData(pageState))
-    }
-  }, [dispatch, history, pageState, userInfo])
+  }, [history, userInfo])
+
+  useLayoutEffect(() => {
+    dispatch(listPhoneData(pageState))
+  }, [dispatch, pageState])
+
+  // useEffect(() => {
+  //   if (pageState === 0) {
+  //     setPageState(0)
+  //     dispatch(listPhoneData(pageState))
+  //   } else {
+  //     dispatch(listPhoneData(pageState))
+  //   }
+
+  // }, [dispatch, pageState])
 
   const handleChangePage = (event, newPage) => {
     console.log('newPage', newPage)
@@ -103,93 +115,179 @@ const CleanList = () => {
     setFilterState({ ...filterState, [name]: value })
   }
 
-  console.log(filterState)
-
   const filterListPhones = (listPhones) => {
     return listPhones?.filter((phones) => {
       if (filterState.phone && !phones.phone.includes(filterState.phone))
         return false
       if (filterState.revenue && !phones.revenue.includes(filterState.revenue))
         return false
-      // if (filterState.clicker !== '' && phones.clicker !== filterState.clicker)
-      //   return false
-
       return true
     })
   }
 
-  useEffect(() => {
-    if (query) {
-      for (const filter of query.keys()) {
-        setFilterState({ ...filterState, [filter]: query.get(filter) })
-      }
-    }
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [loading])
+  // useEffect(() => {
+  //   if (query) {
+  //     for (const filter of query.keys()) {
+  //       setFilterState({ ...filterState, [filter]: query.get(filter) })
+  //     }
+  //   }
+  //   // eslint-disable-next-line react-hooks/exhaustive-deps
+  // }, [loading])
 
   const filters = (
-    <Grid container spacing={4} className={classes.filtersSection}>
-      <Grid item xs={12} md={4}>
-        <TextField
-          margin="normal"
-          label="Search by Phone"
-          type="phone"
-          name="phone"
-          fullWidth
-          className="dashboard-input"
-          variant="outlined"
-          onChange={handleFilterChange}
-          value={filterState.phone || ''}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <FaSearch />
-              </InputAdornment>
-            ),
-          }}
-        />
+    <Grid
+      container
+      spacing={4}
+      className={classes.filtersSection}
+      justifyContent="space-around"
+    >
+      <Grid
+        item
+        xs={12}
+        md={5}
+        container
+        rowSpacing={1}
+        style={{ border: '1px #accce3 solid', borderRadius: '10px' }}
+      >
+        <Grid item xs={12} container justifyContent="space-between">
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <TextField
+              margin="normal"
+              label="Search by Carrier"
+              type="text"
+              name="carrier"
+              fullWidth
+              className="dashboard-input"
+              variant="outlined"
+              onChange={handleFilterChange}
+              //value={filterState.carrier || ''}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FaSearch />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <TextField
+              margin="normal"
+              label="Search by Phone"
+              type="phone"
+              name="phone"
+              fullWidth
+              className="dashboard-input"
+              variant="outlined"
+              onChange={handleFilterChange}
+              //value={filterState.phone || ''}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FaSearch />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
+        <Grid item xs={12} container justifyContent="space-between">
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <TextField
+              margin="normal"
+              label="Search by Source"
+              type="text"
+              name="source"
+              fullWidth
+              className="dashboard-input"
+              variant="outlined"
+              onChange={handleFilterChange}
+              //value={filterState.source || ''}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FaSearch />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+          <Grid item xs={12} md={5}>
+            <TextField
+              margin="normal"
+              label="Search by Name"
+              type="name"
+              name="name"
+              fullWidth
+              className="dashboard-input"
+              variant="outlined"
+              onChange={handleFilterChange}
+              //value={filterState.name || ''}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <FaSearch />
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Grid>
+        </Grid>
       </Grid>
-      <Grid item xs={12} md={4}>
-        <TextField
-          margin="normal"
-          label="Search by Revenue"
-          type="revenue"
-          name="revenue"
-          fullWidth
-          className="dashboard-input"
-          variant="outlined"
-          onChange={handleFilterChange}
-          value={filterState.revenue || ''}
-          InputProps={{
-            startAdornment: (
-              <InputAdornment position="start">
-                <FaSearch />
-              </InputAdornment> 
-            ),
-          }}
-        />
+
+      <Grid
+        item
+        xs={12}
+        md={5}
+        container
+        rowSpacing={1}
+        style={{ border: '1px #accce3 solid', borderRadius: '10px' }}
+      >
+        <Grid item xs={12} container justifyContent="space-between">
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              className={commons.secondaryBtn}
+              endIcon={<FaSearch />}
+            >
+              Master CCC
+            </Button>
+          </Grid>
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              className={commons.secondaryBtn}
+              endIcon={<FaSearch />}
+            >
+              Not CCC
+            </Button>
+          </Grid>
+        </Grid>
+        <Grid item xs={12} container justifyContent="space-between">
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              className={commons.secondaryBtn}
+              endIcon={<FaSearch />}
+            >
+              Master CCC
+            </Button>
+          </Grid>
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <Button
+              fullWidth
+              variant="outlined"
+              className={commons.cancelBtn}
+              endIcon={<FaSearch />}
+            >
+              Search Data
+            </Button>
+          </Grid>
+        </Grid>
       </Grid>
-      {/*
-  <Grid item xs={12} md={4}>
-        <FormControl variant="outlined" className={classes.formControl}>
-          <InputLabel id="clicker-label">Clicker</InputLabel>
-          <Select
-            labelId="clicker-label"
-            name="clicker"
-            onChange={handleFilterChange}
-            label="clicker"
-            value={filterState.clicker}
-          >
-            <MenuItem value={''}>
-              <em>All</em>
-            </MenuItem>
-            <MenuItem value={'true'}>True</MenuItem>
-            <MenuItem value={'false'}>False</MenuItem>
-          </Select>
-        </FormControl>
-      </Grid>
-  */}
     </Grid>
   )
 
@@ -205,6 +303,7 @@ const CleanList = () => {
           columns={defaultColumns}
           identifier={'phone'}
         />
+
         {filters}
         <TableContainer>
           <Table
@@ -223,7 +322,7 @@ const CleanList = () => {
             />
             {!loading ? (
               <TableBody>
-                {createRows(filterListPhones(listPhones)).map((row, index) => {
+                {createRows(filterListPhones(listPhones))?.map((row, index) => {
                   return (
                     <TableRow
                       hover
@@ -256,7 +355,7 @@ const CleanList = () => {
               <TableBody>
                 <TableRow>
                   <TableCell colSpan={7} className={classesTable.tableLoader}>
-                    ...
+                    <Loader />
                   </TableCell>
                 </TableRow>
               </TableBody>

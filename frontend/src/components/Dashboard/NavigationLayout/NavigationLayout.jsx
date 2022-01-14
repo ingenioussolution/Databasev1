@@ -4,7 +4,12 @@ import { List, ListItem, ListItemIcon, ListItemText } from '@material-ui/core'
 import HomeIcon from '@material-ui/icons/Home'
 
 import clsx from 'clsx'
-import { FaListUl, FaPhoneSlash,FaCloudUploadAlt, FaCloudDownloadAlt } from 'react-icons/fa'
+import {
+  FaListUl,
+  FaPhoneSlash,
+  FaCloudUploadAlt,
+  FaCloudDownloadAlt,
+} from 'react-icons/fa'
 
 //import useStyles from './styles'
 
@@ -30,7 +35,6 @@ const NavigationLayout = () => {
             <ListItemText>Dashboard</ListItemText>
           </ListItem>
         </Link>
-
         <Link to={'/dashboard/data-table-phones'}>
           <ListItem
             button
@@ -46,20 +50,20 @@ const NavigationLayout = () => {
           </ListItem>
         </Link>
         {/* Master CCC */}
-        <Link to={'/dashboard/data-master-ccc'}>
-        <ListItem
-          button
-          key="dashboard-data-table-phones"
-          className={clsx({
-            active: pathname === '/dashboard/data-master-ccc',
-          })}
-        >
-          <ListItemIcon>
-            <FaListUl />
-          </ListItemIcon>
-          <ListItemText>Master CCC</ListItemText>
-        </ListItem>
-      </Link>
+        {/*<Link to={'/dashboard/data-master-ccc'}>
+          <ListItem
+            button
+            key="dashboard-data-table-phones"
+            className={clsx({
+              active: pathname === '/dashboard/data-master-ccc',
+            })}
+          >
+            <ListItemIcon>
+              <FaListUl />
+            </ListItemIcon>
+            <ListItemText>Master CCC</ListItemText>
+          </ListItem>
+          </Link>*/}
         <Link to={'/dashboard/bad-area-code'}>
           <ListItem
             button
@@ -71,27 +75,24 @@ const NavigationLayout = () => {
             <ListItemIcon>
               <FaPhoneSlash />
             </ListItemIcon>
-            <ListItemText>Bad Area Code</ListItemText>
+            <ListItemText>Bad States</ListItemText>
           </ListItem>
         </Link>
         <Link to={'/dashboard/upload-new-data'}>
-        <ListItem
-          button
-          key="upload-csv"
-          className={clsx({
-            active: pathname === '/dashboard/upload-new-data',
-          })}
-        >
-          <ListItemIcon>
-            <FaCloudUploadAlt />
-          </ListItemIcon>
-          <ListItemText>Upload New Data</ListItemText>
-        </ListItem>
-      </Link>
-
-  
-
-      <Link to={'/dashboard/download-csv'}>
+          <ListItem
+            button
+            key="upload-csv"
+            className={clsx({
+              active: pathname === '/dashboard/upload-new-data',
+            })}
+          >
+            <ListItemIcon>
+              <FaCloudUploadAlt />
+            </ListItemIcon>
+            <ListItemText>Upload New Data</ListItemText>
+          </ListItem>
+        </Link>
+        <Link to={'/dashboard/download-csv'}>
           <ListItem
             button
             key="dashboard-csv"
@@ -105,9 +106,7 @@ const NavigationLayout = () => {
             <ListItemText>Download Csv File</ListItemText>
           </ListItem>
         </Link>
-
-        {/*
-          <Link to={'/dashboard/list-phones'}>
+       {/* <Link to={'/dashboard/list-phones'}>
           <ListItem
             button
             key="dashboard-data-table-phones"
@@ -120,11 +119,7 @@ const NavigationLayout = () => {
             </ListItemIcon>
             <ListItemText>Data Table V1</ListItemText>
           </ListItem>
-        </Link>
-        */}
-      
-      
-        
+          </Link>*/}
         
       </List>
     </React.Fragment>

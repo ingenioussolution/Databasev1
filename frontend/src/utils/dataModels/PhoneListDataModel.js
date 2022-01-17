@@ -4,7 +4,7 @@ export const phone = {
   field: 'phone',
   title: 'Phone',
 }
-export const firstName = {
+export const firstName = { 
   field: 'firstName',
   title: 'First_Name',
 }

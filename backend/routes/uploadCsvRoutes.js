@@ -62,6 +62,11 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
 
           for (let x = 0; x < NewArray.length; x++) {
             NewArray[x].map(async (z) => {
+
+              if (data.clicker) {
+                temp = Boolean(data.clicker)
+                data.clicker = temp
+              }
               if (z.clicker) {
                 temp = Boolean(z.clicker)
                 z.clicker = temp
@@ -176,6 +181,11 @@ router.post('/test', upload.single('file'), async (req, res) => {
           for (let x = 0; x < NewArray.length; x++) {
             NewArray[x].reduce(async (prev, data) => {
               await prev
+             
+              if (data.repliers) {
+                temp = Boolean(data.repliers)
+                data.repliers = temp
+              }
               if (data.clicker) {
                 temp = Boolean(data.clicker)
                 data.clicker = temp

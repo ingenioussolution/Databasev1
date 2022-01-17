@@ -52,7 +52,7 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
     const createdAt_end = req.query.end
     const areaCode = req.query.areaCode
     let sourceFilter = req.query.source
-    let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
+    let source = { $regex: '/^' + `${sourceFilter}` + '/', $options: 'i' }
 
     let arrayFilters = []
     let arrayExport = []
@@ -193,7 +193,7 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
 
       await fastcsv
         .write(arrayExport, {
-          headers: arrayHeader,
+          headers: arrayHeader, 
         })
         .pipe(ws)
         .on('finish', function () {

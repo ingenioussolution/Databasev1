@@ -29,6 +29,7 @@ export const listPhoneCleanReducer = (state = { listPhones: [] }, action) => {
     case PHONE_CLEAN_LIST_SUCCESS:
       return {
         loading: false,
+        success: true,
         listPhones: action.payload.data,
         page: action.payload.page,
         pages: action.payload.totalPages,

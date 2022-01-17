@@ -154,6 +154,11 @@ const PhoneListSchema = mongoose.Schema(
       type: Boolean,
       default:false,
     },
+    
+    repliers:{
+      type: Boolean,
+      default:false,
+    },
   },
   {
     timestamps: true,

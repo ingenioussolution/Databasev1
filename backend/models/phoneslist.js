@@ -152,6 +152,11 @@ const PhoneListSchema = mongoose.Schema(
     
     burstOptOut:{
       type: Boolean,
+      default:false, 
+    },
+
+    repliers:{
+      type: Boolean,
       default:false,
     },
   },

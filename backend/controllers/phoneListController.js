@@ -127,7 +127,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const converter = req.query.converter
     const suppressed = req.query.suppressed
     let sourceFilter = req.query.source
-    let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
+    let source = { $regex: '^' + `${sourceFilter}`+'.*$', $options: 'i' }
     let carrierFilter = req.query.carrier
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
     const firstNameFilter = req.query.firstName
@@ -259,7 +259,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       //   .count()
       //   .lean()
       //const count = await PhoneList.countDocuments({})
-    
+
       let count = await PhoneList.count().limit(500000)
       const total = Math.ceil(count / pageSize)
 

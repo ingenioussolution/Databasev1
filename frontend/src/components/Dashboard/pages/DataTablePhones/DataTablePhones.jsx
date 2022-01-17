@@ -25,9 +25,12 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
+  FormLabel,
   InputAdornment,
   TextField,
   Snackbar,
+  Radio,
+  RadioGroup,
 } from '@material-ui/core'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from './styles'
@@ -53,6 +56,7 @@ const DataTablePhones = () => {
   const [queryExport, setQueryExport] = useState('')
   const [filter, setFilter] = useState('')
   const [areaCode, setAreaCode] = useState(false)
+  const [checkGroup, setCheckGroup] = useState({masterCCC:false, areaCode: false,  notCCC:false})
 
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
@@ -60,7 +64,10 @@ const DataTablePhones = () => {
   const listExportData = useSelector((state) => state.listExportData)
   const { loading, error: exportError, success } = listExportData
 
-  console.log('loading', loading)
+  const listData = useSelector((state) => state.listPhoneClean)
+  const { error: errorData, success: successData } = listData
+
+  console.log('successData', successData)
 
   const [totalProcessPages, setTotalPages] = useState()
   const [errorMsg, setErrorMsg] = useState('')
@@ -255,7 +262,7 @@ const DataTablePhones = () => {
         }
 
         if (filterState.areaCode) {
-          url += '&urlCCC=' + true
+          url += '&areaCode=' + true
           urlExport += '&areaCode=' + true
         }
 
@@ -325,15 +332,11 @@ const DataTablePhones = () => {
       }
     })
 
-  useEffect(() => {
-    console.log('filter count', filter)
-  }, [filter])
-
   //verify onclick Export Button
   useEffect(() => {
     if (exportCSV) {
       console.log('totalProcessPages', totalProcessPages)
-      if (totalProcessPages > 25000) {
+      if (totalProcessPages > 50000) {
         Swal.fire({
           icon: 'info',
           title: 'Exceeded limit of rows to export',
@@ -361,21 +364,26 @@ const DataTablePhones = () => {
   }, [exportCSV])
 
   const handleChangeAreaCode = (event) => {
-    setAreaCode(event.target.checked)
+    //setAreaCode(event.target.checked)
+    setFilterState({ ...filterState, areaCode: event.target.checked  })
+    setCheckGroup({...checkGroup, masterCCC:true, notCCC:true})  
   }
 
   const handleChangeMasterCCC = (event) => {
-    setFilterState({ ...filterState, masterCCC: event.target.checked })
-  }
+    setFilterState({ ...filterState, masterCCC: event.target.checked  })
+    setCheckGroup({...checkGroup, notCCC:true, areaCode:true})  }
 
   const handleChangeNotCCC = (event) => {
     setFilterState({ ...filterState, notCCC: event.target.checked })
+    setCheckGroup({...checkGroup, masterCCC:true, areaCode:true})
   }
 
   const handleFilterChange = (evt) => {
     const { value, name } = evt.target
     setFilterState({ ...filterState, [name]: value })
   }
+
+  console.log('filterState', filterState)
 
   const handleDateRangePickerChange = (range) => {
     setFilterState({
@@ -406,6 +414,11 @@ const DataTablePhones = () => {
       phone: '',
       areaCode: '',
       name: '',
+    })
+    setCheckGroup({
+      notCCC: false,
+      masterCCC:false,
+      areaCode: false
     })
     tableRef.current.onQueryChange()
   }
@@ -450,7 +463,7 @@ const DataTablePhones = () => {
             <TextField
               margin="normal"
               label="Search by Phone"
-              type="phone"
+              type="number"
               name="phone"
               fullWidth
               className="dashboard-input"
@@ -492,7 +505,7 @@ const DataTablePhones = () => {
             <TextField
               margin="normal"
               label="Search by Name"
-              type="name"
+              type="text"
               name="name"
               fullWidth
               className="dashboard-input"
@@ -524,9 +537,11 @@ const DataTablePhones = () => {
         }}
       >
         <Grid item xs={12} container justifyContent="space-between">
-          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
-            <Grid className={classes.paperCheck}>
-              <FormControl component="fieldset">
+      
+
+       <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+         <Grid className={classes.paperCheck}>
+              <FormControl component="fieldset" disabled = {checkGroup.masterCCC} >
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -543,7 +558,7 @@ const DataTablePhones = () => {
           </Grid>
           <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
             <Grid className={classes.paperCheck}>
-              <FormControl component="fieldset">
+              <FormControl component="fieldset" disabled = {checkGroup.notCCC} >
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -558,15 +573,16 @@ const DataTablePhones = () => {
               </FormControl>
             </Grid>
           </Grid>
+              
         </Grid>
         <Grid item xs={12} container justifyContent="space-between">
           <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
             <Grid className={classes.paperCheck}>
-              <FormControl component="fieldset">
+              <FormControl component="fieldset"  disabled = {checkGroup.areaCode}>
                 <FormControlLabel
                   control={
                     <Checkbox
-                      checked={areaCode}
+                      checked={filterState.areaCode}
                       onChange={handleChangeAreaCode}
                       name="areaCode"
                       color="primary"
@@ -604,6 +620,15 @@ const DataTablePhones = () => {
     if (exportError) setErrorMsg(exportError)
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportError, success])
+
+  useEffect(() => {
+    if (successData) {
+      dispatch({ type: PHONE_CLEAN_LIST_RESET })
+      setSuccessMsg('Search Complete')
+    }
+    if (errorData) setErrorMsg(errorData)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [errorData, successData])
 
   return (
     <div>

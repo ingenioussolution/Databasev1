@@ -6,30 +6,10 @@ import ModelTemporal from '../models/TemporalData.js'
 
 export const ImportDataAll = asyncHandler(async (req, res, next) => {
   try {
-    // let requestCount = 10000 //parseInt(req.query.count) || 100000
-    // let count = await ModelTemporal.countDocuments()
-    // const skipCount = 10000
-    // const size = 10000
-    // const total = Math.ceil(count / requestCount)
+    let count = await ModelTemporal.countDocuments()
+
     let newPhone = []
     let updatePhone = []
-    let resultTemp = []
-    // let TemporalData = []
-
-    // console.log('total ', total)
-    // if (total) {
-    //   for (let i = 1; i <= total; i++) {
-    //     console.log('next ', i, total)
-
-    //     await ModelTemporal.find({})
-    //       .limit(requestCount)
-    //       .skip(skipCount * (i - 1))
-    //       .then((result) => {
-    //         resultTemp.push(...result)
-    //       })
-
-    //     console.log('resultTemp', resultTemp.length)
-    //   }
 
     const cursor = ModelTemporal.find({}).cursor()
     for (
@@ -41,27 +21,29 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
         phone: phoneCount.phone,
       })
 
-      // if (resultTemp.length !== 0) {
-      // const chunk = (arr, size) =>
-      //   Array.from({ length: Math.ceil(arr.length / size) }, (v, i) =>
-      //     TemporalData.push(arr.slice(i * size, i * size + size))
-      //   )
-      // console.log('chunk', chunk(resultTemp, size))
-      // console.log('NewArray', TemporalData.length)
-
-      // for (let x = 0; x < TemporalData.length; x++) {
-      //   await TemporalData[x].reduce(async (prev, phoneCount) => {
-      //     await prev
-      //     const phoneExists = await PhoneList.findOne({
-      //       phone: phoneCount.phone,
-      //     })
-      //console.log('phoneCount', phoneCount.phone)
-
       if (phoneExists) {
         console.log('Phone Exists')
         // Count total update phones
         updatePhone.push(phoneExists)
 
+        phoneExists.burstOptOut =
+          phoneExists.burstOptOut === undefined
+            ? phoneCount.burstOptOut
+            : phoneExists.burstOptOut === phoneCount.burstOptOut
+            ? phoneExists.burstOptOut
+            : phoneCount.burstOptOut === undefined
+            ? phoneExists.burstOptOut
+            : phoneCount.burstOptOut
+        //--------------------------------------------------------------------
+        phoneExists.repliers =
+          phoneExists.repliers === undefined
+            ? phoneCount.repliers
+            : phoneExists.repliers === phoneCount.repliers
+            ? phoneExists.repliers
+            : phoneCount.repliers === undefined
+            ? phoneExists.repliers
+            : phoneCount.repliers
+        //--------------------------------------------------------------------
         phoneExists.firstName =
           phoneExists.firstName === undefined
             ? phoneCount.firstName
@@ -518,6 +500,8 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
           vertical: phoneCount.vertical,
           vertical2: phoneCount.vertical2,
           vertical3: phoneCount.vertical3,
+          vertical2: phoneCount.repliers,
+          vertical3: phoneCount.burstOptOut,
         })
 
         if (phoneCreated) {

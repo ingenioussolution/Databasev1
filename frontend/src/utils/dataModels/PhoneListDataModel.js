@@ -192,6 +192,19 @@ export const recentAbuse = {
   ),
   filtering: false,
 }
+
+export const repliers = {
+  field: 'repliers',
+  title: 'Repliers',
+  align: 'center',
+  render: (row) => (
+    <div className={row.repliers ? 'text-success' : 'text-error'}>
+      {row.repliers ? 'True' : 'False'}
+    </div>
+  ),
+  filtering: false,
+} 
+
 export const fraudScore = {
   field: 'fraudScore',
   title: 'FraudScore',
@@ -438,6 +451,7 @@ export const defaultColumns = [
   suppressed,
   source,
   revenue,
+  repliers,
   createdAt,
   updatedAt,
   email,

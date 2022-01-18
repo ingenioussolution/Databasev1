@@ -500,8 +500,8 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
           vertical: phoneCount.vertical,
           vertical2: phoneCount.vertical2,
           vertical3: phoneCount.vertical3,
-          vertical2: phoneCount.repliers,
-          vertical3: phoneCount.burstOptOut,
+          repliers: phoneCount.repliers,
+          burstOptOut: phoneCount.burstOptOut,
         })
 
         if (phoneCreated) {
@@ -522,14 +522,10 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
           throw new Error('Invalid Phone data')
         }
       }
-      //   return Promise.resolve()
-      // }, Promise.resolve())
 
       let countData = await ModelTemporal.countDocuments()
       if (!countData) {
         console.log('SUCCESS')
-
-        resultTemp = []
         res.status(200).json({
           message: 'Import Successfully !!!!',
           news: newPhone.length,
@@ -537,14 +533,7 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
           total: count,
         })
       }
-      // }
-      // }
     }
-    // else {
-    //   res.status(200).json({
-    //     message: `Import Successfully data es empty ${total}!!!!`,
-    //   })
-    // }
   } catch (error) {
     next(error)
   }

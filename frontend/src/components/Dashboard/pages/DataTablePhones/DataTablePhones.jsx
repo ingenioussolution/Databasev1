@@ -25,12 +25,12 @@ import {
   Checkbox,
   FormControl,
   FormControlLabel,
-  FormLabel,
   InputAdornment,
   TextField,
   Snackbar,
-  Radio,
-  RadioGroup,
+  Select,
+  InputLabel,
+  MenuItem,
 } from '@material-ui/core'
 import layoutStyles from '../../../DashboardLayout/styles'
 import useStyles from './styles'
@@ -54,9 +54,17 @@ const DataTablePhones = () => {
   const [dataTable, setDataTable] = useState([])
   const [exportCSV, setExportCSV] = useState(false)
   const [queryExport, setQueryExport] = useState('')
-  const [filter, setFilter] = useState('')
-  const [areaCode, setAreaCode] = useState(false)
-  const [checkGroup, setCheckGroup] = useState({masterCCC:false, areaCode: false,  notCCC:false})
+  //const [filter, setFilter] = useState('')
+  //const [areaCode, setAreaCode] = useState(false)
+  const [checkGroup, setCheckGroup] = useState({
+    masterCCC: false,
+    areaCode: false,
+    notCCC: false,
+    clicker: false,
+    converter: false,
+    dateUpdate: false,
+    dateCreate: false,
+  })
 
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
@@ -74,6 +82,8 @@ const DataTablePhones = () => {
   const [successMsg, setSuccessMsg] = useState('')
 
   const [filterState, setFilterState] = useState({
+    startUpdateDate: '',
+    endUpdateDate: '',
     startDate: '',
     endDate: '',
     carrier: '',
@@ -83,7 +93,9 @@ const DataTablePhones = () => {
     notCCC: '',
     phone: '',
     areaCode: '',
-    name: '',
+    repliers: '',
+    clicker: '',
+    converter: '',
   })
 
   const handleAlertClose = () => {
@@ -104,119 +116,119 @@ const DataTablePhones = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [history, userInfo, dispatch])
 
-  const dataPagination = (query) =>
-    new Promise((resolve, reject) => {
-      if (userInfo === null || userInfo === undefined) {
-        history.push('/')
-        return
-      } else {
-        dispatch({
-          type: PHONE_CLEAN_LIST_REQUEST,
-        })
+  // const dataPagination = (query) =>
+  //   new Promise((resolve, reject) => {
+  //     if (userInfo === null || userInfo === undefined) {
+  //       history.push('/')
+  //       return
+  //     } else {
+  //       dispatch({
+  //         type: PHONE_CLEAN_LIST_REQUEST,
+  //       })
 
-        const config = {
-          headers: {
-            'Content-Type': 'application/json',
-            Authorization: `Bearer ${userInfo.token}`,
-          },
-        }
+  //       const config = {
+  //         headers: {
+  //           'Content-Type': 'application/json',
+  //           Authorization: `Bearer ${userInfo.token}`,
+  //         },
+  //       }
 
-        let url = '/phoneslist?'
-        let urlExport = 'export-csv?'
-        urlExport += '&user=' + userInfo._id
-        let urlCount = 'count-filter?'
+  //       let url = '/phoneslist?'
+  //       let urlExport = 'export-csv?'
+  //       urlExport += '&user=' + userInfo._id
+  //       let urlCount = 'count-filter?'
 
-        url += '&pageNumber=' + (query.page + 1)
+  //       url += '&pageNumber=' + (query.page + 1)
 
-        //searching area Code
-        if (query.search) {
-          url += '&q=' + query.search
-          urlExport += '&q=' + query.search
-        }
+  //       //searching area Code
+  //       if (query.search) {
+  //         url += '&q=' + query.search
+  //         urlExport += '&q=' + query.search
+  //       }
 
-        //filtering
-        if (query.filters.length) {
-          const filter = query.filters.map((filter) => {
-            //return `&${filter.column.field}${filter.operator}${filter.value}`
-            let filterType = `${filter.column.field}`
-            let valueFilter = `${filter.value}`
+  //       //filtering
+  //       if (query.filters.length) {
+  //         const filter = query.filters.map((filter) => {
+  //           //return `&${filter.column.field}${filter.operator}${filter.value}`
+  //           let filterType = `${filter.column.field}`
+  //           let valueFilter = `${filter.value}`
 
-            console.log('valueFilter', valueFilter)
+  //           console.log('valueFilter', valueFilter)
 
-            let encoded = encodeURIComponent(valueFilter)
-            console.log('encoded filter', encoded)
-            return '&' + filterType + `${filter.operator}` + encoded
-          })
-          url += filter.join('')
-          urlExport += filter.join('')
-        }
+  //           let encoded = encodeURIComponent(valueFilter)
+  //           console.log('encoded filter', encoded)
+  //           return '&' + filterType + `${filter.operator}` + encoded
+  //         })
+  //         url += filter.join('')
+  //         urlExport += filter.join('')
+  //       }
 
-        //sorting
-        if (query.orderBy) {
-          url += '&sort='(query.orderBy.field) + '&order='(query.orderDirection)
-        }
+  //       //sorting
+  //       if (query.orderBy) {
+  //         url += '&sort='(query.orderBy.field) + '&order='(query.orderDirection)
+  //       }
 
-        if (areaCode) {
-          url += '&areaCode=' + true
-          urlExport += '&areaCode=' + true
-        }
+  //       if (areaCode) {
+  //         url += '&areaCode=' + true
+  //         urlExport += '&areaCode=' + true
+  //       }
 
-        if (filterState.startDate !== '') {
-          url += '&start=' + moment(filterState.startDate).format('YYYY-MM-DD')
-          urlExport +=
-            '&start=' + moment(filterState.startDate).format('YYYY-MM-DD')
-        } else {
-          url += '&start='
-          urlExport += '&start='
-        }
+  //       if (filterState.startDate !== '') {
+  //         url += '&start=' + moment(filterState.startDate).format('YYYY-MM-DD')
+  //         urlExport +=
+  //           '&start=' + moment(filterState.startDate).format('YYYY-MM-DD')
+  //       } else {
+  //         url += '&start='
+  //         urlExport += '&start='
+  //       }
 
-        if (filterState.endDate !== '') {
-          url += '&end=' + moment(filterState.endDate).format('YYYY-MM-DD')
-          urlExport +=
-            '&end=' + moment(filterState.endDate).format('YYYY-MM-DD')
-        } else {
-          url += '&end='
-          urlExport += '&end='
-        }
+  //       if (filterState.endDate !== '') {
+  //         url += '&end=' + moment(filterState.endDate).format('YYYY-MM-DD')
+  //         urlExport +=
+  //           '&end=' + moment(filterState.endDate).format('YYYY-MM-DD')
+  //       } else {
+  //         url += '&end='
+  //         urlExport += '&end='
+  //       }
 
-        console.log('URL with filters: ', url)
-        console.log('Query: ', query)
+  //       console.log('URL with filters: ', url)
+  //       console.log('Query: ', query)
 
-        axios
-          .get(url, config)
-          .catch((error) => {
-            console.log(error.response)
-            dispatch({
-              type: PHONE_CLEAN_LIST_FAIL,
-              payload:
-                error.response && error.response.data.message
-                  ? error.response.data.message
-                  : error.message,
-            })
-          })
-          .then((result) => {
-            if (result.data !== undefined) {
-              resolve({
-                data: createRows(result.data.data),
-                page: result.data.page - 1,
-                totalCount: result.data.totalPages,
-              })
-            } else {
-              ;<Loader />
-            }
-            setDataTable(result)
-            console.log('urlExport', urlExport)
-            setQueryExport(urlExport)
-            setTotalPages(result.data.totalPages)
-            setFilter(urlCount)
-          })
+  //       axios
+  //         .get(url, config)
+  //         .catch((error) => {
+  //           console.log(error.response)
+  //           dispatch({
+  //             type: PHONE_CLEAN_LIST_FAIL,
+  //             payload:
+  //               error.response && error.response.data.message
+  //                 ? error.response.data.message
+  //                 : error.message,
+  //           })
+  //         })
+  //         .then((result) => {
+  //           if (result.data !== undefined) {
+  //             resolve({
+  //               data: createRows(result.data.data),
+  //               page: result.data.page - 1,
+  //               totalCount: result.data.totalPages,
+  //             })
+  //           } else {
+  //             ;<Loader />
+  //           }
+  //           setDataTable(result)
+  //           console.log('urlExport', urlExport)
+  //           setQueryExport(urlExport)
+  //           setTotalPages(result.data.totalPages)
+  //           setFilter(urlCount)
+  //         })
 
-        dispatch({
-          type: PHONE_CLEAN_LIST_SUCCESS,
-          payload: dataTable,
-        })
-      }
-    })
+  //       dispatch({
+  //         type: PHONE_CLEAN_LIST_SUCCESS,
+  //         payload: dataTable,
+  //       })
+  //     }
+  //   })
 
   const dataReports = (query) =>
     new Promise((resolve, reject) => {
@@ -261,9 +273,25 @@ const DataTablePhones = () => {
           urlExport += '&source=' + filterState.source
         }
 
-        if (filterState.areaCode) {
-          url += '&areaCode=' + true
-          urlExport += '&areaCode=' + true
+        if (filterState.areaCode !== '') {
+          url += '&areaCode=' + filterState.areaCode
+          urlExport += '&areaCode=' + filterState.areaCode
+        }
+
+        if (filterState.clicker !== '') {
+          url += '&clicker=' + filterState.clicker
+          urlExport += '&clicker=' + filterState.clicker
+        }
+
+        if (filterState.converter !== '') {
+          url += '&converter=' + filterState.converter
+          urlExport += '&converter=' + filterState.converter
+        }
+
+        // repliers
+        if (filterState.repliers !== '') {
+          url += '&repliers=' + filterState.repliers
+          urlExport += '&repliers=' + filterState.repliers
         }
 
         if (filterState.masterCCC) {
@@ -340,7 +368,7 @@ const DataTablePhones = () => {
         Swal.fire({
           icon: 'info',
           title: 'Exceeded limit of rows to export',
-          text: 'No more than 250,000',
+          text: 'No more than 500,000',
         }).then((result) => {
           if (result.isConfirmed) {
             setExportCSV(false)
@@ -363,19 +391,12 @@ const DataTablePhones = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [exportCSV])
 
-  const handleChangeAreaCode = (event) => {
-    //setAreaCode(event.target.checked)
-    setFilterState({ ...filterState, areaCode: event.target.checked  })
-    setCheckGroup({...checkGroup, masterCCC:true, notCCC:true})  
-  }
-
   const handleChangeMasterCCC = (event) => {
-    setFilterState({ ...filterState, masterCCC: event.target.checked  })
-    setCheckGroup({...checkGroup, notCCC:true, areaCode:true})  }
+    setFilterState({ ...filterState, masterCCC: event.target.checked })
+  }
 
   const handleChangeNotCCC = (event) => {
     setFilterState({ ...filterState, notCCC: event.target.checked })
-    setCheckGroup({...checkGroup, masterCCC:true, areaCode:true})
   }
 
   const handleFilterChange = (evt) => {
@@ -385,11 +406,79 @@ const DataTablePhones = () => {
 
   console.log('filterState', filterState)
 
+  useEffect(() => {
+    if (
+      filterState.areaCode !== '' ||
+      filterState.clicker !== '' ||
+      filterState.converter !== ''
+    ) {
+      setCheckGroup({ ...checkGroup, masterCCC: true, notCCC: true })
+    } else {
+      setCheckGroup({ ...checkGroup, masterCCC: false, notCCC: false })
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterState])
+
+  useEffect(() => {
+    if (filterState.notCCC === true) {
+      setCheckGroup({
+        ...checkGroup,
+        masterCCC: true,
+        clicker: true,
+        converter: true,
+        areaCode: true,
+      })
+    } else {
+      setCheckGroup({
+        ...checkGroup,
+        masterCCC: false,
+        clicker: false,
+        converter: false,
+        areaCode: false,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterState.notCCC])
+
+  useEffect(() => {
+    if (filterState.masterCCC === true) {
+      setCheckGroup({
+        ...checkGroup,
+        notCCC: true,
+        clicker: true,
+        converter: true,
+        areaCode: true,
+      })
+    } else {
+      setCheckGroup({
+        ...checkGroup,
+        notCCC: false,
+        clicker: false,
+        converter: false,
+        areaCode: false,
+      })
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [filterState.masterCCC])
+
+  console.log('checkGroup', checkGroup)
+
   const handleDateRangePickerChange = (range) => {
+ 
     setFilterState({
       ...filterState,
       startDate: range.start,
       endDate: range.end,
+    })
+  }
+
+  const handleDateRangePickerChangeUpdate = (range) => {
+  
+    setFilterState({
+      ...filterState,
+      startUpdateDate: range.start,
+      endUpdateDate: range.end,
     })
   }
 
@@ -401,6 +490,13 @@ const DataTablePhones = () => {
     })
   }
 
+  const handleClearDateRangePickerUpdate = () => {
+    setFilterState({
+      ...filterState,
+      startUpdateDate: '',
+      endUpdateDate: '',
+    })
+  }
   const handleClearFilters = () => {
     setFilterState({
       ...filterState,
@@ -413,13 +509,16 @@ const DataTablePhones = () => {
       notCCC: '',
       phone: '',
       areaCode: '',
-      name: '',
+      clicker: '',
+      converter: '',
+      repliers: '',
     })
+
     setCheckGroup({
       notCCC: false,
-      masterCCC:false,
-      areaCode: false
+      masterCCC: false,
     })
+
     tableRef.current.onQueryChange()
   }
 
@@ -433,7 +532,7 @@ const DataTablePhones = () => {
       <Grid
         item
         xs={12}
-        md={5}
+        md={4}
         container
         rowSpacing={1}
         style={{ border: '1px #accce3 solid', borderRadius: '10px' }}
@@ -523,11 +622,10 @@ const DataTablePhones = () => {
           </Grid>
         </Grid>
       </Grid>
-
       <Grid
         item
         xs={12}
-        md={5}
+        md={3}
         container
         rowSpacing={1}
         style={{
@@ -537,11 +635,124 @@ const DataTablePhones = () => {
         }}
       >
         <Grid item xs={12} container justifyContent="space-between">
-      
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              className={classes.formControl}
+            >
+              <InputLabel id="repliers-label" className={classes.labelSelect}>
+                Repliers
+              </InputLabel>
+              <Select
+                labelId="repliers-label"
+                name="repliers"
+                onChange={handleFilterChange}
+                label="Repliers"
+                value={filterState.repliers}
+              >
+                <MenuItem value={''}>
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem value={true}>true</MenuItem>
+                <MenuItem value={false}>false</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              className={classes.formControl}
+              disabled={checkGroup.clicker}
+            >
+              <InputLabel id="clicker-label" className={classes.labelSelect}>
+                Clicker
+              </InputLabel>
+              <Select
+                labelId="clicker-label"
+                name="clicker"
+                onChange={handleFilterChange}
+                label="Clicker"
+                value={filterState.clicker}
+              >
+                <MenuItem value={''}>
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem value={true}>true</MenuItem>
+                <MenuItem value={false}>false</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              className={classes.formControl}
+              disabled={checkGroup.converter}
+            >
+              <InputLabel id="converter-label" className={classes.labelSelect}>
+                Converter
+              </InputLabel>
+              <Select
+                labelId="converter-label"
+                name="converter"
+                onChange={handleFilterChange}
+                label="Converter"
+                value={filterState.converter}
+              >
+                <MenuItem value={''}>
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem value={true}>true</MenuItem>
+                <MenuItem value={false}>false</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
 
-       <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
-         <Grid className={classes.paperCheck}>
-              <FormControl component="fieldset" disabled = {checkGroup.masterCCC} >
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              className={classes.formControl}
+              disabled={checkGroup.areaCode}
+            >
+              <InputLabel id="area-code-label" className={classes.labelSelect}>
+                Area Code
+              </InputLabel>
+              <Select
+                labelId="area-code-label"
+                name="areaCode"
+                onChange={handleFilterChange}
+                label="AreaCode"
+                value={filterState.areaCode}
+              >
+                <MenuItem value={''}>
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem value={true}>true</MenuItem>
+                <MenuItem value={false}>false</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+        </Grid>
+      </Grid>
+      <Grid
+        item
+        xs={12}
+        md={4}
+        container
+        rowSpacing={1}
+        style={{
+          border: '1px #accce3 solid',
+          borderRadius: '10px',
+          float: 'left',
+        }}
+      >
+        <Grid item xs={12} container justifyContent="space-between">
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <Grid className={classes.paperCheck}>
+              <FormControl component="fieldset" disabled={checkGroup.masterCCC}>
                 <FormControlLabel
                   control={
                     <Checkbox
@@ -558,13 +769,13 @@ const DataTablePhones = () => {
           </Grid>
           <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
             <Grid className={classes.paperCheck}>
-              <FormControl component="fieldset" disabled = {checkGroup.notCCC} >
+              <FormControl component="fieldset" disabled={checkGroup.notCCC}>
                 <FormControlLabel
                   control={
                     <Checkbox
                       checked={filterState.notCCC}
                       onChange={handleChangeNotCCC}
-                      name="masterCCC"
+                      name="notCCC"
                       color="primary"
                     />
                   }
@@ -573,26 +784,8 @@ const DataTablePhones = () => {
               </FormControl>
             </Grid>
           </Grid>
-              
         </Grid>
         <Grid item xs={12} container justifyContent="space-between">
-          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
-            <Grid className={classes.paperCheck}>
-              <FormControl component="fieldset"  disabled = {checkGroup.areaCode}>
-                <FormControlLabel
-                  control={
-                    <Checkbox
-                      checked={filterState.areaCode}
-                      onChange={handleChangeAreaCode}
-                      name="areaCode"
-                      color="primary"
-                    />
-                  }
-                  label="Bad State"
-                />
-              </FormControl>
-            </Grid>
-          </Grid>
           <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
             <Button
               fullWidth
@@ -605,6 +798,19 @@ const DataTablePhones = () => {
             >
               Search
             </Button>
+          </Grid>
+
+          <Grid item xs={12} md={5}>
+            <Tooltip title="Clear Filters" aria-label="clearFilters">
+              <Button
+                variant="outlined"
+                className={commons.secondaryBtn}
+                endIcon={<FaSearch />}
+                onClick={handleClearFilters}
+              >
+                Clean Filters
+              </Button>
+            </Tooltip>
           </Grid>
         </Grid>
       </Grid>
@@ -674,22 +880,21 @@ const DataTablePhones = () => {
                     endValue={filterState.endDate}
                     onChange={handleDateRangePickerChange}
                     onClear={handleClearDateRangePicker}
+                    disabled={checkGroup.dateCreate}
+                    title={'Create Date'}
                   />
                 </Grid>
 
-                <Grid item xs={12} sm={3} md={2}>
-                  <Tooltip title="Clear Filters" aria-label="clearFilters">
-                    <Button
-                      variant="outlined"
-                      className={commons.secondaryBtn}
-                      endIcon={<FaSearch />}
-                      onClick={handleClearFilters}
-                    >
-                      Clean Filters
-                    </Button>
-                  </Tooltip>
-                </Grid>
-
+                {/*<Grid item xs={12} sm={3} md={2}>
+                  <DateRangePicker
+                    startValue={filterState.startUpdateDate}
+                    endValue={filterState.endUpdateDate}
+                    onChange={handleDateRangePickerChangeUpdate}
+                    onClear={handleClearDateRangePickerUpdate}
+                    disabled={checkGroup.dateUpdate}
+                    title={'Update Date'}
+                  />
+  </Grid>*/}
                 <Grid item xs={12} sm={3} md={2}>
                   <Tooltip title="Export" aria-label="export">
                     {!loading ? (
@@ -713,6 +918,7 @@ const DataTablePhones = () => {
                       className={commons.successBtn}
                       endIcon={<FaFileDownload />}
                       href={'/dashboard/download-csv'}
+                      fullWidth
                     >
                       Download
                     </Button>

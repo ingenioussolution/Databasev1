@@ -170,7 +170,7 @@ PhoneListSchema.plugin(aggregatePaginate);
 
 PhoneListSchema.index({ createdAt: 1})
 PhoneListSchema.index({ updatedAt: 1}) 
-PhoneListSchema.index({ carrier: 1})
+PhoneListSchema.index({ carrier: 1, source:1, firstName:1, repliers:1, clicker:1,converter:1,suppressed:1,hardBounce:1})
 const PhoneList = mongoose.model('PhoneList', PhoneListSchema)
 
 export default PhoneList

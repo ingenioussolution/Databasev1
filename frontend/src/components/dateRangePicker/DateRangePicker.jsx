@@ -24,7 +24,7 @@ import layoutStyles from '../../components/DashboardLayout/styles'
 import useStyles from './styles'
 import moment from 'moment'
 
-const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
+const DateRangePicker = ({ startValue, endValue, onChange, onClear, title }) => {
   const commons = layoutStyles()
   const classes = useStyles()
 
@@ -137,7 +137,7 @@ const DateRangePicker = ({ startValue, endValue, onChange, onClear }) => {
       <TextField
         className={classes.dataRange}
         margin='normal'
-        label='Date Between'
+        label={title}
         value={`${range?.start ? dateFormat(range.start) + ' -to-' : ''} ${
           range?.end ? dateFormat(range.end) : ''
         }`}

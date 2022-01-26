@@ -70,4 +70,13 @@ export default makeStyles((theme) => ({
   filtersSection: {
     padding: theme.spacing(4),
   },
+
+  formControl: {
+    width: '100%',
+ 
+  },
+
+  labelSelect:{
+    //transform: 'translate(20px, 10px) scale(1) !important',
+  },
 }))

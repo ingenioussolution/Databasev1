@@ -7,10 +7,10 @@ import ExportCsv from '../models/ExportCSVModel.js'
 import User from '../models/userModel.js'
 import mongoose from 'mongoose'
 
-//const dateTime = moment.utc().format('YYYY-MM-DD-h-mm-ss')
-const dateTime = moment().format('YYYY-MM-DD-h-mm-ss')
 
-let current_user = ''
+//const dateTime = moment.utc().format('YYYY-MM-DD-h-mm-ss')
+const dateTime = moment().format('YYYY-MM-DD')
+
 aws.config = new aws.Config({
   accessKeyId: process.env.AWS_ACCESS_KEY_ID,
   secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
@@ -27,8 +27,13 @@ const s3 = new aws.S3({
 // UPLOAD FILE TO S3
 export const uploadExportFile = async (file, user) => {
   const parsed = parse(file)
+
+  const nameUser = await User.findById(user)
+
+  console.log("userName:", nameUser.username)
+
   console.log('filename: ', dateTime + '-' +path.basename(parsed.pathname))
-  const filename = dateTime + '-' + path.basename(parsed.pathname)
+  const filename = nameUser.username + '-' + dateTime + '-' + path.basename(parsed.pathname)
   const fileStream = fs.createReadStream(file)
 
   const uploadParams = {
@@ -41,8 +46,9 @@ export const uploadExportFile = async (file, user) => {
   let signedUrl = s3.getSignedUrl('getObject', {
     Key: filename,
     Bucket: process.env.AWS_BUCKET_NAME,
+    Expires: 86400,
   })
-  current_user = user
+
   registerExport(signedUrl, user, filename)
   return
 }
@@ -77,6 +83,7 @@ export const getFileStream = (fileKey) => {
     Bucket: process.env.AWS_BUCKET_NAME,
   }
   return s3.getObject(downloadParams).createReadStream()
+
 }
 
 export const getExport = async (req, res, next) => {

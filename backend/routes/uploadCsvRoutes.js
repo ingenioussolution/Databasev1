@@ -3,7 +3,7 @@ import multer from 'multer'
 import path from 'path'
 import csvtojson from 'csvtojson'
 import TemporalData from '../models/TemporalData.js'
-
+ 
 const router = express.Router()
 import { protect } from '../middlewere/authMiddlewere.js'
 
@@ -62,7 +62,6 @@ router.post('/add-csv', protect, upload.single('file'), async (req, res) => {
 
           for (let x = 0; x < NewArray.length; x++) {
             NewArray[x].map(async (z) => {
-
               if (data.clicker) {
                 temp = Boolean(data.clicker)
                 data.clicker = temp
@@ -163,7 +162,7 @@ router.post('/test', upload.single('file'), async (req, res) => {
       })
     }
 
-    csvtojson({ ignoreEmpty: true, maxRowLength: 65535, fork: false })
+    csvtojson({ ignoreEmpty: true, fork: false })
       .fromFile(req.file.path)
       .then((jsonObj) => {
         if (jsonObj) {
@@ -181,7 +180,7 @@ router.post('/test', upload.single('file'), async (req, res) => {
           for (let x = 0; x < NewArray.length; x++) {
             NewArray[x].reduce(async (prev, data) => {
               await prev
-             
+
               if (data.repliers) {
                 temp = Boolean(data.repliers)
                 data.repliers = temp
@@ -232,12 +231,12 @@ router.post('/test', upload.single('file'), async (req, res) => {
                 data.burstOptOut = temp
               }
 
-              csvData.push(data)
+              csvData.push(data) 
               console.log(csvData.length)
               TemporalData.insertMany(data, (err) => {
                 if (err) console.log('duplicate', data.phone, duplicate++)
               })
-              let count = await TemporalData.countDocuments()
+              let count = await TemporalData.countDocuments() 
               if (csvData.length === jsonObj.length) {
                 csvData = []
                 NewArray = []
@@ -246,7 +245,7 @@ router.post('/test', upload.single('file'), async (req, res) => {
                   message:
                     'Upload/import the CSV data into database successfully',
                   total: count,
-                  duplicate: duplicate,
+                  duplicate: duplicate, 
                 })
               }
 
@@ -263,4 +262,4 @@ router.post('/test', upload.single('file'), async (req, res) => {
   }
 })
 
-export default router 
+export default router

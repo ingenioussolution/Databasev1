@@ -1,11 +1,10 @@
 import express from 'express'
 import {
   getPhoneList,
-  registerPhoneList,
+  RegisterDataList,
   updatePhoneList,
   AddPhoneList,
   getPhoneListFrontEnd,
-  getPhoneListByStatus,
   getPhoneListFrontEnd1,
   getMasterCCC,
   getCountFilters,
@@ -14,20 +13,16 @@ import {
 import { ExportCSV, Export_Master_CCC_CSV } from '../controllers/UploadPhoneList.js'
 import {ImportDataAll} from '../controllers/importDataController.js'
 
-import {getShowPhones} from '../controllers/Bulk-Import-Controller.js'
-
 import { protect } from '../middlewere/authMiddlewere.js'
 
 const route = express.Router()
 route.get('/', protect, getPhoneListFrontEnd)
 route.get('/master-ccc', protect, getMasterCCC)
 route.get('/count-filter', protect, getCountFilters)
-route.get('/fetch-data', getShowPhones)
-route.get('/status', getPhoneListByStatus)
 route.get('/filters', getPhoneListFrontEnd1)
 route.get('/export-csv', protect, ExportCSV)
 route.get('/export-master-ccc-csv', protect, Export_Master_CCC_CSV)
-route.post('/', registerPhoneList)
+route.post('/', RegisterDataList)
 route.post('/register-data', AddPhoneList)
 route.post('/import-data', ImportDataAll)
 route.post('/register-clean-data', getPhoneList)

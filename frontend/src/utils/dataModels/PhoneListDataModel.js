@@ -6,18 +6,18 @@ export const phone = {
 }
 export const firstName = { 
   field: 'firstName',
-  title: 'First_Name',
+  title: 'First Name',
 }
 
 export const lastName = {
   field: 'lastName',
-  title: 'Last_Name',
+  title: 'Last Name',
   filtering: false,
 }
 
 export const email = {
   field: 'email',
-  title: 'Email Address',
+  title: 'Email',
   filtering: false,
 }
 
@@ -28,7 +28,7 @@ export const carrier = {
 
 export const blackListAlliance = {
   field: 'blackListAlliance',
-  title: 'Black List',
+  title: 'BlackList',
   align: 'center',
   render: (row) => (
     <div className={row.blackListAlliance ? 'text-success' : 'text-error'}>
@@ -40,7 +40,7 @@ export const blackListAlliance = {
 
 export const incomeSource = {
   field: 'incomeSource',
-  title: 'Income Source',
+  title: 'Income',
   filtering: false,
 }
 export const monthlyIncome = {

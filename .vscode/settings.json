@@ -44,6 +44,7 @@
     "Swipeable",
     "syncfusion",
     "timedout",
-    "Toogle"
+    "Toogle",
+    "upsert"
   ]
 }

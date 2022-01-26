@@ -3,13 +3,11 @@ import PhoneList from '../models/phoneslist.js'
 import asyncHandler from 'express-async-handler'
 import ModelTemporal from '../models/TemporalData.js'
 import BadAreaCode from '../models/badAreaCode.js'
-
 import axios from 'axios'
 
-// @routes GET /phoneslist/
-// @des GET All Phone List
+// @routes GET /phoneslist/count-filter
+// @des GET Count Filter
 // @access  Private/User
-
 export const getCountFilters = asyncHandler(async (req, res, next) => {
   // FILTERS QUERY
   const hardBounce = req.query.hardBounce
@@ -115,19 +113,23 @@ export const getCountFilters = asyncHandler(async (req, res, next) => {
   }
 })
 
-// GET/ Data
-
+// @routes GET /phoneslist/
+// @des GET All Phone List
+// @access  Private/User
 export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
     const hardBounce = req.query.hardBounce
     const clicker = req.query.clicker
+    const repliers = req.query.repliers
     const phone = req.query.phone
     const revenue = req.query.revenue
     const converter = req.query.converter
     const suppressed = req.query.suppressed
+
     let sourceFilter = req.query.source
-    let source = { $regex: '^' + `${sourceFilter}`+'.*$', $options: 'i' }
+    //let sourceFilter = req.query.source
+    //let source = { $regex:  '^' + `${sourceFilter}` + '$', $options: 'i' }
     let carrierFilter = req.query.carrier
     let carrier = { $regex: `${carrierFilter}`, $options: 'i' }
     const firstNameFilter = req.query.firstName
@@ -137,8 +139,6 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
     const areaCode = req.query.areaCode
     let arrayFilters = []
 
-    let regex = req.query.q
-    let search = { $regex: regex, $options: 'i' }
     const pageSize = 10
     const page = parseInt(req.query.pageNumber) || 1
 
@@ -161,7 +161,8 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
       areaCode ||
       createdAt_start ||
       createdAt_end ||
-      sourceFilter
+      sourceFilter ||
+      repliers
     ) {
       if (createdAt_start || createdAt_end) {
         arrayFilters.push({
@@ -171,11 +172,37 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           },
         })
       }
+      if (carrierFilter) {
+        arrayFilters.push({ carrier: carrier })
+      }
+      if (sourceFilter) {
+        arrayFilters.push({ source: sourceFilter })
+      }
+
+      // if (sourceFilter) {
+      //   arrayFilters.push({ source: source })
+      // }
+
+      if (firstNameFilter) {
+        arrayFilters.push({ firstName: firstName })
+      }
+      if (repliers) {
+        if (repliers === 'false') {
+          arrayFilters.push({ repliers: { $ne: true } })
+        } else if (repliers === 'true') {
+          arrayFilters.push({ repliers: repliers })
+        }
+      }
       if (clicker || converter) {
         if (converter === 'true' && clicker === 'true') {
           arrayFilters.push({
             $or: [{ converter: converter }, { clicker: clicker }],
           })
+        } else if (converter === 'false' && clicker === 'false') {
+          arrayFilters.push(
+            { converter: { $ne: true } },
+            { clicker: { $ne: true } }
+          )
         } else if (clicker === 'false') {
           arrayFilters.push({ clicker: { $ne: true } })
         } else if (clicker === 'true') {
@@ -186,21 +213,6 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           arrayFilters.push({ converter: converter })
         }
       }
-
-      if (hardBounce === 'false') {
-        console.log('hard bounce FALSE', hardBounce)
-        arrayFilters.push({ hardBounce: { $ne: true } })
-      } else if (hardBounce === 'true') {
-        console.log('hard bounce TRUE')
-        arrayFilters.push({ hardBounce: hardBounce })
-      }
-      if (revenue) {
-        arrayFilters.push({ revenue: revenue })
-      }
-      if (phone) {
-        arrayFilters.push({ phone: phone })
-      }
-
       if (suppressed) {
         if (suppressed === 'false') {
           arrayFilters.push({ suppressed: { $ne: true } })
@@ -208,20 +220,31 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           arrayFilters.push({ suppressed: suppressed })
         }
       }
-      if (carrierFilter) {
-        arrayFilters.push({ carrier: carrier })
-      }
-      if (sourceFilter) {
-        arrayFilters.push({ source: source })
-      }
-      if (firstNameFilter) {
-        arrayFilters.push({ firstName: firstName })
+      if (hardBounce === 'false') {
+        console.log('hard bounce FALSE', hardBounce)
+        arrayFilters.push({ hardBounce: { $ne: true } })
+      } else if (hardBounce === 'true') {
+        console.log('hard bounce TRUE')
+        arrayFilters.push({ hardBounce: hardBounce })
       }
 
-      if (areaCode) {
+      if (revenue) {
+        arrayFilters.push({ revenue: revenue })
+      }
+      if (phone) {
+        arrayFilters.push({ phone: phone })
+      }
+
+      if (areaCode === 'true') {
         arrayFilters.push({
           phone: {
             $nin: arrayBadArea,
+          },
+        })
+      }else if(areaCode === 'false'){
+        arrayFilters.push({
+          phone: { 
+            $in: arrayBadArea,
           },
         })
       }
@@ -234,7 +257,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
         )
           .count()
           .lean()
-          .limit(500000)
+          //.limit(500000)
 
         console.timeEnd()
 
@@ -242,6 +265,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           $and: arrayFilters,
         })
           .limit(pageSize)
+          .sort({ createdAt: 1 })
           .skip(pageSize * (page - 1))
           .lean()
 
@@ -279,10 +303,9 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
   }
 })
 
-// @routes GET /phoneslist/
-// @des GET All Phone List
+// @routes GET /phoneslist/master-ccc
+// @des GET Master CCC
 // @access  Private/User
-
 export const getMasterCCC = asyncHandler(async (req, res, next) => {
   try {
     // FILTERS QUERY
@@ -473,8 +496,6 @@ export const getPhoneListFrontEnd1 = asyncHandler(async (req, res, next) => {
   }
 })
 
-// @route Get Master CCC
-
 // FILTER DATA API BLACKLIST ALLIANCE
 const temporal = []
 // Return Array after filter with BlackList API
@@ -607,485 +628,6 @@ const getApiCarrierData = (phoneNumber) => {
   })
 }
 
-// @routes GET /phoneslist by phone
-// @des GET by Phone Number
-// @access  Private/User
-export const getPhoneListByPhone = asyncHandler(async (req, res, next) => {
-  try {
-    const pageSize = 10
-    const page = parseInt(req.query.pageNumber) || 1
-    const phone = req.query.phone
-    const count = await PhoneList.countDocuments({ phone: phone })
-    const listPhones = await PhoneList.findOne({ phone: phone })
-      .limit(pageSize)
-      .skip(pageSize * (page - 1))
-
-    if (listPhones) {
-      res.json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-    } else {
-      res.status(404)
-      throw new Error('Phone not found')
-    }
-  } catch (error) {
-    next(error)
-  }
-})
-
-// @routes GET /phoneslist by status
-// @des GET List Phones By status
-// @access  Private/User
-export const getPhoneListByStatus = asyncHandler(async (req, res, next) => {
-  try {
-    const pageSize = 10
-    const page = parseInt(req.query.pageNumber) || 1
-    const status = req.query.status
-    const count = await PhoneList.countDocuments({ status: status })
-    const listPhones = await PhoneList.find({ status: status })
-      .limit(pageSize)
-      .skip(pageSize * (page - 1))
-
-    res
-      .status(200)
-      .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-  } catch (error) {
-    next(error)
-  }
-})
-
-// @routes GET /phoneslist by Credit Score
-// @des GET List Phones By creditScore
-// @access  Private/User
-export const getPhoneListByCreditScore = asyncHandler(
-  async (req, res, next) => {
-    try {
-      const pageSize = 10
-      const page = parseInt(req.query.pageNumber) || 1
-      const creditScore = req.query.creditScore
-      const count = await PhoneList.countDocuments({ creditScore: creditScore })
-      const listPhones = await PhoneList.find({ creditScore: creditScore })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      if (creditScore) {
-        res
-          .status(200)
-          .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-      } else {
-        res.status(404)
-        throw new Error('creditScore not found')
-      }
-    } catch (error) {
-      next(error)
-    }
-  }
-)
-
-// @routes GET /phoneslist by filters
-// @des GET List Phones By creditScore
-// @access  Private/User
-export const getPhoneListByCombineFilters = asyncHandler(
-  async (req, res, next) => {
-    try {
-      const pageSize = 10
-      const page = parseInt(req.query.pageNumber) || 1
-      const creditScore = req.query.creditScore
-      const status = req.query.status
-      const incomeSource = req.query.incomeSource
-
-      if ((creditScore !== undefined) & (status !== undefined)) {
-        const count = await PhoneList.countDocuments({
-          $and: [{ creditScore: creditScore }, { status: status }],
-        })
-        const listPhones = await PhoneList.find({
-          $and: [{ creditScore: creditScore }, { status: status }],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        if (listPhones) {
-          res
-            .status(200)
-            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-        } else {
-          res.status(404)
-          throw new Error('Filter not found')
-        }
-      } else if ((status !== undefined) & (incomeSource !== undefined)) {
-        const count = await PhoneList.countDocuments({
-          $and: [{ incomeSource: incomeSource }, { status: status }],
-        })
-        const listPhones = await PhoneList.find({
-          $and: [{ incomeSource: incomeSource }, { status: status }],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        if (listPhones) {
-          res
-            .status(200)
-            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-        } else {
-          res.status(404)
-          throw new Error('Filter not found')
-        }
-      } else if (creditScore & incomeSource) {
-        const count = await PhoneList.countDocuments({
-          $and: [{ creditScore: creditScore }, { incomeSource: incomeSource }],
-        })
-        const listPhones = await PhoneList.find({
-          $and: [{ creditScore: creditScore }, { incomeSource: incomeSource }],
-        })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        if (listPhones) {
-          res
-            .status(200)
-            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-        } else {
-          res.status(404)
-          throw new Error('Filter not found')
-        }
-      } else if (incomeSource) {
-        const count = await PhoneList.countDocuments({
-          incomeSource: incomeSource,
-        })
-        const listPhones = await PhoneList.find({ incomeSource: incomeSource })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        if (listPhones) {
-          res
-            .status(200)
-            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-        } else {
-          res.status(404)
-          throw new Error('Filter not found')
-        }
-      }
-      if (creditScore !== undefined) {
-        const count = await PhoneList.countDocuments({
-          creditScore: creditScore,
-        })
-        const listPhones = await PhoneList.find({ creditScore: creditScore })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        if (listPhones) {
-          res
-            .status(200)
-            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-        } else {
-          res.status(404)
-          throw new Error('Filter not found')
-        }
-      } else if (status !== undefined) {
-        const count = await PhoneList.countDocuments({ status: status })
-        const listPhones = await PhoneList.find({ status: status })
-          .limit(pageSize)
-          .skip(pageSize * (page - 1))
-
-        if (listPhones) {
-          res
-            .status(200)
-            .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-        } else {
-          res.status(404)
-          throw new Error('Filter not found')
-        }
-      }
-      const count = await PhoneList.countDocuments({
-        incomeSource: incomeSource,
-      })
-      const listPhones = await PhoneList.find({ incomeSource: incomeSource })
-        .limit(pageSize)
-        .skip(pageSize * (page - 1))
-
-      if (listPhones) {
-        res
-          .status(200)
-          .json({ listPhones, page, pages: Math.ceil(count / pageSize) })
-      } else {
-        res.status(404)
-        throw new Error('Filter not found')
-      }
-    } catch (error) {
-      next(error)
-    }
-  }
-)
-
-// @routes GET /phoneslist by Income Source
-// @des GET List Phones By Income Source
-// @access  Private/User
-export const getPhoneListByIncomeSource = asyncHandler(
-  async (req, res, next) => {
-    try {
-      const incomeSource = await PhoneList.find({
-        incomeSource: req.body.incomeSource,
-      })
-      if (incomeSource) {
-        res.json(incomeSource)
-      } else {
-        res.status(404)
-        throw new Error('Phone not found')
-      }
-    } catch (error) {
-      next(error)
-    }
-  }
-)
-
-// @routes POST /phoneslist
-// @des Create or Update an Phones List
-export const registerPhoneList = asyncHandler(async (req, res) => {
-  const {
-    firstName,
-    lastName,
-    email,
-    name,
-    phone,
-    state,
-    carrier,
-    source,
-    ip,
-    site,
-    status,
-    list,
-    revenue,
-    monthlyIncome,
-    incomeSource,
-    creditScore,
-    zipCode,
-    subId,
-    countryCode,
-    activePhone,
-    validStatus,
-    recentAbuse,
-    validMobile,
-    blackListAlliance,
-    clicker,
-    converter,
-    hardBounce,
-    suppressed,
-    platform,
-    message,
-    fraudScore,
-    lineType,
-    prepaid,
-    risky,
-    city,
-    listID,
-    birthDate,
-    gender,
-    senderID,
-    sendAt,
-    validity,
-    subject,
-    vertical,
-    vertical2,
-    vertical3,
-  } = req.body
-
-  const phoneExists = await PhoneList.findOne({ phone: phone })
-
-  if (phoneExists) {
-    phoneExists.firstName = firstName || phoneExists.firstName
-    phoneExists.lastName = lastName || phoneExists.lastName
-    phoneExists.name = name || phoneExists.name
-    phoneExists.email = email || phoneExists.email
-    phoneExists.state = state || phoneExists.state
-
-    phoneExists.source = source || phoneExists.source
-    phoneExists.ipAddress = ipAddress || phoneExists.ipAddress
-    phoneExists.site = site || phoneExists.site
-    phoneExists.status = status || phoneExists.status
-    phoneExists.list = list || phoneExists.list
-    phoneExists.revenue = revenue || phoneExists.revenue
-    phoneExists.monthlyIncome = monthlyIncome || phoneExists.monthlyIncome
-    phoneExists.incomeSource = incomeSource || phoneExists.incomeSource
-    phoneExists.carrier = carrier || phoneExists.carrier
-    phoneExists.creditScore = creditScore || phoneExists.creditScore
-    phoneExists.subId = subId || phoneExists.subId
-    phoneExists.countryCode = countryCode || phoneExists.countryCode
-    phoneExists.activePhone = activePhone || phoneExists.activePhone
-    phoneExists.validStatus = validStatus || phoneExists.validStatus
-    phoneExists.recentAbuse = recentAbuse || phoneExists.recentAbuse
-    phoneExists.validMobile = validMobile || phoneExists.validMobile
-    phoneExists.blackListAlliance =
-      blackListAlliance || phoneExists.blackListAlliance
-    phoneExists.clicker = clicker || phoneExists.clicker
-    phoneExists.converter = converter || phoneExists.converter
-    phoneExists.hardBounce = hardBounce || phoneExists.hardBounce
-    phoneExists.suppressed = suppressed || phoneExists.suppressed
-    phoneExists.platform = platform || phoneExists.platform
-    phoneExists.message = message || phoneExists.message
-    phoneExists.fraudScore = fraudScore || phoneExists.fraudScore
-    phoneExists.lineType = lineType || phoneExists.lineType
-    phoneExists.prepaid = prepaid || phoneExists.prepaid
-    phoneExists.risky = risky || phoneExists.risky
-    phoneExists.city = city || phoneExists.city
-    phoneExists.listID = listID || phoneExists.listID
-    phoneExists.birthDate = birthDate || phoneExists.birthDate
-    phoneExists.gender = gender || phoneExists.gender
-    phoneExists.senderID = senderID || phoneExists.senderID
-    phoneExists.sendAt = sendAt || phoneExists.sendAt
-    phoneExists.validity = validity || phoneExists.validity
-    phoneExists.subject = subject || phoneExists.subject
-    phoneExists.vertical = vertical || phoneExists.vertical
-    phoneExists.vertical2 = vertical2 || phoneExists.vertical2
-    phoneExists.vertical3 = vertical3 || phoneExists.vertical3
-
-    const updatedPhonesList = await phoneExists.save()
-    res.status(200).json({
-      _id: updatedPhonesList._id,
-      firstName: updatedPhonesList.firstName,
-      lastName: updatedPhonesList.lastName,
-      email: updatedPhonesList.email,
-      state: updatedPhonesList.state,
-
-      source: updatedPhonesList.source,
-      ipAddress: updatedPhonesList.ipAddress,
-      site: updatedPhonesList.site,
-      status: updatedPhonesList.status,
-      list: updatedPhonesList.list,
-      revenue: updatedPhonesList.revenue,
-      monthlyIncome: updatedPhonesList.monthlyIncome,
-      incomeSource: updatedPhonesList.incomeSource,
-      carrier: updatedPhonesList.carrier,
-      creditScore: updatedPhonesList.creditScore,
-      subId: updatedPhonesList.subId,
-      countryCode: updatedPhonesList.countryCode,
-      activePhone: updatedPhonesList.activePhone,
-      validStatus: updatedPhonesList.validStatus,
-      recentAbuse: updatedPhonesList.recentAbuse,
-      validMobile: updatedPhonesList.validMobile,
-      blackListAlliance: updatedPhonesList.blackListAlliance,
-      clicker: updatedPhonesList.clicker,
-      converter: updatedPhonesList.converter,
-      hardBounce: updatedPhonesList.hardBounce,
-      suppressed: updatedPhonesList.suppressed,
-      platform: updatedPhonesList.platform,
-      message: updatedPhonesList.message,
-      fraudScore: updatedPhonesList.fraudScore,
-      lineType: updatedPhonesList.lineType,
-      prepaid: updatedPhonesList.prepaid,
-      risky: updatedPhonesList.risky,
-      city: updatedPhonesList.city,
-      listID: updatedPhonesList.listID,
-      birthDate: updatedPhonesList.birthDate,
-      senderID: updatedPhonesList.senderID,
-      sendAt: updatedPhonesList.sendAt,
-      validity: updatedPhonesList.validity,
-      subject: updatedPhonesList.subject,
-      vertical: updatedPhonesList.vertical,
-      vertical2: updatedPhonesList.vertical2,
-      vertical3: updatedPhonesList.vertical3,
-    })
-  } else {
-    const phoneCreated = await PhoneList.create({
-      firstName,
-      lastName,
-      email,
-      name,
-      phone,
-      state,
-      carrier,
-      source,
-      ip,
-      site,
-      status,
-      list,
-      revenue,
-      monthlyIncome,
-      incomeSource,
-      creditScore,
-      zipCode,
-      subId,
-      countryCode,
-      activePhone,
-      validStatus,
-      recentAbuse,
-      validMobile,
-      blackListAlliance,
-      clicker,
-      converter,
-      hardBounce,
-      suppressed,
-      platform,
-      message,
-      fraudScore,
-      lineType,
-      prepaid,
-      risky,
-      city,
-      listID,
-      birthDate,
-      gender,
-      senderID,
-      sendAt,
-      validity,
-      subject,
-      vertical,
-      vertical2,
-      vertical3,
-    })
-
-    if (phoneCreated) {
-      res.status(201).json({
-        _id: phoneCreated._id,
-        firstName: phoneCreated.firstName,
-        lastName: phoneCreated.lastName,
-        name: phoneCreated.name,
-        email: phoneCreated.email,
-        state: phoneCreated.state,
-        phone: phoneCreated.phone,
-
-        source: phoneCreated.source,
-        ip: phoneCreated.ip,
-        site: phoneCreated.site,
-        status: phoneCreated.status,
-        list: phoneCreated.list,
-        revenue: phoneCreated.revenue,
-        monthlyIncome: phoneCreated.monthlyIncome,
-        incomeSource: phoneCreated.incomeSource,
-        carrier: phoneCreated.carrier,
-        creditScore: phoneCreated.creditScore,
-        subId: phoneCreated.subId,
-        countryCode: phoneCreated.countryCode,
-        activePhone: phoneCreated.activePhone,
-        validStatus: phoneCreated.validStatus,
-        recentAbuse: phoneCreated.recentAbuse,
-        validMobile: phoneCreated.validMobile,
-        blackListAlliance: phoneCreated.blackListAlliance,
-        clicker: phoneCreated.clicker,
-        converter: phoneCreated.converter,
-        hardBounce: phoneCreated.hardBounce,
-        suppressed: phoneCreated.suppressed,
-        platform: phoneCreated.platform,
-        message: phoneCreated.message,
-        fraudScore: phoneCreated.fraudScore,
-        lineType: phoneCreated.lineType,
-        prepaid: phoneCreated.prepaid,
-        risky: phoneCreated.risky,
-        city: phoneCreated.city,
-        listID: phoneCreated.listID,
-        birthDate: phoneCreated.birthDate,
-        senderID: phoneCreated.senderID,
-        sendAt: phoneCreated.sendAt,
-        validity: phoneCreated.validity,
-        subject: phoneCreated.subject,
-        vertical: phoneCreated.vertical,
-        vertical2: phoneCreated.vertical2,
-        vertical3: phoneCreated.vertical3,
-      })
-    } else {
-      res.status(400)
-      throw new Error('Invalid Phone data')
-    }
-  }
-})
-
 // @routes POST /register-data
 // Move data th Temporal to PhonesList
 // @des Create or Update an Phones List
@@ -1118,6 +660,25 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
           console.log('Phone Exists')
           // Count total update phones
           updatePhone.push(phoneExists)
+
+          phoneExists.burstOptOut =
+            phoneExists.burstOptOut === undefined
+              ? TemporalData[phoneCount].burstOptOut
+              : phoneExists.burstOptOut === TemporalData[phoneCount].burstOptOut
+              ? phoneExists.burstOptOut
+              : TemporalData[phoneCount].burstOptOut === undefined
+              ? phoneExists.burstOptOut
+              : TemporalData[phoneCount].burstOptOut
+          //--------------------------------------------------------------------
+          phoneExists.repliers =
+            phoneExists.repliers === undefined
+              ? TemporalData[phoneCount].repliers
+              : phoneExists.repliers === TemporalData[phoneCount].repliers
+              ? phoneExists.repliers
+              : TemporalData[phoneCount].repliers === undefined
+              ? phoneExists.repliers
+              : TemporalData[phoneCount].repliers
+          //--------------------------------------------------------------------
 
           phoneExists.firstName =
             phoneExists.firstName === undefined
@@ -1582,6 +1143,8 @@ export const AddPhoneList = asyncHandler(async (req, res, next) => {
             vertical: TemporalData[phoneCount].vertical,
             vertical2: TemporalData[phoneCount].vertical2,
             vertical3: TemporalData[phoneCount].vertical3,
+            repliers: TemporalData[phoneCount].repliers,
+            burstOptOut: TemporalData[phoneCount].burstOptOut,
           })
 
           if (phoneCreated) {

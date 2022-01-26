@@ -27,6 +27,7 @@ let arrayHeader = [
   'creditScore',
   'fraudScore',
   'prepaid',
+  'repliers',
   'city',
   'birthDate',
   'gender',
@@ -52,7 +53,8 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
     const createdAt_end = req.query.end
     const areaCode = req.query.areaCode
     let sourceFilter = req.query.source
-    let source = { $regex: '/^' + `${sourceFilter}` + '/', $options: 'i' }
+    let source = { $regex: '^' + `${sourceFilter}` + '.*', $options: 'i' }
+    const repliers = req.query.repliers
 
     let arrayFilters = []
     let arrayExport = []
@@ -80,11 +82,9 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       areaCode ||
       createdAt_start ||
       createdAt_end ||
-      sourceFilter
+      sourceFilter ||
+      repliers
     ) {
-      if (phone) {
-        arrayFilters.push({ phone: phone })
-      }
       if (createdAt_start || createdAt_end) {
         arrayFilters.push({
           createdAt: {
@@ -96,12 +96,34 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
       if (carrierFilter) {
         arrayFilters.push({ carrier: carrier })
       }
+      if (sourceFilter) {
+        arrayFilters.push({ source: sourceFilter })
+      }
 
+      // if (sourceFilter) {
+      //   arrayFilters.push({ source: source })
+      // }
+
+      if (firstNameFilter) {
+        arrayFilters.push({ firstName: firstName })
+      }
+      if (repliers) {
+        if (repliers === 'false') {
+          arrayFilters.push({ repliers: { $ne: true } })
+        } else if (repliers === 'true') {
+          arrayFilters.push({ repliers: repliers })
+        }
+      }
       if (clicker || converter) {
         if (converter === 'true' && clicker === 'true') {
           arrayFilters.push({
             $or: [{ converter: converter }, { clicker: clicker }],
           })
+        } else if (converter === 'false' && clicker === 'false') {
+          arrayFilters.push(
+            { converter: { $ne: true } },
+            { clicker: { $ne: true } }
+          )
         } else if (clicker === 'false') {
           arrayFilters.push({ clicker: { $ne: true } })
         } else if (clicker === 'true') {
@@ -112,7 +134,13 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           arrayFilters.push({ converter: converter })
         }
       }
-
+      if (suppressed) {
+        if (suppressed === 'false') {
+          arrayFilters.push({ suppressed: { $ne: true } })
+        } else if (suppressed === 'true') {
+          arrayFilters.push({ suppressed: suppressed })
+        }
+      }
       if (hardBounce === 'false') {
         console.log('hard bounce FALSE', hardBounce)
         arrayFilters.push({ hardBounce: { $ne: true } })
@@ -121,44 +149,28 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
         arrayFilters.push({ hardBounce: hardBounce })
       }
 
-      if (suppressed) {
-        if (suppressed === 'false') {
-          arrayFilters.push({ suppressed: { $ne: true } })
-        } else if (suppressed === 'true') {
-          arrayFilters.push({ suppressed: suppressed })
-        }
+      if (revenue) {
+        arrayFilters.push({ revenue: revenue })
+      }
+      if (phone) {
+        arrayFilters.push({ phone: phone })
       }
 
-      if (areaCode) {
+      if (areaCode === 'true') {
         arrayFilters.push({
           phone: {
             $nin: arrayBadArea,
           },
         })
-      }
-      if (firstNameFilter) {
-        arrayFilters.push({ firstName: firstName })
-      }
-      if (sourceFilter) {
-        arrayFilters.push({ source: source })
-      }
-      if (revenue) {
-        arrayFilters.push({ revenue: revenue })
+      } else if (areaCode === 'false') {
+        arrayFilters.push({
+          phone: {
+            $in: arrayBadArea,
+          },
+        })
       }
 
       console.log('Array Export: ', arrayFilters)
-
-      // const aggregation = await PhoneList.aggregate([
-      //   {$match: { $and: arrayFilters } },
-      //   {$project:{phone:1, carrier:1, firstName:1, lastName:1, name:1, source:1, email:1, lineType:1, fraudScore:1, monthlyIncome:1, state:1, city:1, createdAt:1}}
-      // ]).cursor()
-      // for await (const doc of aggregation) {
-
-      //   await arrayExport.push(doc)
-      // }
-
-      // console.log('aggregation', arrayExport.length)
-
       const cursor = await PhoneList.find(
         {
           $and: arrayFilters,
@@ -178,7 +190,8 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           city: 1,
           gender: 1,
           createdAt: 1,
-          birthDate:1,
+          birthDate: 1,
+          repliers: 1,
           _id: 0,
         }
       )
@@ -187,13 +200,14 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
 
       for (let ex = await cursor.next(); ex != null; ex = await cursor.next()) {
         await arrayExport.push(ex)
+        console.log('arrayExport: ', ex.phone)
       }
 
-      console.log('cursor: ', arrayExport.length)
+      console.log('arrayExport: ', arrayExport.length)
 
       await fastcsv
         .write(arrayExport, {
-          headers: arrayHeader, 
+          headers: arrayHeader,
         })
         .pipe(ws)
         .on('finish', function () {

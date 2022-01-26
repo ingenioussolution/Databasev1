@@ -8,10 +8,8 @@ import connectDB from './config/db.js'
 import { notFound, errorHandler } from './middlewere/errorMiddlewere.js'
 
 // Middleware connect-timeout
-import timeout from 'connect-timeout';
-import bodyParser from 'body-parser';
-//import redis from 'redis'
-//---------------
+import timeout from 'connect-timeout'
+import bodyParser from 'body-parser'
 
 
 //Routes
@@ -51,7 +49,7 @@ const app = express()
 app.use(express.json())
 
 app.use(cors())
-app.options('*', cors()) 
+app.options('*', cors())
 
 // Use routes
 app.use('/phoneslist', phoneslistRoutes)
@@ -68,12 +66,10 @@ app.use('/partners', partner)
 // route clean Data
 app.use('/clean-data', cleanData)
 
-//----------------
-
 // Connect-Timeout
 const haltOnTimedout = (req, res, next) => {
   if (!req.timedout) {
-    next();
+    next()
   }
 }
 
@@ -96,20 +92,17 @@ if (process.env.SITE_LIVE === 'true') {
     // time out heroku
     setTimeout(() => {
       if (req.timedout) {
-        next();
+        next()
+      } else {
+        res.send('API is running...')
       }
-      else {
-        res.send('API is running...');
-      }
-    }, Math.random() * 7000);
+    }, Math.random() * 7000)
 
     //------ end timeout
 
     //res.send('API is running...')
   })
 }
-
-
 
 app.use(notFound)
 

@@ -6,12 +6,48 @@ import ModelTemporal from '../models/TemporalData.js'
 
 export const ImportDataAll = asyncHandler(async (req, res, next) => {
   try {
-    let count = await ModelTemporal.countDocuments()
+    let arrayRemove = []
+    const cursor = ModelTemporal.find(
+      {},
+      { _id: 0, __v: 0, createdAt: 0, updatedAt: 0 }
+    )
+      .lean()
+      .cursor()
+    for (
+      let phoneCount = await cursor.next();
+      phoneCount != null;
+      phoneCount = await cursor.next()
+    ) {
+      console.log('Old: ', phoneCount.phone)
+      await PhoneList.findOneAndUpdate(
+        { phone: phoneCount.phone },
+        phoneCount,
+        {
+          new: true,
+          upsert: true,
+          runValidators: true,
+        }
+      )
+      await arrayRemove.push(phoneCount.phone)
+    } 
+    if (arrayRemove) {
+      const resDelete = await ModelTemporal.deleteMany({ phone: arrayRemove })
+      console.log('deletedCount:', resDelete.deletedCount)
+    }
+    res.status(200).json({
+      message: 'Import Successfully !!!!',
+    })
+  } catch (error) {
+    next(error)
+  }
+})
 
+export const ImportDataAll_Cursor = asyncHandler(async (req, res, next) => {
+  try {
     let newPhone = []
-    let updatePhone = []
+    let updatePhone = [] 
 
-    const cursor = ModelTemporal.find({}).cursor()
+    const cursor = ModelTemporal.find({}).lean().limit(1000).cursor()
     for (
       let phoneCount = await cursor.next();
       phoneCount != null;
@@ -24,7 +60,7 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
       if (phoneExists) {
         console.log('Phone Exists')
         // Count total update phones
-        updatePhone.push(phoneExists)
+        //  updatePhone.push(phoneExists)
 
         phoneExists.burstOptOut =
           phoneExists.burstOptOut === undefined
@@ -529,8 +565,7 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
         res.status(200).json({
           message: 'Import Successfully !!!!',
           news: newPhone.length,
-          update: updatePhone.length,
-          total: count,
+          //  update: updatePhone.length,
         })
       }
     }
@@ -591,7 +626,6 @@ export const DeleteWrongPhone = asyncHandler(async (req, res, next) => {
         return Promise.resolve()
       }, Promise.resolve())
     }
-    //}
   } catch (error) {
     next(error)
   }

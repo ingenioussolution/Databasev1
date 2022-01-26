@@ -33,6 +33,7 @@ export const ImportDataAll = asyncHandler(async (req, res, next) => {
     if (arrayRemove) {
       const resDelete = await ModelTemporal.deleteMany({ phone: arrayRemove })
       console.log('deletedCount:', resDelete.deletedCount)
+      //console.log("arrayRemove", arrayRemove);
     }
     res.status(200).json({
       message: 'Import Successfully !!!!',

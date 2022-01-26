@@ -30,7 +30,7 @@ import {
 
 import { listPhoneCleanReducer, importDataReducer, masterCCCReducer } from '../reducers/phoneListCleanReducer'
 
-import {listPhoneTempReducer} from '../reducers/tempTableReducers'
+import {listPhoneTempReducer, listPhoneTempCountReducer} from '../reducers/tempTableReducers'
 import {
   siteSettingsReducer,
   siteSettingsUpdateReducer,
@@ -114,6 +114,7 @@ const reducer = combineReducers({
 
   // Temporal table Data
   listPhoneTemp: listPhoneTempReducer,
+  listPhoneCount: listPhoneTempCountReducer,
 
   // filter home
   CountClicker: CountClickerReducer,

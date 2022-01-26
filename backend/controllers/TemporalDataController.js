@@ -12,48 +12,38 @@ export const getModelTemporalList = asyncHandler(async (req, res, next) => {
     const page = parseInt(req.query.pageNumber) || 1
 
     const listTemp = await ModelTemporal.countDocuments({})
-    console.log("pageSize",pageSize, Math.ceil(listTemp / pageSize));
+    console.log('pageSize', pageSize, Math.ceil(listTemp / pageSize))
     const data = await ModelTemporal.find({})
       .limit(pageSize)
       .skip(pageSize * (page - 1))
-
-    if (!listTemp) throw Error('Not items')
- 
-    res
-      .status(200)
-      .json({ data, page, totalPages: Math.ceil(listTemp / pageSize), listTemp })
+    if (data) {
+      res
+        .status(200)
+        .json({
+          data,
+          page,
+          totalPages: Math.ceil(listTemp / pageSize),
+          listTemp,
+        })
+    } else {
+      res.status(404)
+      throw new Error('Not items')
+    }
   } catch (error) {
     next(error)
   }
 })
 
 export const getTemporal = asyncHandler(async (req, res, next) => {
-  let temporal = []
   try {
-    const listPhones = await ModelTemporal.find()
-    console.log('listPhones', listPhones)
-    listPhones.reduce(async (prev, phoneNumber) => {
-      await prev
-      const { data } = await axios.get(
-        `https://api.blacklistalliance.com/standard/api/v1/Lookup/key/b128a57d1da0fdaea16f8ab95883a5f2/response/json/phone/${phoneNumber.phone}`
-      )
-      if (data.wireless === 1 && data.results === 0) {
-        temporal.push = {
-          phone: phoneNumber.phone,
-          name: phoneNumber.name,
-          wireless: data.wireless,
-          status: data.status,
-          results: data.results,
-        }
-      }
+    const listPhones = await ModelTemporal.find().lean().count()
 
-      return Promise.resolve()
-    }, Promise.resolve())
-
-    console.log('temporal', temporal)
-
-    if (!listPhones) throw Error('Not items')
-    res.status(200).json(listPhones)
+    if (listPhones) {
+      res.status(200).json(listPhones)
+    } else {
+      res.status(404)
+      throw Error('Not items')
+    }
   } catch (error) {
     next(error)
   }

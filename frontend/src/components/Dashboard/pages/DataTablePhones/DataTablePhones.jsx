@@ -75,7 +75,6 @@ const DataTablePhones = () => {
   const listData = useSelector((state) => state.listPhoneClean)
   const { error: errorData, success: successData } = listData
 
-  console.log('successData', successData)
 
   const [totalProcessPages, setTotalPages] = useState()
   const [errorMsg, setErrorMsg] = useState('')

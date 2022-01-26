@@ -1,14 +1,14 @@
 import axios from 'axios'
 import {
-    PHONE_TEMP_LIST_REQUEST,
-    PHONE_TEMP_LIST_SUCCESS,
-    PHONE_TEMP_LIST_FAIL
+    PHONE_TEMP_COUNT_REQUEST,
+    PHONE_TEMP_COUNT_SUCCESS,
+    PHONE_TEMP_COUNT_FAIL
 } from '../constants/tempTableConstants'
 
 export const listPhoneTemporalData = (page) => async (dispatch, getState) => {
     try {
       dispatch({
-        type: PHONE_TEMP_LIST_REQUEST,
+        type: PHONE_TEMP_COUNT_REQUEST,
       })
   
       const {
@@ -22,15 +22,18 @@ export const listPhoneTemporalData = (page) => async (dispatch, getState) => {
         },
       }
   
-      const { data } = await axios.get(`/data-temporal/get-temp?pageNumber=${page}`, config)
-  
+      //const { data } = await axios.get(`/data-temporal/get-temp?pageNumber=${page}`, config)
+      const { data } = await axios.get('/data-temporal', config)
+
+      console.log(data);
+
       dispatch({
-        type: PHONE_TEMP_LIST_SUCCESS,
+        type: PHONE_TEMP_COUNT_SUCCESS,
         payload: data,
       })
     } catch (error) {
       dispatch({
-        type: PHONE_TEMP_LIST_FAIL,
+        type: PHONE_TEMP_COUNT_FAIL,
         payload:
           error.response && error.response.data.message
             ? error.response.data.message

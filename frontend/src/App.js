@@ -1,6 +1,5 @@
 import React, { useState } from 'react'
 import StyleApp from './StyleApp'
-
 import clsx from 'clsx'
 import CssBaseline from '@material-ui/core/CssBaseline'
 import { Grid, Toolbar } from '@material-ui/core'
@@ -31,6 +30,8 @@ import UpdateUser from './components/AdminDashboard/AdminCRUD/UpdateUser/UpdateU
 //import DataMasterCCC from './components/Dashboard/pages/DataMasterCCC/DataMasterCCC'
 import DownloadCsv from './components/Dashboard/pages/DownloadCsv/DownloadCsv'
 
+
+
 const App = ({ location }) => {
   const classes = StyleApp()
   const [drawerClosed, setDraweClosed] = useState(false)
@@ -45,6 +46,174 @@ const App = ({ location }) => {
 
   return (
     <Router>
+      {userInfo || adminUserInfo ? (
+        <div className={clsx('dashboard', classes.root)}>
+          <CssBaseline />
+          {!location.pathname.includes('admin') ? (
+            <NavigatorLayout
+              authenticatedUser={userInfo}
+              logoutAction={logout}
+              onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
+              dashboardUrl="/dashboard"
+              drawerContent={<Navigation />}
+              settings={<ProfileUser />}
+              profileUrl="/dashboard/profile"
+            />
+          ) : (
+            <NavigatorLayout
+              onDrawerToogle={(isClosed) => setDraweClosed(isClosed)}
+              dashboardUrl="/admin"
+              drawerContent={<AdminNavigation />}
+              logoutAction={adminLogout}
+              authenticatedUser={adminUserInfo}
+            />
+          )}
+          <div className={classes.sectionWrapper}>
+            <Toolbar />
+            <main
+              className={clsx(classes.mainSection, {
+                expanded: drawerClosed,
+              })}
+            >
+            <Switch>
+            <Route path="/" exact component={Login} />
+            <Route path="/dashboard" exact component={DashboardHome} />
+            <Route path="/admin" exact component={AdminLogin} />
+            <Route
+              path="/admin/admin-dashboard/list-users"
+              exact
+              component={AdminDashboard}
+            />
+            <Route
+              exact
+              path={'/reset-password/:token'}
+              component={ResetPassword}
+            ></Route>
+            <Route
+              path="/dashboard/data-table-phones"
+              exact
+              component={DataTablePhones}
+            />
+            
+            <Route path="/dashboard/profile" exact component={ProfileUser} />
+            <Route
+              path="/dashboard/bad-area-code"
+              exact
+              component={BadAreaCode}
+            />
+            <Route
+              path="/dashboard/upload-new-data"
+              exact
+              component={UploadCsv}
+            />
+            <Route
+              path="/dashboard/download-csv"
+              exact
+              component={DownloadCsv}
+            />
+
+            <Route
+              path="/admin/admin-dashboard"
+              exact
+              component={AdminHome}
+            />
+            
+            <Route
+              path="/admin/admin-dashboard/list-users/:id/edit"
+              exact
+              component={UpdateUser}
+            />
+            <Route
+              path="/admin/list-users/add"
+              exact
+              component={UpdateUser}
+            />
+          </Switch>
+            </main>
+            <Grid item container className={classes.copyright} xs={11} md={12}>
+              Copyright {today.getFullYear()} Ingenious Solution Group. All
+              rights reserved.
+            </Grid>
+          </div>
+        </div>
+      ) : (
+        <div className={clsx('dashboard', classes.root)} style={{background: '#e3f2fd'}}>
+          <CssBaseline />
+          <div className={classes.sectionWrapper}>
+            <Toolbar />
+            <main className={classes.mainSection} style={{display:'flex', justifyContent:'center',alignItems:'center', width:'100%'}}>
+            <Switch>
+            <Route path="/" exact component={Login} />
+            <Route path="/dashboard" exact component={DashboardHome} />
+            <Route path="/admin" exact component={AdminLogin} />
+            <Route
+              path="/admin/admin-dashboard/list-users"
+              exact
+              component={AdminDashboard}
+            />
+            <Route
+              exact
+              path={'/reset-password/:token'}
+              component={ResetPassword}
+            ></Route>
+            <Route
+              path="/dashboard/data-table-phones"
+              exact
+              component={DataTablePhones}
+            />
+            
+            <Route path="/dashboard/profile" exact component={ProfileUser} />
+            <Route
+              path="/dashboard/bad-area-code"
+              exact
+              component={BadAreaCode}
+            />
+            <Route
+              path="/dashboard/upload-new-data"
+              exact
+              component={UploadCsv}
+            />
+            <Route
+              path="/dashboard/download-csv"
+              exact
+              component={DownloadCsv}
+            />
+
+            <Route
+              path="/admin/admin-dashboard"
+              exact
+              component={AdminHome}
+            />
+            
+            <Route
+              path="/admin/admin-dashboard/list-users/:id/edit"
+              exact
+              component={UpdateUser}
+            />
+            <Route
+              path="/admin/list-users/add"
+              exact
+              component={UpdateUser}
+            />
+          </Switch>
+            </main>
+            <Grid
+              item
+              container
+              justifyContent="center"
+              className={classes.copyright}
+              xs={11}
+              md={12}
+            >
+              Copyright {today.getFullYear()} Ingenious Solution Group. All
+              rights reserved.
+            </Grid>
+          </div>
+        </div>
+      )}
+    </Router>
+
+    /*    <Router>
       <div className={clsx('dashboard', classes.root)}>
         <CssBaseline />
         {!location.pathname.includes('admin') ? (
@@ -78,6 +247,11 @@ const App = ({ location }) => {
               <Route path="/dashboard" exact component={DashboardHome} />
               <Route path="/admin" exact component={AdminLogin} />
               <Route
+                path="/admin/admin-dashboard/list-users"
+                exact
+                component={AdminDashboard}
+              />
+              <Route
                 exact
                 path={'/reset-password/:token'}
                 component={ResetPassword}
@@ -87,16 +261,7 @@ const App = ({ location }) => {
                 exact
                 component={DataTablePhones}
               />
-              {/* <Route
-                path="/dashboard/data-master-ccc"
-                exact
-                component={DataMasterCCC}
-             />*/}
-              {/* <Route
-                path="/dashboard/list-phones"
-                exact
-                component={CleanList}
-            />*/}
+              
               <Route path="/dashboard/profile" exact component={ProfileUser} />
               <Route
                 path="/dashboard/bad-area-code"
@@ -119,13 +284,9 @@ const App = ({ location }) => {
                 exact
                 component={AdminHome}
               />
+              
               <Route
-                path="/admin/list-users"
-                exact
-                component={AdminDashboard}
-              />
-              <Route
-                path="/admin/list-users/:id/edit"
+                path="/admin/admin-dashboard/list-users/:id/edit"
                 exact
                 component={UpdateUser}
               />
@@ -143,6 +304,7 @@ const App = ({ location }) => {
         </div>
       </div>
     </Router>
+          */
   )
 }
 

@@ -48,6 +48,7 @@ import {
   RESET_PASSWORD_EMAIL_TEMPLATE_ID,
 } from '../utils/sendEmail'
 
+
 export const login = (email, password) => async (dispatch) => {
   try {
     dispatch({
@@ -123,6 +124,7 @@ export const logout = () => (dispatch) => {
   dispatch({ type: USER_LOGOUT })
   dispatch({ type: USER_DETAILS_RESET })
   dispatch({ type: USER_LIST_RESET })
+  
 }
 
 export const adminLogout = () => (dispatch) => {

@@ -25,6 +25,7 @@ export default makeStyles((theme) => ({
     },
   },
   mainSection: {
+    
     flexGrow: 1,
     padding: theme.spacing(3),
     borderRadius: '13px',
@@ -44,6 +45,7 @@ export default makeStyles((theme) => ({
       minWidth: '93vw !important',
     },
   },
+
   card: {
     borderRadius: '12px',
   },

@@ -31,12 +31,12 @@ const AdminNavigation = () => {
           </ListItem>
         </Link>
 
-        <Link to={'/admin/list-users'}>
+        <Link to={'/admin/admin-dashboard/list-users'}>
           <ListItem
             button
             key="dashboard-data-table-phones"
             className={clsx({
-              active: pathname === '/admin/list-users',
+              active: pathname === '/admin/admin-dashboard/list-users',
             })}
           >
             <ListItemIcon>

@@ -64,6 +64,8 @@ const DataTablePhones = () => {
     converter: false,
     dateUpdate: false,
     dateCreate: false,
+    hardBounce: false,
+    suppressed: false
   })
 
   const UserLogin = useSelector((state) => state.userLogin)
@@ -74,7 +76,6 @@ const DataTablePhones = () => {
 
   const listData = useSelector((state) => state.listPhoneClean)
   const { error: errorData, success: successData } = listData
-
 
   const [totalProcessPages, setTotalPages] = useState()
   const [errorMsg, setErrorMsg] = useState('')
@@ -95,6 +96,8 @@ const DataTablePhones = () => {
     repliers: '',
     clicker: '',
     converter: '',
+    hardBounce: '',
+    suppressed: '',
   })
 
   const handleAlertClose = () => {
@@ -287,6 +290,16 @@ const DataTablePhones = () => {
           urlExport += '&converter=' + filterState.converter
         }
 
+        if (filterState.hardBounce !== '') {
+          url += '&hardBounce=' + filterState.hardBounce
+          urlExport += '&hardBounce=' + filterState.hardBounce
+        }
+
+        if (filterState.suppressed !== '') {
+          url += '&suppressed=' + filterState.suppressed
+          urlExport += '&suppressed=' + filterState.suppressed
+        }
+
         // repliers
         if (filterState.repliers !== '') {
           url += '&repliers=' + filterState.repliers
@@ -409,7 +422,9 @@ const DataTablePhones = () => {
     if (
       filterState.areaCode !== '' ||
       filterState.clicker !== '' ||
-      filterState.converter !== ''
+      filterState.converter !== '' ||
+      filterState.hardBounce !== '' ||
+      filterState.suppressed !== '' 
     ) {
       setCheckGroup({ ...checkGroup, masterCCC: true, notCCC: true })
     } else {
@@ -427,6 +442,8 @@ const DataTablePhones = () => {
         clicker: true,
         converter: true,
         areaCode: true,
+        hardBounce: true,
+        suppressed:true,
       })
     } else {
       setCheckGroup({
@@ -435,6 +452,8 @@ const DataTablePhones = () => {
         clicker: false,
         converter: false,
         areaCode: false,
+        hardBounce: false,
+        suppressed:false,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -448,6 +467,8 @@ const DataTablePhones = () => {
         clicker: true,
         converter: true,
         areaCode: true,
+        hardBounce: true,
+        suppressed:true,
       })
     } else {
       setCheckGroup({
@@ -456,6 +477,8 @@ const DataTablePhones = () => {
         clicker: false,
         converter: false,
         areaCode: false,
+        hardBounce: false,
+        suppressed:false,
       })
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -464,7 +487,6 @@ const DataTablePhones = () => {
   console.log('checkGroup', checkGroup)
 
   const handleDateRangePickerChange = (range) => {
- 
     setFilterState({
       ...filterState,
       startDate: range.start,
@@ -472,14 +494,14 @@ const DataTablePhones = () => {
     })
   }
 
-  const handleDateRangePickerChangeUpdate = (range) => {
-  
-    setFilterState({
-      ...filterState,
-      startUpdateDate: range.start,
-      endUpdateDate: range.end,
-    })
-  }
+  // const handleDateRangePickerChangeUpdate = (range) => {
+
+  //   setFilterState({
+  //     ...filterState,
+  //     startUpdateDate: range.start,
+  //     endUpdateDate: range.end,
+  //   })
+  // }
 
   const handleClearDateRangePicker = () => {
     setFilterState({
@@ -489,13 +511,13 @@ const DataTablePhones = () => {
     })
   }
 
-  const handleClearDateRangePickerUpdate = () => {
-    setFilterState({
-      ...filterState,
-      startUpdateDate: '',
-      endUpdateDate: '',
-    })
-  }
+  // const handleClearDateRangePickerUpdate = () => {
+  //   setFilterState({
+  //     ...filterState,
+  //     startUpdateDate: '',
+  //     endUpdateDate: '',
+  //   })
+  // }
   const handleClearFilters = () => {
     setFilterState({
       ...filterState,
@@ -511,6 +533,8 @@ const DataTablePhones = () => {
       clicker: '',
       converter: '',
       repliers: '',
+      hardBounce: '',
+      suppressed: '',
     })
 
     setCheckGroup({
@@ -528,13 +552,17 @@ const DataTablePhones = () => {
       className={classes.filtersSection}
       justifyContent="space-around"
     >
+
+    <Grid container justifyContent="space-around" style={{marginBottom:'10px'}}>
+    
+    
       <Grid
         item
         xs={12}
-        md={4}
+        md={5}
         container
         rowSpacing={1}
-        style={{ border: '1px #accce3 solid', borderRadius: '10px' }}
+        style={{ border: '1px #accce3 solid', borderRadius: '10px', padding:'20px' }}
       >
         <Grid item xs={12} container justifyContent="space-between">
           <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
@@ -545,7 +573,7 @@ const DataTablePhones = () => {
               name="carrier"
               fullWidth
               className="dashboard-input"
-              variant="outlined"
+              variant="standard"
               onChange={handleFilterChange}
               value={filterState.carrier || ''}
               InputProps={{
@@ -565,7 +593,7 @@ const DataTablePhones = () => {
               name="phone"
               fullWidth
               className="dashboard-input"
-              variant="outlined"
+              variant="standard"
               onChange={handleFilterChange}
               value={filterState.phone || ''}
               InputProps={{
@@ -587,7 +615,7 @@ const DataTablePhones = () => {
               name="source"
               fullWidth
               className="dashboard-input"
-              variant="outlined"
+              variant="standard"
               onChange={handleFilterChange}
               value={filterState.source || ''}
               InputProps={{
@@ -607,7 +635,7 @@ const DataTablePhones = () => {
               name="name"
               fullWidth
               className="dashboard-input"
-              variant="outlined"
+              variant="standard"
               onChange={handleFilterChange}
               value={filterState.name || ''}
               InputProps={{
@@ -624,13 +652,14 @@ const DataTablePhones = () => {
       <Grid
         item
         xs={12}
-        md={3}
+        md={5}
         container
         rowSpacing={1}
         style={{
           border: '1px #accce3 solid',
           borderRadius: '10px',
           float: 'left',
+          padding:'20px'
         }}
       >
         <Grid item xs={12} container justifyContent="space-between">
@@ -734,12 +763,68 @@ const DataTablePhones = () => {
               </Select>
             </FormControl>
           </Grid>
+
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              className={classes.formControl}
+              disabled={checkGroup.hardBounce}
+            >
+              <InputLabel
+                id="hard-bounce-label"
+                className={classes.labelSelect}
+              >
+                HardBounce
+              </InputLabel>
+              <Select
+                labelId="hard-bounce-label"
+                name="hardBounce"
+                onChange={handleFilterChange}
+                label="AreaCode"
+                value={filterState.hardBounce}
+              >
+                <MenuItem value={''}>
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem value={true}>true</MenuItem>
+                <MenuItem value={false}>false</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
+
+          <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+            <FormControl
+              variant="standard"
+              fullWidth
+              className={classes.formControl}
+              disabled={checkGroup.suppressed}
+            >
+              <InputLabel id="suppressed-label" className={classes.labelSelect}>
+                Suppressed
+              </InputLabel>
+              <Select
+                labelId="suppressed-label"
+                name="suppressed"
+                onChange={handleFilterChange}
+                label="AreaCode"
+                value={filterState.suppressed}
+              >
+                <MenuItem value={''}>
+                  <em>All</em>
+                </MenuItem>
+                <MenuItem value={true}>true</MenuItem>
+                <MenuItem value={false}>false</MenuItem>
+              </Select>
+            </FormControl>
+          </Grid>
         </Grid>
+      </Grid>
       </Grid>
       <Grid
         item
         xs={12}
-        md={4}
+        md={5}
         container
         rowSpacing={1}
         style={{
@@ -784,6 +869,20 @@ const DataTablePhones = () => {
             </Grid>
           </Grid>
         </Grid>
+      </Grid>
+
+      <Grid
+        item
+        xs={12}
+        md={5}
+        container
+        rowSpacing={1}
+        style={{
+          border: '1px #accce3 solid',
+          borderRadius: '10px',
+          float: 'left',
+        }}
+      >
         <Grid item xs={12} container justifyContent="space-between">
           <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
             <Button
@@ -806,6 +905,7 @@ const DataTablePhones = () => {
                 className={commons.secondaryBtn}
                 endIcon={<FaSearch />}
                 onClick={handleClearFilters}
+                fullWidth
               >
                 Clean Filters
               </Button>

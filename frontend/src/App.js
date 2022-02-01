@@ -29,8 +29,7 @@ import UploadCsv from './components/Dashboard/pages/UploadData/UploadData'
 import UpdateUser from './components/AdminDashboard/AdminCRUD/UpdateUser/UpdateUser'
 //import DataMasterCCC from './components/Dashboard/pages/DataMasterCCC/DataMasterCCC'
 import DownloadCsv from './components/Dashboard/pages/DownloadCsv/DownloadCsv'
-
-
+import UploadApiBL from './components/Dashboard/ScreenApiBlackList/ApiUploadCsv/ApiUploadCsv'
 
 const App = ({ location }) => {
   const classes = StyleApp()
@@ -75,60 +74,70 @@ const App = ({ location }) => {
                 expanded: drawerClosed,
               })}
             >
-            <Switch>
-            <Route path="/" exact component={Login} />
-            <Route path="/dashboard" exact component={DashboardHome} />
-            <Route path="/admin" exact component={AdminLogin} />
-            <Route
-              path="/admin/admin-dashboard/list-users"
-              exact
-              component={AdminDashboard}
-            />
-            <Route
-              exact
-              path={'/reset-password/:token'}
-              component={ResetPassword}
-            ></Route>
-            <Route
-              path="/dashboard/data-table-phones"
-              exact
-              component={DataTablePhones}
-            />
-            
-            <Route path="/dashboard/profile" exact component={ProfileUser} />
-            <Route
-              path="/dashboard/bad-area-code"
-              exact
-              component={BadAreaCode}
-            />
-            <Route
-              path="/dashboard/upload-new-data"
-              exact
-              component={UploadCsv}
-            />
-            <Route
-              path="/dashboard/download-csv"
-              exact
-              component={DownloadCsv}
-            />
+              <Switch>
+                <Route path="/" exact component={Login} />
+                <Route path="/dashboard" exact component={DashboardHome} />
+                <Route path="/admin" exact component={AdminLogin} />
+                <Route
+                  path="/admin/admin-dashboard/list-users"
+                  exact
+                  component={AdminDashboard}
+                />
+                <Route
+                  exact
+                  path={'/reset-password/:token'}
+                  component={ResetPassword}
+                ></Route>
+                <Route
+                  path="/dashboard/data-table-phones"
+                  exact
+                  component={DataTablePhones}
+                />
 
-            <Route
-              path="/admin/admin-dashboard"
-              exact
-              component={AdminHome}
-            />
-            
-            <Route
-              path="/admin/admin-dashboard/list-users/:id/edit"
-              exact
-              component={UpdateUser}
-            />
-            <Route
-              path="/admin/list-users/add"
-              exact
-              component={UpdateUser}
-            />
-          </Switch>
+                <Route
+                  path="/dashboard/profile"
+                  exact
+                  component={ProfileUser}
+                />
+                <Route
+                  path="/dashboard/bad-area-code"
+                  exact
+                  component={BadAreaCode}
+                />
+                <Route
+                  path="/dashboard/upload-new-data"
+                  exact
+                  component={UploadCsv}
+                />
+                <Route
+                  path="/dashboard/download-csv"
+                  exact
+                  component={DownloadCsv}
+                />
+
+                <Route
+                  path="/dashboard/upload-api-data"
+                  exact
+                  component={UploadApiBL}
+                />
+
+                <Route
+                  path="/admin/admin-dashboard"
+                  exact
+                  component={AdminHome}
+                />
+
+                <Route
+                  path="/admin/admin-dashboard/list-users/:id/edit"
+                  exact
+                  component={UpdateUser}
+                />
+                <Route
+                  path="/admin/list-users/add"
+                  exact
+                  component={UpdateUser}
+                />
+              </Switch>
             </main>
             <Grid item container className={classes.copyright} xs={11} md={12}>
               Copyright {today.getFullYear()} Ingenious Solution Group. All
@@ -137,65 +146,86 @@ const App = ({ location }) => {
           </div>
         </div>
       ) : (
-        <div className={clsx('dashboard', classes.root)} style={{background: '#e3f2fd'}}>
+        <div
+          className={clsx('dashboard', classes.root)}
+          style={{ background: '#e3f2fd' }}
+        >
           <CssBaseline />
           <div className={classes.sectionWrapper}>
             <Toolbar />
-            <main className={classes.mainSection} style={{display:'flex', justifyContent:'center',alignItems:'center', width:'100%'}}>
-            <Switch>
-            <Route path="/" exact component={Login} />
-            <Route path="/dashboard" exact component={DashboardHome} />
-            <Route path="/admin" exact component={AdminLogin} />
-            <Route
-              path="/admin/admin-dashboard/list-users"
-              exact
-              component={AdminDashboard}
-            />
-            <Route
-              exact
-              path={'/reset-password/:token'}
-              component={ResetPassword}
-            ></Route>
-            <Route
-              path="/dashboard/data-table-phones"
-              exact
-              component={DataTablePhones}
-            />
-            
-            <Route path="/dashboard/profile" exact component={ProfileUser} />
-            <Route
-              path="/dashboard/bad-area-code"
-              exact
-              component={BadAreaCode}
-            />
-            <Route
-              path="/dashboard/upload-new-data"
-              exact
-              component={UploadCsv}
-            />
-            <Route
-              path="/dashboard/download-csv"
-              exact
-              component={DownloadCsv}
-            />
+            <main
+              className={classes.mainSection}
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                alignItems: 'center',
+                width: '100%',
+              }}
+            >
+              <Switch>
+                <Route path="/" exact component={Login} />
+                <Route path="/dashboard" exact component={DashboardHome} />
+                <Route path="/admin" exact component={AdminLogin} />
+                <Route
+                  path="/admin/admin-dashboard/list-users"
+                  exact
+                  component={AdminDashboard}
+                />
+                <Route
+                  exact
+                  path={'/reset-password/:token'}
+                  component={ResetPassword}
+                ></Route>
+                <Route
+                  path="/dashboard/data-table-phones"
+                  exact
+                  component={DataTablePhones}
+                />
 
-            <Route
-              path="/admin/admin-dashboard"
-              exact
-              component={AdminHome}
-            />
-            
-            <Route
-              path="/admin/admin-dashboard/list-users/:id/edit"
-              exact
-              component={UpdateUser}
-            />
-            <Route
-              path="/admin/list-users/add"
-              exact
-              component={UpdateUser}
-            />
-          </Switch>
+                <Route
+                  path="/dashboard/profile"
+                  exact
+                  component={ProfileUser}
+                />
+                <Route
+                  path="/dashboard/bad-area-code"
+                  exact
+                  component={BadAreaCode}
+                />
+                <Route
+                  path="/dashboard/upload-new-data"
+                  exact
+                  component={UploadCsv}
+                />
+                <Route
+                  path="/dashboard/download-csv"
+                  exact
+                  component={DownloadCsv}
+                />
+
+                <Route
+                  path="/dashboard/upload-api-data"
+                  exact
+                  component={UploadApiBL}
+                />
+
+                <Route
+                  path="/admin/admin-dashboard"
+                  exact
+                  component={AdminHome}
+                />
+
+                <Route
+                  path="/admin/admin-dashboard/list-users/:id/edit"
+                  exact
+                  component={UpdateUser}
+                />
+                <Route
+                  path="/admin/list-users/add"
+                  exact
+                  component={UpdateUser}
+                />
+              </Switch>
             </main>
             <Grid
               item

@@ -834,7 +834,11 @@ const DataTablePhones = () => {
         }}
       >
         <Grid item xs={12} container justifyContent="space-between">
+        <Grid item xs={12} md={10} style={{ margin: '0px auto', justifyContent:'center', display:'flex', border:'1px solid rgb(172 204 227)', borderRadius:'5px' }}>
+        <h6>Combine Filters</h6>
+        </Grid>
           <Grid item xs={12} md={5} style={{ marginBottom: '10px' }}>
+          
             <Grid className={classes.paperCheck}>
               <FormControl component="fieldset" disabled={checkGroup.masterCCC}>
                 <FormControlLabel
@@ -993,7 +997,7 @@ const DataTablePhones = () => {
                     disabled={checkGroup.dateUpdate}
                     title={'Update Date'}
                   />
-  </Grid>*/}
+                </Grid>*/}
                 <Grid item xs={12} sm={3} md={2}>
                   <Tooltip title="Export" aria-label="export">
                     {!loading ? (
@@ -1026,6 +1030,9 @@ const DataTablePhones = () => {
               </Grid>
             </Grid>
           </Toolbar>
+          <Grid container xs={10} style={{margin:'0px auto'}}>
+          
+          </Grid>
           {filters}
           <MaterialTable
             style={{ padding: '20px' }}
@@ -1043,6 +1050,10 @@ const DataTablePhones = () => {
               filtering: false,
               search: false,
               sorting: true,
+              headerStyle: {
+                backgroundColor: "#e3f2fd",
+                color: "#000",
+              },
             }}
             data={dataReports}
             tableRef={tableRef}

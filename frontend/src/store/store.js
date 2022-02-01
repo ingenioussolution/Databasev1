@@ -8,6 +8,14 @@ import {
 } from '../reducers/phoneReducers'
 
 import {
+  upload_Api_Csv_Reducer,
+  list_Clean_Data_Reducer,
+  Import_Clean_Data_Reducer,
+  Clean_Look_Up_Reducer,
+  list_API_Data_Reducer,
+} from '../reducers/apiBlackListReducer'
+
+import {
   deletePhoneCarrierReducer,
   phoneCarrierListReducer,
   registerPhoneCarrierReducer,
@@ -28,9 +36,16 @@ import {
   userUpdateProfileReducer,
 } from '../reducers/userReducers'
 
-import { listPhoneCleanReducer, importDataReducer, masterCCCReducer } from '../reducers/phoneListCleanReducer'
+import {
+  listPhoneCleanReducer,
+  importDataReducer,
+  masterCCCReducer,
+} from '../reducers/phoneListCleanReducer'
 
-import {listPhoneTempReducer, listPhoneTempCountReducer} from '../reducers/tempTableReducers'
+import {
+  listPhoneTempReducer,
+  listPhoneTempCountReducer,
+} from '../reducers/tempTableReducers'
 import {
   siteSettingsReducer,
   siteSettingsUpdateReducer,
@@ -44,8 +59,12 @@ import {
   deleteBadAreaReducer,
 } from '../reducers/badAreaReducers'
 
-import {listExportDataReducer, ExportMaster_CCC_Reducer, Export_Csv_Reducer} from '../reducers/exportDataReducers'
-import {uploadCsvDataReducer} from '../reducers/uploadCsvReducers'
+import {
+  listExportDataReducer,
+  ExportMaster_CCC_Reducer,
+  Export_Csv_Reducer,
+} from '../reducers/exportDataReducers'
+import { uploadCsvDataReducer } from '../reducers/uploadCsvReducers'
 
 import {
   CountClickerReducer,
@@ -62,7 +81,7 @@ import {
   MasterCCCVerizonReducer,
   MasterCCCAttReducer,
   MasterCCCSprintReducer,
-  MasterCCC_T_MobileReducer
+  MasterCCC_T_MobileReducer,
 } from '../reducers/homeFilterReducers'
 
 const reducer = combineReducers({
@@ -132,6 +151,14 @@ const reducer = combineReducers({
   MasterCCCAtt: MasterCCCAttReducer,
   MasterCCCSprint: MasterCCCSprintReducer,
   MasterCCC_T_Mobile: MasterCCC_T_MobileReducer,
+
+  // Loop up data API Black List
+
+  R_Upload_Api_Csv: upload_Api_Csv_Reducer,
+  R_List_Clean_Data: list_Clean_Data_Reducer,
+  R_Import_Clean_Data: Import_Clean_Data_Reducer,
+  R_Clean_Look_Up: Clean_Look_Up_Reducer,
+  list_API_Data: list_API_Data_Reducer,
 })
 
 const userInfoFromStorage = localStorage.getItem('userInfo')

@@ -45,11 +45,7 @@ const UploadData = () => {
 
   const tableRef = React.createRef()
 
-  // const [uploadingCsv, setUploadingCsv] = useState(false)
-  // const [openCsv, setOpenCsv] = useState(false)
-
   // login status
-
   const UserLogin = useSelector((state) => state.userLogin)
   const { userInfo } = UserLogin
 
@@ -57,15 +53,10 @@ const UploadData = () => {
   const { loading, success } = uploadCsvData
 
   const listTemporalData = useSelector((state) => state.listPhoneTemp)
-  const {
-    loading: loadingTable,
-    error: errorTable,
-  } = listTemporalData
+  const { loading: loadingTable, error: errorTable } = listTemporalData
 
   const listTemporalCount = useSelector((state) => state.listPhoneCount)
-  const {
-    count,
-  } = listTemporalCount
+  const { count } = listTemporalCount
 
   const [errorMsg, setErrorMsg] = useState('')
   const [successMsg, setSuccessMsg] = useState('')
@@ -155,10 +146,9 @@ const UploadData = () => {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [errorTable, loadingTable])
 
-  const updateData = () =>{
+  const updateData = () => {
     dispatch(listPhoneTemporalData())
     tableRef.current.onQueryChange()
-
   }
 
   return (
@@ -182,7 +172,7 @@ const UploadData = () => {
             <Message severity="success">{successMsg}</Message>
           </Snackbar>
           <Toolbar className={clsx(classes.tableHeader)}>
-            <Grid container>
+            <Grid container justifyContent='center'>
               <h3>Upload New Data</h3>
             </Grid>
           </Toolbar>
@@ -241,8 +231,14 @@ const UploadData = () => {
               data={dataPagination}
               options={{
                 search: false,
+                headerStyle: {
+                  backgroundColor: "#e3f2fd",
+                  color: "#000",
+                  
+                },
               }}
               tableRef={tableRef}
+              
               //components={{ Pagination: PaginationTemp }}
             />
           )}

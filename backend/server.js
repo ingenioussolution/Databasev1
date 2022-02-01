@@ -23,6 +23,7 @@ import settingsRoutes from './routes/siteSettingsRoutes.js'
 import uploadRoutes from './routes/uploadCsvRoutes.js'
 import homeFilter from './routes/homeFilterRouters.js'
 import partner from './routes/partnerRouters.js'
+import ApiBlackList from './routes/uploadApiBlackListRouters.js'
 
 // clean data
 
@@ -62,6 +63,8 @@ app.use('/settings', settingsRoutes)
 app.use('/upload-csv', uploadRoutes)
 app.use('/filters', homeFilter)
 app.use('/partners', partner)
+
+app.use('/api-black-list', ApiBlackList)
 
 // route clean Data
 app.use('/clean-data', cleanData)

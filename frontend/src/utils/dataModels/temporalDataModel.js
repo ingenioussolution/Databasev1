@@ -12,13 +12,11 @@ export const firstName = {
 export const lastName = {
   field: 'lastName',
   title: 'Last_Name',
-  
 }
 
 export const email = {
   field: 'email',
   title: 'Email Address',
-  
 }
 
 export const carrier = {
@@ -30,39 +28,33 @@ export const blackListAlliance = {
   field: 'blackListAlliance',
   title: 'Black List',
   align: 'center',
-  
 }
 
 export const incomeSource = {
   field: 'incomeSource',
   title: 'Income Source',
-  
 }
 export const monthlyIncome = {
   field: 'monthlyIncome',
   title: 'Monthly Income($)',
   align: 'right',
-  
 }
 
 export const status = {
   field: 'status',
   title: 'Status',
   align: 'center',
-  
 }
 
 export const countryCode = {
   field: 'countryCode',
   title: 'Country Code',
   align: 'center',
-  
 }
 
 export const state = {
   field: 'state',
   title: 'State',
-  
 }
 
 export const revenue = {
@@ -73,7 +65,6 @@ export const revenue = {
 export const creditScore = {
   field: 'creditScore',
   title: 'Credit Score',
-  
 }
 
 export const clicker = {
@@ -103,149 +94,122 @@ export const suppressed = {
 export const list = {
   field: 'list',
   title: 'List',
-  
 }
 
 export const source = {
   field: 'source',
   title: 'Source',
-  
 }
 
 export const ip = {
   field: 'ip',
   title: 'IP',
-  
 }
 
 export const site = {
   field: 'site',
   title: 'Site',
-  
 }
 
 export const zipCode = {
   field: 'zipCode',
   title: 'Zip Code',
-  
 }
 
 export const subId = {
   field: 'subId',
   title: 'SubId',
-  
 }
 export const vertical = {
   field: 'vertical',
   title: 'Vertical',
-  
 }
 export const platform = {
   field: 'platform',
   title: 'Platform',
-  
 }
 export const message = {
   field: 'message',
   title: 'Message',
-  
 }
 export const recentAbuse = {
   field: 'recentAbuse',
   title: 'Recent Abuse',
-  
 }
 export const fraudScore = {
   field: 'fraudScore',
   title: 'FraudScore',
-  
 }
 export const validMobile = {
   field: 'validMobile',
   title: 'Valid Mobile',
-  
 }
 export const lineType = {
   field: 'lineType',
   title: 'Line Type',
-  
 }
 export const prepaid = {
   field: 'prepaid',
   title: 'Prepaid',
-  
 }
 export const risky = {
   field: 'risky',
   title: 'Risky',
-  
 }
 export const city = {
   field: 'city',
   title: 'City',
-  
 }
 export const listID = {
   field: 'listID',
   title: 'ListID',
-  
 }
 export const birthDate = {
   field: 'birthDate',
   title: 'Birth date',
-  
 }
 export const gender = {
   field: 'gender',
   title: 'Gender',
-  
 }
 export const senderID = {
   field: 'senderID',
   title: 'SenderID',
-  
 }
 export const sendAt = {
   field: 'sendAt',
   title: 'SendAt',
-  
 }
 
 export const validity = {
   field: 'validity',
   title: 'validity',
-  
 }
 
 export const subject = {
   field: 'subject',
   title: 'Subject',
-  
 }
 
 export const vertical2 = {
   field: 'vertical2',
   title: 'Vertical2',
-  
 }
 
 export const vertical3 = {
   field: 'vertical3',
   title: 'Vertical3',
-  
 }
 
 export const updatedAt = {
   field: 'updatedAt',
   title: 'Update Date',
   type: 'date',
-  
 }
 export const createdAt = {
   field: 'createdAt',
   title: 'Create Date',
   type: 'date',
-  
 }
 
 export const formatBlackList = (blackListAlliance) => {

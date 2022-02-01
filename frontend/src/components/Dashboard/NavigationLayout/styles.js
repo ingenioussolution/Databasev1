@@ -20,4 +20,7 @@ export default makeStyles((theme) => ({
       fontSize: '.65em',
     },
   },
+  sizeIcon:{
+    fontSize:'15px !important',
+  },
 }))

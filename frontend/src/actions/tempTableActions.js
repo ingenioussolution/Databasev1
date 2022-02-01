@@ -25,8 +25,6 @@ export const listPhoneTemporalData = (page) => async (dispatch, getState) => {
       //const { data } = await axios.get(`/data-temporal/get-temp?pageNumber=${page}`, config)
       const { data } = await axios.get('/data-temporal', config)
 
-      console.log(data);
-
       dispatch({
         type: PHONE_TEMP_COUNT_SUCCESS,
         payload: data,

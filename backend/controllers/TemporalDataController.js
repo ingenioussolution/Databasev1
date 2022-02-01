@@ -2,7 +2,7 @@
 import ModelTemporal from '../models/TemporalData.js'
 import asyncHandler from 'express-async-handler'
 
-// @routes GET /data-temporal
+// @routes GET /get-temp
 // @des GET All Model Temporal List
 // @access  Private/User
 

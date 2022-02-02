@@ -114,24 +114,23 @@ export const ExportCSV = asyncHandler(async (req, res, next) => {
           arrayFilters.push({ repliers: repliers })
         }
       }
-      if (clicker || converter) {
-        if (converter === 'true' && clicker === 'true') {
-          arrayFilters.push({
-            $or: [{ converter: converter }, { clicker: clicker }],
-          })
-        } else if (converter === 'false' && clicker === 'false') {
-          arrayFilters.push(
-            { converter: { $ne: true } },
-            { clicker: { $ne: true } }
-          )
-        } else if (clicker === 'false') {
-          arrayFilters.push({ clicker: { $ne: true } })
-        } else if (clicker === 'true') {
-          arrayFilters.push({ clicker: clicker })
-        } else if (converter === 'false') {
+      if (converter === 'true' && clicker === 'true') {
+        arrayFilters.push({
+          $or: [{ converter: converter }, { clicker: clicker }],
+        })
+      }
+      if (converter) {
+        if (converter === 'false') {
           arrayFilters.push({ converter: { $ne: true } })
         } else if (converter === 'true') {
           arrayFilters.push({ converter: converter })
+        }
+      }
+      if (clicker) {
+        if (clicker === 'false') {
+          arrayFilters.push({ clicker: { $ne: true } })
+        } else if (clicker === 'true') {
+          arrayFilters.push({ clicker: clicker })
         }
       }
       if (suppressed) {

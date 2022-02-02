@@ -193,26 +193,27 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
           arrayFilters.push({ repliers: repliers })
         }
       }
-      if (clicker || converter) {
-        if (converter === 'true' && clicker === 'true') {
-          arrayFilters.push({
-            $or: [{ converter: converter }, { clicker: clicker }],
-          })
-        } else if (converter === 'false' && clicker === 'false') {
-          arrayFilters.push(
-            { converter: { $ne: true } },
-            { clicker: { $ne: true } }
-          )
-        } else if (clicker === 'false') {
-          arrayFilters.push({ clicker: { $ne: true } })
-        } else if (clicker === 'true') {
-          arrayFilters.push({ clicker: clicker })
-        } else if (converter === 'false') {
+
+      if (converter === 'true' && clicker === 'true') {
+        arrayFilters.push({
+          $or: [{ converter: converter }, { clicker: clicker }],
+        })
+      } 
+      if (converter) {
+        if (converter === 'false') {
           arrayFilters.push({ converter: { $ne: true } })
         } else if (converter === 'true') {
           arrayFilters.push({ converter: converter })
         }
       }
+      if (clicker) {
+        if (clicker === 'false') {
+          arrayFilters.push({ clicker: { $ne: true } })
+        } else if (clicker === 'true') {
+          arrayFilters.push({ clicker: clicker })
+        }
+      }
+  
       if (suppressed) {
         if (suppressed === 'false') {
           arrayFilters.push({ suppressed: { $ne: true } })
@@ -221,7 +222,6 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
         }
       }
       if (hardBounce === 'false') {
-        console.log('hard bounce FALSE', hardBounce)
         arrayFilters.push({ hardBounce: { $ne: true } })
       } else if (hardBounce === 'true') {
         console.log('hard bounce TRUE')
@@ -241,9 +241,9 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
             $nin: arrayBadArea,
           },
         })
-      }else if(areaCode === 'false'){
+      } else if (areaCode === 'false') {
         arrayFilters.push({
-          phone: { 
+          phone: {
             $in: arrayBadArea,
           },
         })
@@ -257,7 +257,7 @@ export const getPhoneListFrontEnd = asyncHandler(async (req, res, next) => {
         )
           .count()
           .lean()
-          //.limit(500000)
+        //.limit(500000)
 
         console.timeEnd()
 

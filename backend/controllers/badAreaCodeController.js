@@ -24,7 +24,6 @@ export const getAreaCode = asyncHandler(async (req, res, next) => {
 // @desc     All Bad Area Code
 // @route    get /list-area-code
 // @access   Public
-
 export const listAreaCode = asyncHandler(async (req, res, next) => {
   try {
     let arrayBadArea = []
